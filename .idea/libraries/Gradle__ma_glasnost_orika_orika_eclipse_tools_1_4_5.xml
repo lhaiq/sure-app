@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: ma.glasnost.orika:orika-eclipse-tools:1.4.5">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../../../../../tool/gradle-2.1/caches/modules-2/files-2.1/ma.glasnost.orika/orika-eclipse-tools/1.4.5/2341f7de6754a45a42b71ed07c2b7c0d7563e714/orika-eclipse-tools-1.4.5.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/../../../../../tool/gradle-2.1/caches/modules-2/files-2.1/ma.glasnost.orika/orika-eclipse-tools/1.4.5/a7b239bfdd06c0dbc4672ea0153c5839186174dc/orika-eclipse-tools-1.4.5-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

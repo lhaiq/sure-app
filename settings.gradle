@@ -1,0 +1,4 @@
+rootProject.name = 'sure'
+include 'sure-service-api'
+include 'sure-service'
+include 'sure-webapp'

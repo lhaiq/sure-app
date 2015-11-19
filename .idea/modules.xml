@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/sure.iml" filepath="$PROJECT_DIR$/sure.iml" />
+      <module fileurl="file://$PROJECT_DIR$/sure-service/sure-service.iml" filepath="$PROJECT_DIR$/sure-service/sure-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/sure-service-api/sure-service-api.iml" filepath="$PROJECT_DIR$/sure-service-api/sure-service-api.iml" />
+      <module fileurl="file://$PROJECT_DIR$/sure-webapp/sure-webapp.iml" filepath="$PROJECT_DIR$/sure-webapp/sure-webapp.iml" />
+    </modules>
+  </component>
+</project>

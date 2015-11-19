@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hengsu.sure.auth.repository.RelationRepository" >
+  <resultMap id="BaseResultMap" type="com.hengsu.sure.auth.entity.Relation" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="from_user" property="fromUser" jdbcType="BIGINT" />
+    <result column="to_user" property="toUser" jdbcType="BIGINT" />
+    <result column="time" property="time" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, from_user, to_user, time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from relation
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from relation
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.hengsu.sure.auth.entity.Relation" >
+    insert into relation (id, from_user, to_user, 
+      time)
+    values (#{id,jdbcType=BIGINT}, #{fromUser,jdbcType=BIGINT}, #{toUser,jdbcType=BIGINT}, 
+      #{time,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hengsu.sure.auth.entity.Relation" >
+    insert into relation
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="fromUser != null" >
+        from_user,
+      </if>
+      <if test="toUser != null" >
+        to_user,
+      </if>
+      <if test="time != null" >
+        time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="fromUser != null" >
+        #{fromUser,jdbcType=BIGINT},
+      </if>
+      <if test="toUser != null" >
+        #{toUser,jdbcType=BIGINT},
+      </if>
+      <if test="time != null" >
+        #{time,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hengsu.sure.auth.entity.Relation" >
+    update relation
+    <set >
+      <if test="fromUser != null" >
+        from_user = #{fromUser,jdbcType=BIGINT},
+      </if>
+      <if test="toUser != null" >
+        to_user = #{toUser,jdbcType=BIGINT},
+      </if>
+      <if test="time != null" >
+        time = #{time,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hengsu.sure.auth.entity.Relation" >
+    update relation
+    set from_user = #{fromUser,jdbcType=BIGINT},
+      to_user = #{toUser,jdbcType=BIGINT},
+      time = #{time,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectCount" resultType="java.lang.Integer" parameterType="com.hengsu.sure.auth.entity.Relation" >
+    select count(*) from relation
+    <where >
+      <if test="id != null" >
+        and id = #{id,jdbcType=BIGINT}
+      </if>
+      <if test="fromUser != null" >
+        and from_user = #{fromUser,jdbcType=BIGINT}
+      </if>
+      <if test="toUser != null" >
+        and to_user = #{toUser,jdbcType=BIGINT}
+      </if>
+      <if test="time != null" >
+        and time = #{time,jdbcType=TIMESTAMP}
+      </if>
+    </where>
+  </select>
+  <select id="selectPage" resultMap="BaseResultMap" >
+    select 
+    <include refid="Base_Column_List" />
+    from relation where 1 = 1 
+    <if test="param1.id != null" >
+      and id = #{param1.id,jdbcType=BIGINT}
+    </if>
+    <if test="param1.fromUser != null" >
+      and from_user = #{param1.fromUser,jdbcType=BIGINT}
+    </if>
+    <if test="param1.toUser != null" >
+      and to_user = #{param1.toUser,jdbcType=BIGINT}
+    </if>
+    <if test="param1.time != null" >
+      and time = #{param1.time,jdbcType=TIMESTAMP}
+    </if>
+    <if test="param2.sort != null" >
+      order by 
+      <foreach collection="param2.sort" item="order" separator="," >
+        ${order.property} ${order.direction}
+      </foreach>
+    </if>
+    <if test="param2.offset >= 0 and param2.pageSize > 0" >
+      limit ${param2.offset}, ${param2.pageSize}
+    </if>
+  </select>
+</mapper>

@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: com.hkntv.pylon:pylon-web:1.1.0-SNAPSHOT">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../../../../../tool/gradle-2.1/caches/modules-2/files-2.1/com.hkntv.pylon/pylon-web/1.1.0-SNAPSHOT/19d6c542af8dc9941ff4041385f274153ab96416/pylon-web-1.1.0-SNAPSHOT.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/../../../../../tool/gradle-2.1/caches/modules-2/files-2.1/com.hkntv.pylon/pylon-web/1.1.0-SNAPSHOT/e25233c71edb50f7711affb92d9ce1fb6b785e9a/pylon-web-1.1.0-SNAPSHOT-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

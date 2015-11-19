@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: com.hkntv.immortal:immortal-client:1.1.0-SNAPSHOT">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../../../../../tool/gradle-2.1/caches/modules-2/files-2.1/com.hkntv.immortal/immortal-client/1.1.0-SNAPSHOT/66c9f74e73f10649c23523d18bd39ff3a8b81a00/immortal-client-1.1.0-SNAPSHOT.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/../../../../../tool/gradle-2.1/caches/modules-2/files-2.1/com.hkntv.immortal/immortal-client/1.1.0-SNAPSHOT/a5b49a223d0d106e0ee6ba0a661f15e1b39519d0/immortal-client-1.1.0-SNAPSHOT-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

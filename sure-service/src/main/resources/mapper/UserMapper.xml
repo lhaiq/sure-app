@@ -1,0 +1,391 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hengsu.sure.auth.repository.UserRepository" >
+  <resultMap id="BaseResultMap" type="com.hengsu.sure.auth.entity.User" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="phone" property="phone" jdbcType="VARCHAR" />
+    <result column="nickname" property="nickname" jdbcType="VARCHAR" />
+    <result column="gender" property="gender" jdbcType="INTEGER" />
+    <result column="password" property="password" jdbcType="VARCHAR" />
+    <result column="longitude" property="longitude" jdbcType="DOUBLE" />
+    <result column="latitude" property="latitude" jdbcType="DOUBLE" />
+    <result column="location_modify_time" property="locationModifyTime" jdbcType="TIMESTAMP" />
+    <result column="role" property="role" jdbcType="VARCHAR" />
+    <result column="balance" property="balance" jdbcType="DOUBLE" />
+    <result column="age" property="age" jdbcType="INTEGER" />
+    <result column="face_score" property="faceScore" jdbcType="DOUBLE" />
+    <result column="credit" property="credit" jdbcType="DOUBLE" />
+    <result column="skills" property="skills" jdbcType="DOUBLE" />
+    <result column="car" property="car" jdbcType="INTEGER" />
+    <result column="city" property="city" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="face_id" property="faceId" jdbcType="VARCHAR" />
+    <result column="alipay" property="alipay" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, phone, nickname, gender, password, longitude, latitude, location_modify_time, 
+    role, balance, age, face_score, credit, skills, car, city, status, face_id, alipay
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from user
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from user
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.hengsu.sure.auth.entity.User" >
+    insert into user (id, phone, nickname, 
+      gender, password, longitude, 
+      latitude, location_modify_time, role, 
+      balance, age, face_score, 
+      credit, skills, car, 
+      city, status, face_id, 
+      alipay)
+    values (#{id,jdbcType=BIGINT}, #{phone,jdbcType=VARCHAR}, #{nickname,jdbcType=VARCHAR}, 
+      #{gender,jdbcType=INTEGER}, #{password,jdbcType=VARCHAR}, #{longitude,jdbcType=DOUBLE}, 
+      #{latitude,jdbcType=DOUBLE}, #{locationModifyTime,jdbcType=TIMESTAMP}, #{role,jdbcType=VARCHAR}, 
+      #{balance,jdbcType=DOUBLE}, #{age,jdbcType=INTEGER}, #{faceScore,jdbcType=DOUBLE}, 
+      #{credit,jdbcType=DOUBLE}, #{skills,jdbcType=DOUBLE}, #{car,jdbcType=INTEGER}, 
+      #{city,jdbcType=INTEGER}, #{status,jdbcType=INTEGER}, #{faceId,jdbcType=VARCHAR}, 
+      #{alipay,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hengsu.sure.auth.entity.User" >
+    insert into user
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="phone != null" >
+        phone,
+      </if>
+      <if test="nickname != null" >
+        nickname,
+      </if>
+      <if test="gender != null" >
+        gender,
+      </if>
+      <if test="password != null" >
+        password,
+      </if>
+      <if test="longitude != null" >
+        longitude,
+      </if>
+      <if test="latitude != null" >
+        latitude,
+      </if>
+      <if test="locationModifyTime != null" >
+        location_modify_time,
+      </if>
+      <if test="role != null" >
+        role,
+      </if>
+      <if test="balance != null" >
+        balance,
+      </if>
+      <if test="age != null" >
+        age,
+      </if>
+      <if test="faceScore != null" >
+        face_score,
+      </if>
+      <if test="credit != null" >
+        credit,
+      </if>
+      <if test="skills != null" >
+        skills,
+      </if>
+      <if test="car != null" >
+        car,
+      </if>
+      <if test="city != null" >
+        city,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="faceId != null" >
+        face_id,
+      </if>
+      <if test="alipay != null" >
+        alipay,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="phone != null" >
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="nickname != null" >
+        #{nickname,jdbcType=VARCHAR},
+      </if>
+      <if test="gender != null" >
+        #{gender,jdbcType=INTEGER},
+      </if>
+      <if test="password != null" >
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="longitude != null" >
+        #{longitude,jdbcType=DOUBLE},
+      </if>
+      <if test="latitude != null" >
+        #{latitude,jdbcType=DOUBLE},
+      </if>
+      <if test="locationModifyTime != null" >
+        #{locationModifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="role != null" >
+        #{role,jdbcType=VARCHAR},
+      </if>
+      <if test="balance != null" >
+        #{balance,jdbcType=DOUBLE},
+      </if>
+      <if test="age != null" >
+        #{age,jdbcType=INTEGER},
+      </if>
+      <if test="faceScore != null" >
+        #{faceScore,jdbcType=DOUBLE},
+      </if>
+      <if test="credit != null" >
+        #{credit,jdbcType=DOUBLE},
+      </if>
+      <if test="skills != null" >
+        #{skills,jdbcType=DOUBLE},
+      </if>
+      <if test="car != null" >
+        #{car,jdbcType=INTEGER},
+      </if>
+      <if test="city != null" >
+        #{city,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="faceId != null" >
+        #{faceId,jdbcType=VARCHAR},
+      </if>
+      <if test="alipay != null" >
+        #{alipay,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hengsu.sure.auth.entity.User" >
+    update user
+    <set >
+      <if test="phone != null" >
+        phone = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="nickname != null" >
+        nickname = #{nickname,jdbcType=VARCHAR},
+      </if>
+      <if test="gender != null" >
+        gender = #{gender,jdbcType=INTEGER},
+      </if>
+      <if test="password != null" >
+        password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="longitude != null" >
+        longitude = #{longitude,jdbcType=DOUBLE},
+      </if>
+      <if test="latitude != null" >
+        latitude = #{latitude,jdbcType=DOUBLE},
+      </if>
+      <if test="locationModifyTime != null" >
+        location_modify_time = #{locationModifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="role != null" >
+        role = #{role,jdbcType=VARCHAR},
+      </if>
+      <if test="balance != null" >
+        balance = #{balance,jdbcType=DOUBLE},
+      </if>
+      <if test="age != null" >
+        age = #{age,jdbcType=INTEGER},
+      </if>
+      <if test="faceScore != null" >
+        face_score = #{faceScore,jdbcType=DOUBLE},
+      </if>
+      <if test="credit != null" >
+        credit = #{credit,jdbcType=DOUBLE},
+      </if>
+      <if test="skills != null" >
+        skills = #{skills,jdbcType=DOUBLE},
+      </if>
+      <if test="car != null" >
+        car = #{car,jdbcType=INTEGER},
+      </if>
+      <if test="city != null" >
+        city = #{city,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="faceId != null" >
+        face_id = #{faceId,jdbcType=VARCHAR},
+      </if>
+      <if test="alipay != null" >
+        alipay = #{alipay,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hengsu.sure.auth.entity.User" >
+    update user
+    set phone = #{phone,jdbcType=VARCHAR},
+      nickname = #{nickname,jdbcType=VARCHAR},
+      gender = #{gender,jdbcType=INTEGER},
+      password = #{password,jdbcType=VARCHAR},
+      longitude = #{longitude,jdbcType=DOUBLE},
+      latitude = #{latitude,jdbcType=DOUBLE},
+      location_modify_time = #{locationModifyTime,jdbcType=TIMESTAMP},
+      role = #{role,jdbcType=VARCHAR},
+      balance = #{balance,jdbcType=DOUBLE},
+      age = #{age,jdbcType=INTEGER},
+      face_score = #{faceScore,jdbcType=DOUBLE},
+      credit = #{credit,jdbcType=DOUBLE},
+      skills = #{skills,jdbcType=DOUBLE},
+      car = #{car,jdbcType=INTEGER},
+      city = #{city,jdbcType=INTEGER},
+      status = #{status,jdbcType=INTEGER},
+      face_id = #{faceId,jdbcType=VARCHAR},
+      alipay = #{alipay,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectCount" resultType="java.lang.Integer" parameterType="com.hengsu.sure.auth.entity.User" >
+    select count(*) from user
+    <where >
+      <if test="id != null" >
+        and id = #{id,jdbcType=BIGINT}
+      </if>
+      <if test="phone != null" >
+        and phone = #{phone,jdbcType=VARCHAR}
+      </if>
+      <if test="nickname != null" >
+        and nickname = #{nickname,jdbcType=VARCHAR}
+      </if>
+      <if test="gender != null" >
+        and gender = #{gender,jdbcType=INTEGER}
+      </if>
+      <if test="password != null" >
+        and password = #{password,jdbcType=VARCHAR}
+      </if>
+      <if test="longitude != null" >
+        and longitude = #{longitude,jdbcType=DOUBLE}
+      </if>
+      <if test="latitude != null" >
+        and latitude = #{latitude,jdbcType=DOUBLE}
+      </if>
+      <if test="locationModifyTime != null" >
+        and location_modify_time = #{locationModifyTime,jdbcType=TIMESTAMP}
+      </if>
+      <if test="role != null" >
+        and role = #{role,jdbcType=VARCHAR}
+      </if>
+      <if test="balance != null" >
+        and balance = #{balance,jdbcType=DOUBLE}
+      </if>
+      <if test="age != null" >
+        and age = #{age,jdbcType=INTEGER}
+      </if>
+      <if test="faceScore != null" >
+        and face_score = #{faceScore,jdbcType=DOUBLE}
+      </if>
+      <if test="credit != null" >
+        and credit = #{credit,jdbcType=DOUBLE}
+      </if>
+      <if test="skills != null" >
+        and skills = #{skills,jdbcType=DOUBLE}
+      </if>
+      <if test="car != null" >
+        and car = #{car,jdbcType=INTEGER}
+      </if>
+      <if test="city != null" >
+        and city = #{city,jdbcType=INTEGER}
+      </if>
+      <if test="status != null" >
+        and status = #{status,jdbcType=INTEGER}
+      </if>
+      <if test="faceId != null" >
+        and face_id = #{faceId,jdbcType=VARCHAR}
+      </if>
+      <if test="alipay != null" >
+        and alipay = #{alipay,jdbcType=VARCHAR}
+      </if>
+    </where>
+  </select>
+  <select id="selectPage" resultMap="BaseResultMap" >
+    select 
+    <include refid="Base_Column_List" />
+    from user where 1 = 1 
+    <if test="param1.id != null" >
+      and id = #{param1.id,jdbcType=BIGINT}
+    </if>
+    <if test="param1.phone != null" >
+      and phone = #{param1.phone,jdbcType=VARCHAR}
+    </if>
+    <if test="param1.nickname != null" >
+      and nickname = #{param1.nickname,jdbcType=VARCHAR}
+    </if>
+    <if test="param1.gender != null" >
+      and gender = #{param1.gender,jdbcType=INTEGER}
+    </if>
+    <if test="param1.password != null" >
+      and password = #{param1.password,jdbcType=VARCHAR}
+    </if>
+    <if test="param1.longitude != null" >
+      and longitude = #{param1.longitude,jdbcType=DOUBLE}
+    </if>
+    <if test="param1.latitude != null" >
+      and latitude = #{param1.latitude,jdbcType=DOUBLE}
+    </if>
+    <if test="param1.locationModifyTime != null" >
+      and location_modify_time = #{param1.locationModifyTime,jdbcType=TIMESTAMP}
+    </if>
+    <if test="param1.role != null" >
+      and role = #{param1.role,jdbcType=VARCHAR}
+    </if>
+    <if test="param1.balance != null" >
+      and balance = #{param1.balance,jdbcType=DOUBLE}
+    </if>
+    <if test="param1.age != null" >
+      and age = #{param1.age,jdbcType=INTEGER}
+    </if>
+    <if test="param1.faceScore != null" >
+      and face_score = #{param1.faceScore,jdbcType=DOUBLE}
+    </if>
+    <if test="param1.credit != null" >
+      and credit = #{param1.credit,jdbcType=DOUBLE}
+    </if>
+    <if test="param1.skills != null" >
+      and skills = #{param1.skills,jdbcType=DOUBLE}
+    </if>
+    <if test="param1.car != null" >
+      and car = #{param1.car,jdbcType=INTEGER}
+    </if>
+    <if test="param1.city != null" >
+      and city = #{param1.city,jdbcType=INTEGER}
+    </if>
+    <if test="param1.status != null" >
+      and status = #{param1.status,jdbcType=INTEGER}
+    </if>
+    <if test="param1.faceId != null" >
+      and face_id = #{param1.faceId,jdbcType=VARCHAR}
+    </if>
+    <if test="param1.alipay != null" >
+      and alipay = #{param1.alipay,jdbcType=VARCHAR}
+    </if>
+    <if test="param2.sort != null" >
+      order by 
+      <foreach collection="param2.sort" item="order" separator="," >
+        ${order.property} ${order.direction}
+      </foreach>
+    </if>
+    <if test="param2.offset >= 0 and param2.pageSize > 0" >
+      limit ${param2.offset}, ${param2.pageSize}
+    </if>
+  </select>
+</mapper>

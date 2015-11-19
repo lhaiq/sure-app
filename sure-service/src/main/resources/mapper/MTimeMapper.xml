@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hengsu.sure.auth.repository.MTimeRepository" >
+  <resultMap id="BaseResultMap" type="com.hengsu.sure.auth.entity.MTime" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="user_id" property="userId" jdbcType="BIGINT" />
+    <result column="time" property="time" jdbcType="TIMESTAMP" />
+    <result column="longitude" property="longitude" jdbcType="DOUBLE" />
+    <result column="latitude" property="latitude" jdbcType="DOUBLE" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.hengsu.sure.auth.entity.MTime" extends="BaseResultMap" >
+    <result column="content" property="content" jdbcType="LONGVARCHAR" />
+    <result column="images" property="images" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, user_id, time, longitude, latitude
+  </sql>
+  <sql id="Blob_Column_List" >
+    content, images
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from mtime
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from mtime
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.hengsu.sure.auth.entity.MTime" >
+    insert into mtime (id, user_id, time, 
+      longitude, latitude, content, 
+      images)
+    values (#{id,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{time,jdbcType=TIMESTAMP}, 
+      #{longitude,jdbcType=DOUBLE}, #{latitude,jdbcType=DOUBLE}, #{content,jdbcType=LONGVARCHAR}, 
+      #{images,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hengsu.sure.auth.entity.MTime" >
+    insert into mtime
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="time != null" >
+        time,
+      </if>
+      <if test="longitude != null" >
+        longitude,
+      </if>
+      <if test="latitude != null" >
+        latitude,
+      </if>
+      <if test="content != null" >
+        content,
+      </if>
+      <if test="images != null" >
+        images,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="time != null" >
+        #{time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="longitude != null" >
+        #{longitude,jdbcType=DOUBLE},
+      </if>
+      <if test="latitude != null" >
+        #{latitude,jdbcType=DOUBLE},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="images != null" >
+        #{images,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hengsu.sure.auth.entity.MTime" >
+    update mtime
+    <set >
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="time != null" >
+        time = #{time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="longitude != null" >
+        longitude = #{longitude,jdbcType=DOUBLE},
+      </if>
+      <if test="latitude != null" >
+        latitude = #{latitude,jdbcType=DOUBLE},
+      </if>
+      <if test="content != null" >
+        content = #{content,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="images != null" >
+        images = #{images,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.hengsu.sure.auth.entity.MTime" >
+    update mtime
+    set user_id = #{userId,jdbcType=BIGINT},
+      time = #{time,jdbcType=TIMESTAMP},
+      longitude = #{longitude,jdbcType=DOUBLE},
+      latitude = #{latitude,jdbcType=DOUBLE},
+      content = #{content,jdbcType=LONGVARCHAR},
+      images = #{images,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hengsu.sure.auth.entity.MTime" >
+    update mtime
+    set user_id = #{userId,jdbcType=BIGINT},
+      time = #{time,jdbcType=TIMESTAMP},
+      longitude = #{longitude,jdbcType=DOUBLE},
+      latitude = #{latitude,jdbcType=DOUBLE}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectCount" resultType="java.lang.Integer" parameterType="com.hengsu.sure.auth.entity.MTime" >
+    select count(*) from mtime
+    <where >
+      <if test="id != null" >
+        and id = #{id,jdbcType=BIGINT}
+      </if>
+      <if test="userId != null" >
+        and user_id = #{userId,jdbcType=BIGINT}
+      </if>
+      <if test="time != null" >
+        and time = #{time,jdbcType=TIMESTAMP}
+      </if>
+      <if test="longitude != null" >
+        and longitude = #{longitude,jdbcType=DOUBLE}
+      </if>
+      <if test="latitude != null" >
+        and latitude = #{latitude,jdbcType=DOUBLE}
+      </if>
+      <if test="content != null" >
+        and content = #{content,jdbcType=LONGVARCHAR}
+      </if>
+      <if test="images != null" >
+        and images = #{images,jdbcType=LONGVARCHAR}
+      </if>
+    </where>
+  </select>
+  <select id="selectPage" resultMap="BaseResultMap" >
+    select 
+    <include refid="Base_Column_List" />
+    from mtime where 1 = 1 
+    <if test="param1.id != null" >
+      and id = #{param1.id,jdbcType=BIGINT}
+    </if>
+    <if test="param1.userId != null" >
+      and user_id = #{param1.userId,jdbcType=BIGINT}
+    </if>
+    <if test="param1.time != null" >
+      and time = #{param1.time,jdbcType=TIMESTAMP}
+    </if>
+    <if test="param1.longitude != null" >
+      and longitude = #{param1.longitude,jdbcType=DOUBLE}
+    </if>
+    <if test="param1.latitude != null" >
+      and latitude = #{param1.latitude,jdbcType=DOUBLE}
+    </if>
+    <if test="param1.content != null" >
+      and content = #{param1.content,jdbcType=LONGVARCHAR}
+    </if>
+    <if test="param1.images != null" >
+      and images = #{param1.images,jdbcType=LONGVARCHAR}
+    </if>
+    <if test="param2.sort != null" >
+      order by 
+      <foreach collection="param2.sort" item="order" separator="," >
+        ${order.property} ${order.direction}
+      </foreach>
+    </if>
+    <if test="param2.offset >= 0 and param2.pageSize > 0" >
+      limit ${param2.offset}, ${param2.pageSize}
+    </if>
+  </select>
+</mapper>

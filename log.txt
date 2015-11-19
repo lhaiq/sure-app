@@ -1,0 +1,119 @@
+[2015-11-16 22:55:14] [WARN ] - [Server]Unable to execute HTTP request: The specified bucket is not valid.
+[ErrorCode]: InvalidBucketName
+[RequestId]: 5649EE521790CF0F5370BB0F
+[HostId]: hengsu-sure.hengsu-sure.oss-cn-hangzhou.aliyuncs.com
+[ResponseError]:
+<?xml version="1.0" encoding="UTF-8"?>
+<Error>
+  <Code>InvalidBucketName</Code>
+  <Message>The specified bucket is not valid.</Message>
+  <RequestId>5649EE521790CF0F5370BB0F</RequestId>
+  <HostId>hengsu-sure.hengsu-sure.oss-cn-hangzhou.aliyuncs.com</HostId>
+  <BucketName>hengsu-sure.hengsu-sure</BucketName>
+</Error>
+
+[2015-11-16 22:57:40] [WARN ] - [Server]Unable to execute HTTP request: The specified bucket is not valid.
+[ErrorCode]: InvalidBucketName
+[RequestId]: 5649EEE3770DFE1A1870C5AA
+[HostId]: hengsu-sure.hengsu-sure.oss-cn-hangzhou.aliyuncs.com
+[ResponseError]:
+<?xml version="1.0" encoding="UTF-8"?>
+<Error>
+  <Code>InvalidBucketName</Code>
+  <Message>The specified bucket is not valid.</Message>
+  <RequestId>5649EEE3770DFE1A1870C5AA</RequestId>
+  <HostId>hengsu-sure.hengsu-sure.oss-cn-hangzhou.aliyuncs.com</HostId>
+  <BucketName>hengsu-sure.hengsu-sure</BucketName>
+</Error>
+
+[2015-11-16 22:59:17] [WARN ] - [Server]Unable to execute HTTP request: The request signature we calculated does not match the signature you provided. Check your key and signing method.
+[ErrorCode]: SignatureDoesNotMatch
+[RequestId]: 5649EF45D4C05B09C76ADA36
+[HostId]: hengsu-sure.oss-cn-hangzhou.aliyuncs.com
+[ResponseError]:
+<?xml version="1.0" encoding="UTF-8"?>
+<Error>
+  <Code>SignatureDoesNotMatch</Code>
+  <Message>The request signature we calculated does not match the signature you provided. Check your key and signing method.</Message>
+  <RequestId>5649EF45D4C05B09C76ADA36</RequestId>
+  <HostId>hengsu-sure.oss-cn-hangzhou.aliyuncs.com</HostId>
+  <OSSAccessKeyId>3MEfGv2FB8BlxmCp</OSSAccessKeyId>
+  <SignatureProvided>hhMCZoGlDaX1ZJY5pn274guXIMI=</SignatureProvided>
+  <StringToSign>GET
+
+
+Mon, 16 Nov 2015 14:59:15 GMT
+/hengsu-sure/</StringToSign>
+  <StringToSignBytes>47 45 54 0A 0A 0A 4D 6F 6E 2C 20 31 36 20 4E 6F 76 20 32 30 31 35 20 31 34 3A 35 39 3A 31 35 20 47 4D 54 0A 2F 68 65 6E 67 73 75 2D 73 75 72 65 2F </StringToSignBytes>
+</Error>
+
+[2015-11-16 22:59:53] [WARN ] - [Server]Unable to execute HTTP request: The request signature we calculated does not match the signature you provided. Check your key and signing method.
+[ErrorCode]: SignatureDoesNotMatch
+[RequestId]: 5649EF68770DFE1A18736D48
+[HostId]: hengsu-sure.oss-cn-hangzhou.aliyuncs.com
+[ResponseError]:
+<?xml version="1.0" encoding="UTF-8"?>
+<Error>
+  <Code>SignatureDoesNotMatch</Code>
+  <Message>The request signature we calculated does not match the signature you provided. Check your key and signing method.</Message>
+  <RequestId>5649EF68770DFE1A18736D48</RequestId>
+  <HostId>hengsu-sure.oss-cn-hangzhou.aliyuncs.com</HostId>
+  <OSSAccessKeyId>3MEfGv2FB8BlxmCp</OSSAccessKeyId>
+  <SignatureProvided>It+41DWhKByqu+hHY8b4D0LOGuY=</SignatureProvided>
+  <StringToSign>GET
+
+
+Mon, 16 Nov 2015 14:59:51 GMT
+/hengsu-sure/</StringToSign>
+  <StringToSignBytes>47 45 54 0A 0A 0A 4D 6F 6E 2C 20 31 36 20 4E 6F 76 20 32 30 31 35 20 31 34 3A 35 39 3A 35 31 20 47 4D 54 0A 2F 68 65 6E 67 73 75 2D 73 75 72 65 2F </StringToSignBytes>
+</Error>
+
+[2015-11-16 23:00:40] [WARN ] - [Server]Unable to execute HTTP request: The request signature we calculated does not match the signature you provided. Check your key and signing method.
+[ErrorCode]: SignatureDoesNotMatch
+[RequestId]: 5649EF98D5A34093147933B0
+[HostId]: hengsu-sure.oss-cn-hangzhou.aliyuncs.com
+[ResponseError]:
+<?xml version="1.0" encoding="UTF-8"?>
+<Error>
+  <Code>SignatureDoesNotMatch</Code>
+  <Message>The request signature we calculated does not match the signature you provided. Check your key and signing method.</Message>
+  <RequestId>5649EF98D5A34093147933B0</RequestId>
+  <HostId>hengsu-sure.oss-cn-hangzhou.aliyuncs.com</HostId>
+  <OSSAccessKeyId>3MEfGv2FB8BlxmCp</OSSAccessKeyId>
+  <SignatureProvided>jCfvQu+uLgcdvFdF8PWgXuCl7xA=</SignatureProvided>
+  <StringToSign>GET
+
+
+Mon, 16 Nov 2015 15:00:39 GMT
+/hengsu-sure/</StringToSign>
+  <StringToSignBytes>47 45 54 0A 0A 0A 4D 6F 6E 2C 20 31 36 20 4E 6F 76 20 32 30 31 35 20 31 35 3A 30 30 3A 33 39 20 47 4D 54 0A 2F 68 65 6E 67 73 75 2D 73 75 72 65 2F </StringToSignBytes>
+</Error>
+
+[2015-11-16 23:13:57] [WARN ] - [Server]Unable to execute HTTP request: The specified bucket is not valid.
+[ErrorCode]: InvalidBucketName
+[RequestId]: 5649F2B4F9EEA2F33284905D
+[HostId]: suretime.hengsu-sure.oss-cn-hangzhou.aliyuncs.com
+[ResponseError]:
+<?xml version="1.0" encoding="UTF-8"?>
+<Error>
+  <Code>InvalidBucketName</Code>
+  <Message>The specified bucket is not valid.</Message>
+  <RequestId>5649F2B4F9EEA2F33284905D</RequestId>
+  <HostId>suretime.hengsu-sure.oss-cn-hangzhou.aliyuncs.com</HostId>
+  <BucketName>suretime.hengsu-sure</BucketName>
+</Error>
+
+[2015-11-16 23:15:29] [WARN ] - [Server]Unable to execute HTTP request: The bucket you tried to delete is not empty.
+[ErrorCode]: BucketNotEmpty
+[RequestId]: 5649F311D5A34093148A780A
+[HostId]: hengsu-sure.oss-cn-hangzhou.aliyuncs.com
+[ResponseError]:
+<?xml version="1.0" encoding="UTF-8"?>
+<Error>
+  <Code>BucketNotEmpty</Code>
+  <Message>The bucket you tried to delete is not empty.</Message>
+  <RequestId>5649F311D5A34093148A780A</RequestId>
+  <HostId>hengsu-sure.oss-cn-hangzhou.aliyuncs.com</HostId>
+  <BucketName>hengsu-sure</BucketName>
+</Error>
+
