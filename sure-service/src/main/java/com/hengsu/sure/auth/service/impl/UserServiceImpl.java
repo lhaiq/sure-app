@@ -1,6 +1,7 @@
 package com.hengsu.sure.auth.service.impl;
 
 import com.google.common.collect.ImmutableList;
+import com.hengsu.sure.auth.entity.User;
 import com.hengsu.sure.auth.service.UserService;
 import com.hengsu.sure.core.ErrorCode;
 import com.hengsu.sure.core.model.AuthCodeModel;
@@ -11,7 +12,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.hengsu.sure.auth.entity.User;
 import com.hengsu.sure.auth.repository.UserRepository;
 import com.hengsu.sure.auth.model.UserModel;
 import com.hkntv.pylon.core.beans.mapping.BeanMapper;
@@ -35,7 +35,19 @@ public class UserServiceImpl implements UserService {
     @Value("${register.auth.code.valid.time}")
     private Long registerAuthCodeValidTime;
 
+    @Value("${changepass.auth.code.valid.time}")
+    private Long changePassAuthCodeValidTime;
+
+    /**
+     * 注册验证码缓存
+     */
     private Map<String, AuthCodeModel> registerAuthCodes = new HashMap<>();
+
+    /**
+     * 修改密码缓存
+     */
+    private Map<String, AuthCodeModel> changePassAuthCodes = new HashMap<>();
+
 
     @Autowired
     private AuthCodeService authCodeService;
@@ -89,9 +101,43 @@ public class UserServiceImpl implements UserService {
             ErrorCode.throwBusinessException(ErrorCode.AUTH_CODE_TIME_OUT);
         }
         //检查验证码是否正确
-        if(!authCodeModel.getCode().equals(authCode)){
+        if (!authCodeModel.getCode().equals(authCode)) {
             ErrorCode.throwBusinessException(ErrorCode.AUTH_CODE_ERROR);
         }
+
+    }
+
+    @Override
+    public void generateChangePassAuthCode(String phone) {
+
+        //检查手机号是否注册
+        UserModel userModel = findUserByPhone(phone);
+        if (null == userModel) {
+            ErrorCode.throwBusinessException(ErrorCode.PHONE_NOT_REGISTER);
+        }
+
+        //生成验证码
+        String authCode = RandomUtil.createRandom(true, 4);
+        AuthCodeModel authCodeModel = new AuthCodeModel(authCode);
+        changePassAuthCodes.put(phone, authCodeModel);
+
+    }
+
+    @Override
+    public void changePass(String phone,String newPass,String authCode) {
+
+        //验证码校验
+        AuthCodeModel authCodeModel = changePassAuthCodes.get(phone);
+        if ((System.currentTimeMillis() / 1000 - authCodeModel.getGenerateTime())
+                > changePassAuthCodeValidTime) {
+            ErrorCode.throwBusinessException(ErrorCode.AUTH_CODE_TIME_OUT);
+        }
+
+        //更新密码
+        UserModel userModel =findUserByPhone(phone);
+        String password = DigestUtils.md5DigestAsHex(newPass.getBytes());
+        userModel.setPassword(password);
+        updateByPrimaryKey(userModel);
 
     }
 
@@ -111,9 +157,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserModel login(String phone, String password) {
-        UserModel userModel= findUserByPhone(phone);
+        UserModel userModel = findUserByPhone(phone);
         password = DigestUtils.md5DigestAsHex(userModel.getPassword().getBytes());
-        if(!userModel.getPassword().equals(password)){
+        if (!userModel.getPassword().equals(password)) {
             ErrorCode.throwBusinessException(ErrorCode.LOGIN_PASSWORD_ERROR);
         }
 

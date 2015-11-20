@@ -12,12 +12,11 @@ public enum ErrorCode {
     AUTH_CODE_ERROR("1002", "验证码不正确"),
     AUTH_TOKEN_INVALID("1003", "AUTH TOKEN非法"),
 
-    //register
-    REGISTER_PHONE_EXISTED("2001", "该手机已经注册过"),
+    REGISTER_PHONE_EXISTED("1004", "该手机已经注册过"),
 
-    //login
-    LOGIN_USERNAME_NOT_EXISTED("3001","用户名不存在"),
-    LOGIN_PASSWORD_ERROR("3002","密码错误"),
+    LOGIN_USERNAME_NOT_EXISTED("1005","用户名不存在"),
+    LOGIN_PASSWORD_ERROR("1006","密码错误"),
+    PHONE_NOT_REGISTER("1007","该手机号尚未注册"),
 
 
 

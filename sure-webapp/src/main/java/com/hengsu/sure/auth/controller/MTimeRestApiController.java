@@ -5,10 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import com.hkntv.pylon.core.beans.mapping.BeanMapper;
 import com.hkntv.pylon.web.rest.ResponseEnvelope;
@@ -17,6 +14,7 @@ import com.hkntv.pylon.web.rest.annotation.RestApiController;
 import com.hengsu.sure.auth.service.MTimeService;
 import com.hengsu.sure.auth.model.MTimeModel;
 import com.hengsu.sure.auth.vo.MTimeVO;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 @RestApiController
 @RequestMapping("/sure")
@@ -37,9 +35,17 @@ public class MTimeRestApiController {
 		ResponseEnvelope<MTimeVO> responseEnv = new ResponseEnvelope<MTimeVO>(mTimeVO);
 		return new ResponseEntity<>(responseEnv, HttpStatus.OK);
 	}
-	
+
+	/**
+	 * 添加
+	 * @param files
+	 * @param mTimeVO
+	 * @return
+	 */
 	@RequestMapping(value = "/auth/mTime", method = RequestMethod.POST)
-	public ResponseEntity<ResponseEnvelope<Integer>> createMTime(@RequestBody MTimeVO mTimeVO){
+	public ResponseEntity<ResponseEnvelope<Integer>> createMTime(
+			@RequestParam("file") CommonsMultipartFile[] files,
+			@RequestBody MTimeVO mTimeVO){
 		MTimeModel mTimeModel = beanMapper.map(mTimeVO, MTimeModel.class);
 		Integer  result = mTimeService.create(mTimeModel);
 		ResponseEnvelope<Integer> responseEnv = new ResponseEnvelope<Integer>(result);

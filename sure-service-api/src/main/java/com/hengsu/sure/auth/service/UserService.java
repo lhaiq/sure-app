@@ -24,6 +24,10 @@ public interface UserService{
 
 	public void checkRegisterAuthCode(String phone,String authCode);
 
+	public void generateChangePassAuthCode(String phone);
+
+	public void changePass(String phone,String password,String authCode);
+
 	public void registerUser(UserModel userModel);
 	
 	public UserModel findUserByPhone(String phone);

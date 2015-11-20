@@ -77,13 +77,12 @@
     <orderEntry type="library" exported="" name="Gradle: commons-logging:commons-logging:1.2" level="project" />
     <orderEntry type="library" exported="" name="Gradle: net.coobird:thumbnailator:0.4.8" level="project" />
     <orderEntry type="module-library" exported="">
-      <library>
+      <library name="Gradle: CCP_REST_SMS_JAVA_v2.6.3r">
         <CLASSES>
-          <root url="file://$MODULE_DIR$/../lib" />
+          <root url="jar://$MODULE_DIR$/../lib/CCP_REST_SMS_JAVA_v2.6.3r.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
-        <jarDirectory url="file://$MODULE_DIR$/../lib" recursive="false" />
       </library>
     </orderEntry>
   </component>

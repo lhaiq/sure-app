@@ -71,6 +71,7 @@
           <element id="library" level="project" name="Gradle: net.sf.ezmorph:ezmorph:1.0.6" />
           <element id="library" level="project" name="Gradle: commons-logging:commons-logging:1.2" />
           <element id="library" level="project" name="Gradle: net.coobird:thumbnailator:0.4.8" />
+          <element id="library" level="module" name="Gradle: CCP_REST_SMS_JAVA_v2.6.3r" module-name="sure-service-api" />
           <element id="library" level="project" name="Gradle: com.hkntv.pylon:pylon-data:1.1.0-SNAPSHOT" />
           <element id="library" level="project" name="Gradle: org.codehaus.groovy:groovy-all:2.0.7" />
           <element id="library" level="project" name="Gradle: com.mchange:c3p0:0.9.5-pre8" />

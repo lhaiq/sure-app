@@ -109,7 +109,7 @@ project("sure-service-api") {
 		compile(libraries.pylon_core)
 		compile(libraries.thumbnailator)
 		compile(libraries.aliyun_oss)
-		compile(files("lib/CCP_REST_SMS_JAVA_v2.6.3r.jar"))
+		compile(files("../lib/CCP_REST_SMS_JAVA_v2.6.3r.jar"))
 	}
 }
 

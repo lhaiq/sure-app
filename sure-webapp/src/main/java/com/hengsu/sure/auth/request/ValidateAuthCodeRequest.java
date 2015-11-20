@@ -5,7 +5,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 /**
  * Created by haiquanli on 15/11/19.
  */
-public class ValidateAuthCodeRquest {
+public class ValidateAuthCodeRequest {
 
     @NotEmpty
     private String phone;
