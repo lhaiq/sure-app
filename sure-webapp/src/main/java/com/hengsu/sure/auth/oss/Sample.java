@@ -18,6 +18,7 @@ public class Sample {
         String endpoint="http://oss-cn-hangzhou.aliyuncs.com";
 
         OSSClient client = new OSSClient(endpoint,accessKeyId, accessKeySecret);
+//        client.u
 
 
 
@@ -28,7 +29,7 @@ public class Sample {
 
         // 遍历所有Object
         for (OSSObjectSummary objectSummary : listing.getObjectSummaries()) {
-            System.out.println(objectSummary.getKey()+objectSummary.getOwner()+objectSummary.getETag());
+            System.out.println(objectSummary.getKey());
         }
 
     }

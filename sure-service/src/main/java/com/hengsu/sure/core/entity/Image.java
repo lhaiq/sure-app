@@ -13,6 +13,8 @@ public class Image {
 
     private String contentType;
 
+    private Long length;
+
     public Long getId() {
         return id;
     }
@@ -51,5 +53,13 @@ public class Image {
 
     public void setContentType(String contentType) {
         this.contentType = contentType;
+    }
+
+    public Long getLength() {
+        return length;
+    }
+
+    public void setLength(Long length) {
+        this.length = length;
     }
 }

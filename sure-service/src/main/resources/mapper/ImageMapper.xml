@@ -7,9 +7,10 @@
     <result column="path" property="path" jdbcType="VARCHAR" />
     <result column="time" property="time" jdbcType="TIMESTAMP" />
     <result column="content_type" property="contentType" jdbcType="VARCHAR" />
+    <result column="length" property="length" jdbcType="BIGINT" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, filename, path, time, content_type
+    id, filename, path, time, content_type, length
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
@@ -23,9 +24,11 @@
   </delete>
   <insert id="insert" parameterType="com.hengsu.sure.core.entity.Image" >
     insert into image (id, filename, path, 
-      time, content_type)
+      time, content_type, length
+      )
     values (#{id,jdbcType=BIGINT}, #{filename,jdbcType=VARCHAR}, #{path,jdbcType=VARCHAR}, 
-      #{time,jdbcType=TIMESTAMP}, #{contentType,jdbcType=VARCHAR})
+      #{time,jdbcType=TIMESTAMP}, #{contentType,jdbcType=VARCHAR}, #{length,jdbcType=BIGINT}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.hengsu.sure.core.entity.Image" >
     insert into image
@@ -45,6 +48,9 @@
       <if test="contentType != null" >
         content_type,
       </if>
+      <if test="length != null" >
+        length,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -61,6 +67,9 @@
       </if>
       <if test="contentType != null" >
         #{contentType,jdbcType=VARCHAR},
+      </if>
+      <if test="length != null" >
+        #{length,jdbcType=BIGINT},
       </if>
     </trim>
   </insert>
@@ -79,6 +88,9 @@
       <if test="contentType != null" >
         content_type = #{contentType,jdbcType=VARCHAR},
       </if>
+      <if test="length != null" >
+        length = #{length,jdbcType=BIGINT},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -87,7 +99,8 @@
     set filename = #{filename,jdbcType=VARCHAR},
       path = #{path,jdbcType=VARCHAR},
       time = #{time,jdbcType=TIMESTAMP},
-      content_type = #{contentType,jdbcType=VARCHAR}
+      content_type = #{contentType,jdbcType=VARCHAR},
+      length = #{length,jdbcType=BIGINT}
     where id = #{id,jdbcType=BIGINT}
   </update>
   <select id="selectCount" resultType="java.lang.Integer" parameterType="com.hengsu.sure.core.entity.Image" >
@@ -107,6 +120,9 @@
       </if>
       <if test="contentType != null" >
         and content_type = #{contentType,jdbcType=VARCHAR}
+      </if>
+      <if test="length != null" >
+        and length = #{length,jdbcType=BIGINT}
       </if>
     </where>
   </select>
@@ -128,6 +144,9 @@
     </if>
     <if test="param1.contentType != null" >
       and content_type = #{param1.contentType,jdbcType=VARCHAR}
+    </if>
+    <if test="param1.length != null" >
+      and length = #{param1.length,jdbcType=BIGINT}
     </if>
     <if test="param2.sort != null" >
       order by 

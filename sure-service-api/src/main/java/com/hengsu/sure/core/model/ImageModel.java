@@ -1,6 +1,8 @@
 package com.hengsu.sure.core.model;
 
 import com.hkntv.pylon.core.beans.mapping.annotation.MapClass;
+
+import java.io.InputStream;
 import java.util.Date;
 
 @MapClass("com.hengsu.sure.core.entity.Image")
@@ -11,6 +13,8 @@ public class ImageModel{
 	private String path;
 	private Date time;
 	private String contentType;
+	private Long length;
+	private InputStream content;
 		
 	public void setId(Long id){
 		this.id = id;
@@ -52,5 +56,19 @@ public class ImageModel{
 		return this.contentType;
 	}
 		
-		
+	public void setLength(Long length){
+		this.length = length;
+	}
+	
+	public Long getLength(){
+		return this.length;
+	}
+
+	public void setContent(InputStream content) {
+		this.content = content;
+	}
+
+	public InputStream getContent() {
+		return content;
+	}
 }

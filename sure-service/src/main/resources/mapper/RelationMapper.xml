@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.hengsu.sure.auth.repository.RelationRepository" >
-  <resultMap id="BaseResultMap" type="com.hengsu.sure.auth.entity.Relation" >
+<mapper namespace="com.hengsu.sure.sns.repository.RelationRepository" >
+  <resultMap id="BaseResultMap" type="com.hengsu.sure.sns.entity.Relation" >
     <id column="id" property="id" jdbcType="BIGINT" />
     <result column="from_user" property="fromUser" jdbcType="BIGINT" />
     <result column="to_user" property="toUser" jdbcType="BIGINT" />
@@ -20,13 +20,13 @@
     delete from relation
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.hengsu.sure.auth.entity.Relation" >
+  <insert id="insert" parameterType="com.hengsu.sure.sns.entity.Relation" >
     insert into relation (id, from_user, to_user, 
       time)
     values (#{id,jdbcType=BIGINT}, #{fromUser,jdbcType=BIGINT}, #{toUser,jdbcType=BIGINT}, 
       #{time,jdbcType=TIMESTAMP})
   </insert>
-  <insert id="insertSelective" parameterType="com.hengsu.sure.auth.entity.Relation" >
+  <insert id="insertSelective" parameterType="com.hengsu.sure.sns.entity.Relation" >
     insert into relation
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -57,7 +57,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.hengsu.sure.auth.entity.Relation" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.hengsu.sure.sns.entity.Relation" >
     update relation
     <set >
       <if test="fromUser != null" >
@@ -72,14 +72,14 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.hengsu.sure.auth.entity.Relation" >
+  <update id="updateByPrimaryKey" parameterType="com.hengsu.sure.sns.entity.Relation" >
     update relation
     set from_user = #{fromUser,jdbcType=BIGINT},
       to_user = #{toUser,jdbcType=BIGINT},
       time = #{time,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <select id="selectCount" resultType="java.lang.Integer" parameterType="com.hengsu.sure.auth.entity.Relation" >
+  <select id="selectCount" resultType="java.lang.Integer" parameterType="com.hengsu.sure.sns.entity.Relation" >
     select count(*) from relation
     <where >
       <if test="id != null" >

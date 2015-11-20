@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.hengsu.sure.auth.repository.CommentRepository" >
-  <resultMap id="BaseResultMap" type="com.hengsu.sure.auth.entity.Comment" >
+<mapper namespace="com.hengsu.sure.sns.repository.CommentRepository" >
+  <resultMap id="BaseResultMap" type="com.hengsu.sure.sns.entity.Comment" >
     <id column="id" property="id" jdbcType="BIGINT" />
     <result column="m_id" property="mId" jdbcType="BIGINT" />
     <result column="content" property="content" jdbcType="VARCHAR" />
@@ -21,13 +21,13 @@
     delete from comment
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.hengsu.sure.auth.entity.Comment" >
+  <insert id="insert" parameterType="com.hengsu.sure.sns.entity.Comment" >
     insert into comment (id, m_id, content, 
       time, type)
     values (#{id,jdbcType=BIGINT}, #{mId,jdbcType=BIGINT}, #{content,jdbcType=VARCHAR}, 
       #{time,jdbcType=TIMESTAMP}, #{type,jdbcType=INTEGER})
   </insert>
-  <insert id="insertSelective" parameterType="com.hengsu.sure.auth.entity.Comment" >
+  <insert id="insertSelective" parameterType="com.hengsu.sure.sns.entity.Comment" >
     insert into comment
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -64,7 +64,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.hengsu.sure.auth.entity.Comment" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.hengsu.sure.sns.entity.Comment" >
     update comment
     <set >
       <if test="mId != null" >
@@ -82,7 +82,7 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.hengsu.sure.auth.entity.Comment" >
+  <update id="updateByPrimaryKey" parameterType="com.hengsu.sure.sns.entity.Comment" >
     update comment
     set m_id = #{mId,jdbcType=BIGINT},
       content = #{content,jdbcType=VARCHAR},
@@ -90,7 +90,7 @@
       type = #{type,jdbcType=INTEGER}
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <select id="selectCount" resultType="java.lang.Integer" parameterType="com.hengsu.sure.auth.entity.Comment" >
+  <select id="selectCount" resultType="java.lang.Integer" parameterType="com.hengsu.sure.sns.entity.Comment" >
     select count(*) from comment
     <where >
       <if test="id != null" >

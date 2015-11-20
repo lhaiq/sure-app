@@ -43,4 +43,8 @@ public class RandomUtil {
         return UUID.randomUUID().toString();
     }
 
+    public static String generateOSSKey(){
+        return UUID.randomUUID().toString();
+    }
+
 }

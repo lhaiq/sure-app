@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.hengsu.sure.auth.repository.MTimeRepository" >
-  <resultMap id="BaseResultMap" type="com.hengsu.sure.auth.entity.MTime" >
+<mapper namespace="com.hengsu.sure.sns.repository.MTimeRepository" >
+  <resultMap id="BaseResultMap" type="com.hengsu.sure.sns.entity.MTime" >
     <id column="id" property="id" jdbcType="BIGINT" />
     <result column="user_id" property="userId" jdbcType="BIGINT" />
     <result column="time" property="time" jdbcType="TIMESTAMP" />
     <result column="longitude" property="longitude" jdbcType="DOUBLE" />
     <result column="latitude" property="latitude" jdbcType="DOUBLE" />
   </resultMap>
-  <resultMap id="ResultMapWithBLOBs" type="com.hengsu.sure.auth.entity.MTime" extends="BaseResultMap" >
+  <resultMap id="ResultMapWithBLOBs" type="com.hengsu.sure.sns.entity.MTime" extends="BaseResultMap" >
     <result column="content" property="content" jdbcType="LONGVARCHAR" />
     <result column="images" property="images" jdbcType="LONGVARCHAR" />
   </resultMap>
@@ -30,7 +30,7 @@
     delete from mtime
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.hengsu.sure.auth.entity.MTime" >
+  <insert id="insert" parameterType="com.hengsu.sure.sns.entity.MTime" >
     insert into mtime (id, user_id, time, 
       longitude, latitude, content, 
       images)
@@ -38,7 +38,7 @@
       #{longitude,jdbcType=DOUBLE}, #{latitude,jdbcType=DOUBLE}, #{content,jdbcType=LONGVARCHAR}, 
       #{images,jdbcType=LONGVARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.hengsu.sure.auth.entity.MTime" >
+  <insert id="insertSelective" parameterType="com.hengsu.sure.sns.entity.MTime" >
     insert into mtime
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -87,7 +87,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.hengsu.sure.auth.entity.MTime" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.hengsu.sure.sns.entity.MTime" >
     update mtime
     <set >
       <if test="userId != null" >
@@ -111,7 +111,7 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.hengsu.sure.auth.entity.MTime" >
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.hengsu.sure.sns.entity.MTime" >
     update mtime
     set user_id = #{userId,jdbcType=BIGINT},
       time = #{time,jdbcType=TIMESTAMP},
@@ -121,7 +121,7 @@
       images = #{images,jdbcType=LONGVARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.hengsu.sure.auth.entity.MTime" >
+  <update id="updateByPrimaryKey" parameterType="com.hengsu.sure.sns.entity.MTime" >
     update mtime
     set user_id = #{userId,jdbcType=BIGINT},
       time = #{time,jdbcType=TIMESTAMP},
@@ -129,7 +129,7 @@
       latitude = #{latitude,jdbcType=DOUBLE}
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <select id="selectCount" resultType="java.lang.Integer" parameterType="com.hengsu.sure.auth.entity.MTime" >
+  <select id="selectCount" resultType="java.lang.Integer" parameterType="com.hengsu.sure.sns.entity.MTime" >
     select count(*) from mtime
     <where >
       <if test="id != null" >
