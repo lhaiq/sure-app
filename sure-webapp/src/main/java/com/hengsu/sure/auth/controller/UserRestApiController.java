@@ -1,14 +1,17 @@
 package com.hengsu.sure.auth.controller;
 
 import com.hengsu.sure.ReturnCode;
+import com.hengsu.sure.auth.annotation.IgnoreAuth;
 import com.hengsu.sure.auth.request.LoginRequest;
 import com.hengsu.sure.auth.request.RegisterRequest;
 import com.hengsu.sure.auth.request.ValidateAuthCodeRequest;
 import com.hengsu.sure.auth.service.UserService;
 import com.hengsu.sure.auth.vo.LoginSuccessVO;
+import com.hengsu.sure.core.Context;
 import com.hengsu.sure.core.util.RandomUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,13 +38,19 @@ public class UserRestApiController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    @Qualifier("authContext")
+    private Context<String, Long> authContext;
+
     /**
      * 注册获取验证码
      *
      * @param phone
      * @return
      */
+    @IgnoreAuth
     @RequestMapping(value = "/auth/registercode/{phone}", method = RequestMethod.GET)
+    @ResponseBody
     public ResponseEnvelope<String> getRegisterAuthCode(@PathVariable String phone) {
         userService.generateRegisterAuthCode(phone);
         ResponseEnvelope<String> responseEnv = new ResponseEnvelope<>(ReturnCode.OPERATION_SUCCESS, true);
@@ -54,7 +63,9 @@ public class UserRestApiController {
      * @param authCodeRequest
      * @return
      */
+    @IgnoreAuth
     @RequestMapping(value = "/auth/validatecode", method = RequestMethod.POST)
+    @ResponseBody
     public ResponseEnvelope<String> validateAuthCode(@RequestBody ValidateAuthCodeRequest authCodeRequest) {
         userService.checkRegisterAuthCode(authCodeRequest.getPhone(), authCodeRequest.getCode());
         ResponseEnvelope<String> responseEnv = new ResponseEnvelope<>(ReturnCode.OPERATION_SUCCESS, true);
@@ -67,6 +78,7 @@ public class UserRestApiController {
      * @param registerRequest
      * @return
      */
+    @IgnoreAuth
     @RequestMapping(value = "/auth/register", method = RequestMethod.POST)
     @ResponseBody
     public ResponseEnvelope<LoginSuccessVO> register(@RequestBody RegisterRequest registerRequest) {
@@ -84,6 +96,9 @@ public class UserRestApiController {
         loginSuccessVO.setAuthToken(authToken);
         loginSuccessVO.setUser(returnUser);
 
+        //auth token保存到缓存
+        authContext.put(authToken,userModel.getId());
+
         ResponseEnvelope<LoginSuccessVO> responseEnv = new ResponseEnvelope<>(loginSuccessVO, true);
         return responseEnv;
     }
@@ -94,7 +109,9 @@ public class UserRestApiController {
      * @param phone
      * @return
      */
+    @IgnoreAuth
     @RequestMapping(value = "/auth/changepasscode/{phone}", method = RequestMethod.GET)
+    @ResponseBody
     public ResponseEnvelope<String> getChangePassAuthCode(@PathVariable String phone) {
         userService.generateRegisterAuthCode(phone);
         ResponseEnvelope<String> responseEnv = new ResponseEnvelope<>(ReturnCode.OPERATION_SUCCESS, true);
@@ -107,13 +124,16 @@ public class UserRestApiController {
      * @param phone
      * @return
      */
+    @IgnoreAuth
     @RequestMapping(value = "/auth/changepass/{phone}", method = RequestMethod.PUT)
+    @ResponseBody
     public ResponseEnvelope<String> changePass(@PathVariable String phone) {
         userService.generateRegisterAuthCode(phone);
         ResponseEnvelope<String> responseEnv = new ResponseEnvelope<>(ReturnCode.OPERATION_SUCCESS, true);
         return responseEnv;
     }
 
+    @IgnoreAuth
     @RequestMapping(value = "/auth/login", method = RequestMethod.POST)
     @ResponseBody
     public ResponseEnvelope<LoginSuccessVO> login(@RequestBody LoginRequest loginRequest) {
@@ -124,20 +144,15 @@ public class UserRestApiController {
         String authToken = RandomUtil.generateAuthToken();
         loginSuccessVO.setAuthToken(authToken);
         loginSuccessVO.setUser(userModel);
+        authContext.put(authToken,userModel.getId());
 
         ResponseEnvelope<LoginSuccessVO> responseEnv = new ResponseEnvelope<>(loginSuccessVO, true);
         return responseEnv;
     }
 
 
-    @RequestMapping(value = "/auth/user/{id}", method = RequestMethod.DELETE)
-    public ResponseEntity<ResponseEnvelope<Integer>> deleteUserByPrimaryKey(@PathVariable Long id) {
-        Integer result = userService.deleteByPrimaryKey(id);
-        ResponseEnvelope<Integer> responseEnv = new ResponseEnvelope<Integer>(result);
-        return new ResponseEntity<>(responseEnv, HttpStatus.OK);
-    }
-
     @RequestMapping(value = "/auth/user/{id}", method = RequestMethod.PUT)
+    @ResponseBody
     public ResponseEntity<ResponseEnvelope<Integer>> updateUserByPrimaryKeySelective(@PathVariable Long id, @RequestBody UserVO userVO) {
         UserModel userModel = beanMapper.map(userVO, UserModel.class);
         userModel.setId(id);
@@ -145,6 +160,5 @@ public class UserRestApiController {
         ResponseEnvelope<Integer> responseEnv = new ResponseEnvelope<Integer>(result,true);
         return new ResponseEntity<>(responseEnv, HttpStatus.OK);
     }
-
 
 }

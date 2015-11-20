@@ -2,6 +2,8 @@ package com.hengsu.sure.auth.repository;
 
 import com.hengsu.sure.auth.entity.User;
 import java.util.List;
+
+import com.hengsu.sure.auth.model.UserModel;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -23,4 +25,6 @@ public interface UserRepository {
     int selectCount(@Param("user") User user);
 
     List<User> selectPage(@Param("user") User user, @Param("pageable") Pageable pageable);
+
+    User findUserByPhone(String phone);
 }

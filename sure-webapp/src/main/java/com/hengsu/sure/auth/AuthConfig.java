@@ -19,7 +19,7 @@ public class AuthConfig {
     public Context authContext(){
         Context<String,Long> context = new Context<>();
         //TODO 需要去掉这行
-        context.put("aaaaa",1L);
+        context.put("aaaaa",3L);
         return context;
     }
 }

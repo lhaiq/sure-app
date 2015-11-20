@@ -13,6 +13,7 @@
     <result column="role" property="role" jdbcType="VARCHAR" />
     <result column="balance" property="balance" jdbcType="DOUBLE" />
     <result column="age" property="age" jdbcType="INTEGER" />
+    <result column="icon" property="icon" jdbcType="BIGINT" />
     <result column="face_score" property="faceScore" jdbcType="DOUBLE" />
     <result column="credit" property="credit" jdbcType="DOUBLE" />
     <result column="skills" property="skills" jdbcType="DOUBLE" />
@@ -24,7 +25,8 @@
   </resultMap>
   <sql id="Base_Column_List" >
     id, phone, nickname, gender, password, longitude, latitude, location_modify_time, 
-    role, balance, age, face_score, credit, skills, car, city, status, face_id, alipay
+    role, balance, age, icon, face_score, credit, skills, car, city, status, face_id, 
+    alipay
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
@@ -32,27 +34,35 @@
     from user
     where id = #{id,jdbcType=BIGINT}
   </select>
+
+  <select id="findUserByPhone" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from user
+    where phone = #{phone,jdbcType=VARCHAR}
+  </select>
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
     delete from user
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.hengsu.sure.auth.entity.User" >
+  <insert id="insert" parameterType="com.hengsu.sure.auth.entity.User" keyProperty="id" useGeneratedKeys="true">
     insert into user (id, phone, nickname, 
       gender, password, longitude, 
       latitude, location_modify_time, role, 
-      balance, age, face_score, 
+      balance, age, icon, face_score, 
       credit, skills, car, 
       city, status, face_id, 
       alipay)
     values (#{id,jdbcType=BIGINT}, #{phone,jdbcType=VARCHAR}, #{nickname,jdbcType=VARCHAR}, 
       #{gender,jdbcType=INTEGER}, #{password,jdbcType=VARCHAR}, #{longitude,jdbcType=DOUBLE}, 
       #{latitude,jdbcType=DOUBLE}, #{locationModifyTime,jdbcType=TIMESTAMP}, #{role,jdbcType=VARCHAR}, 
-      #{balance,jdbcType=DOUBLE}, #{age,jdbcType=INTEGER}, #{faceScore,jdbcType=DOUBLE}, 
+      #{balance,jdbcType=DOUBLE}, #{age,jdbcType=INTEGER}, #{icon,jdbcType=BIGINT}, #{faceScore,jdbcType=DOUBLE}, 
       #{credit,jdbcType=DOUBLE}, #{skills,jdbcType=DOUBLE}, #{car,jdbcType=INTEGER}, 
       #{city,jdbcType=INTEGER}, #{status,jdbcType=INTEGER}, #{faceId,jdbcType=VARCHAR}, 
       #{alipay,jdbcType=VARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.hengsu.sure.auth.entity.User" >
+  <insert id="insertSelective" parameterType="com.hengsu.sure.auth.entity.User" keyProperty="id" useGeneratedKeys="true" >
     insert into user
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -87,6 +97,9 @@
       </if>
       <if test="age != null" >
         age,
+      </if>
+      <if test="icon != null" >
+        icon,
       </if>
       <if test="faceScore != null" >
         face_score,
@@ -147,6 +160,9 @@
       <if test="age != null" >
         #{age,jdbcType=INTEGER},
       </if>
+      <if test="icon != null" >
+        #{icon,jdbcType=BIGINT},
+      </if>
       <if test="faceScore != null" >
         #{faceScore,jdbcType=DOUBLE},
       </if>
@@ -206,6 +222,9 @@
       <if test="age != null" >
         age = #{age,jdbcType=INTEGER},
       </if>
+      <if test="icon != null" >
+        icon = #{icon,jdbcType=BIGINT},
+      </if>
       <if test="faceScore != null" >
         face_score = #{faceScore,jdbcType=DOUBLE},
       </if>
@@ -245,6 +264,7 @@
       role = #{role,jdbcType=VARCHAR},
       balance = #{balance,jdbcType=DOUBLE},
       age = #{age,jdbcType=INTEGER},
+      icon = #{icon,jdbcType=BIGINT},
       face_score = #{faceScore,jdbcType=DOUBLE},
       credit = #{credit,jdbcType=DOUBLE},
       skills = #{skills,jdbcType=DOUBLE},
@@ -290,6 +310,9 @@
       </if>
       <if test="age != null" >
         and age = #{age,jdbcType=INTEGER}
+      </if>
+      <if test="icon != null" >
+        and icon = #{icon,jdbcType=BIGINT}
       </if>
       <if test="faceScore != null" >
         and face_score = #{faceScore,jdbcType=DOUBLE}
@@ -353,6 +376,9 @@
     </if>
     <if test="param1.age != null" >
       and age = #{param1.age,jdbcType=INTEGER}
+    </if>
+    <if test="param1.icon != null" >
+      and icon = #{param1.icon,jdbcType=BIGINT}
     </if>
     <if test="param1.faceScore != null" >
       and face_score = #{param1.faceScore,jdbcType=DOUBLE}

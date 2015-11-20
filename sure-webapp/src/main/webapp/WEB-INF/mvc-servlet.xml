@@ -50,6 +50,7 @@
 	        <map>
 	            <entry key="html" value="text/html"/>
 	            <entry key="json" value="application/json"/>
+				<entry key="file" value="multipart/form-data"></entry>
 	        </map>
 	    </property>
 		<property name="viewResolvers">

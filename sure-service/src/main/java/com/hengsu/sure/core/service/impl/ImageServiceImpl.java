@@ -3,6 +3,7 @@ package com.hengsu.sure.core.service.impl;
 import com.aliyun.oss.OSSClient;
 import com.aliyun.oss.model.OSSObject;
 import com.aliyun.oss.model.ObjectMetadata;
+import com.hengsu.sure.core.ErrorCode;
 import com.hengsu.sure.core.util.RandomUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,91 +22,97 @@ import java.util.Date;
 @Service
 public class ImageServiceImpl implements ImageService {
 
-	@Autowired
-	private BeanMapper beanMapper;
+    @Autowired
+    private BeanMapper beanMapper;
 
-	@Autowired
-	private ImageRepository imageRepo;
+    @Autowired
+    private ImageRepository imageRepo;
 
-	@Autowired
-	private OSSClient ossClient;
+    @Autowired
+    private OSSClient ossClient;
 
-	@Value("${oss.access.bucket.name}")
-	private String ossBucketName;
+    @Value("${oss.access.bucket.name}")
+    private String ossBucketName;
 
-	@Transactional
-	@Override
-	public int create(ImageModel imageModel) {
-		return imageRepo.insert(beanMapper.map(imageModel, Image.class));
-	}
+    @Transactional
+    @Override
+    public int create(ImageModel imageModel) {
+        return imageRepo.insert(beanMapper.map(imageModel, Image.class));
+    }
 
-	@Transactional
-	@Override
-	public int createSelective(ImageModel imageModel) {
-		return imageRepo.insertSelective(beanMapper.map(imageModel, Image.class));
-	}
+    @Transactional
+    @Override
+    public int createSelective(ImageModel imageModel) {
+        Image image = beanMapper.map(imageModel, Image.class);
+        int retVal = imageRepo.insertSelective(image);
+        imageModel.setId(image.getId());
+        return retVal;
+    }
 
-	@Transactional
-	@Override
-	public int deleteByPrimaryKey(Long id) {
-		return imageRepo.deleteByPrimaryKey(id);
-	}
+    @Transactional
+    @Override
+    public int deleteByPrimaryKey(Long id) {
+        return imageRepo.deleteByPrimaryKey(id);
+    }
 
-	@Transactional(readOnly = true)
-	@Override
-	public ImageModel findByPrimaryKey(Long id) {
-		Image image = imageRepo.selectByPrimaryKey(id);
-		return beanMapper.map(image, ImageModel.class);
-	}
+    @Transactional(readOnly = true)
+    @Override
+    public ImageModel findByPrimaryKey(Long id) {
+        Image image = imageRepo.selectByPrimaryKey(id);
+        return beanMapper.map(image, ImageModel.class);
+    }
 
-	@Transactional(readOnly = true)
-	@Override
-	public int selectCount(ImageModel imageModel) {
-		return imageRepo.selectCount(beanMapper.map(imageModel, Image.class));
-	}
+    @Transactional(readOnly = true)
+    @Override
+    public int selectCount(ImageModel imageModel) {
+        return imageRepo.selectCount(beanMapper.map(imageModel, Image.class));
+    }
 
-	@Transactional
-	@Override
-	public Long uploadImage(ImageModel imageModel) {
+    @Transactional
+    @Override
+    public Long uploadImage(ImageModel imageModel) {
 
-		//上传文件到OSS
-		ObjectMetadata objectMetadata = new ObjectMetadata();
-		objectMetadata.setContentType(imageModel.getContentType());
-		objectMetadata.setContentLength(imageModel.getLength());
-		String key = RandomUtil.generateOSSKey();
-		ossClient.putObject(ossBucketName,key,imageModel.getContent(),objectMetadata);
+        //上传文件到OSS
+        ObjectMetadata objectMetadata = new ObjectMetadata();
+        objectMetadata.setContentType(imageModel.getContentType());
+        objectMetadata.setContentLength(imageModel.getLength());
+        String key = RandomUtil.generateOSSKey();
+        ossClient.putObject(ossBucketName, key, imageModel.getContent(), objectMetadata);
 
-		//保存到数据库
-		imageModel.setPath(key);
-		imageModel.setTime(new Date());
-		createSelective(imageModel);
+        //保存到数据库
+        imageModel.setPath(key);
+        imageModel.setTime(new Date());
+        createSelective(imageModel);
 
-		return imageModel.getId();
-	}
+        return imageModel.getId();
+    }
 
-	@Override
-	public ImageModel findById(Long id) {
+    @Override
+    public ImageModel findById(Long id) {
 
-		//从数据库加载图片数据
-		ImageModel imageModel = findByPrimaryKey(id);
+        //从数据库加载图片数据
+        ImageModel imageModel = findByPrimaryKey(id);
+        if (null == imageModel) {
+            ErrorCode.throwBusinessException(ErrorCode.IMAGE_EXISTED);
+        }
 
-		//从OSS读取数据
-		OSSObject ossObject = ossClient.getObject(ossBucketName, imageModel.getPath());
-		imageModel.setContent(ossObject.getObjectContent());
+        //从OSS读取数据
+        OSSObject ossObject = ossClient.getObject(ossBucketName, imageModel.getPath());
+        imageModel.setContent(ossObject.getObjectContent());
 
-		return imageModel;
-	}
+        return imageModel;
+    }
 
-	@Transactional
-	@Override
-	public int updateByPrimaryKey(ImageModel imageModel) {
-		return imageRepo.updateByPrimaryKey(beanMapper.map(imageModel, Image.class));
-	}
-	
-	@Transactional
-	@Override
-	public int updateByPrimaryKeySelective(ImageModel imageModel) {
-		return imageRepo.updateByPrimaryKeySelective(beanMapper.map(imageModel, Image.class));
-	}
+    @Transactional
+    @Override
+    public int updateByPrimaryKey(ImageModel imageModel) {
+        return imageRepo.updateByPrimaryKey(beanMapper.map(imageModel, Image.class));
+    }
+
+    @Transactional
+    @Override
+    public int updateByPrimaryKeySelective(ImageModel imageModel) {
+        return imageRepo.updateByPrimaryKeySelective(beanMapper.map(imageModel, Image.class));
+    }
 
 }

@@ -17,6 +17,7 @@ public class UserModel{
 	private String role;
 	private Double balance;
 	private Integer age;
+	private Long icon;
 	private Double faceScore;
 	private Double credit;
 	private Double skills;
@@ -112,6 +113,14 @@ public class UserModel{
 	
 	public Integer getAge(){
 		return this.age;
+	}
+		
+	public void setIcon(Long icon){
+		this.icon = icon;
+	}
+	
+	public Long getIcon(){
+		return this.icon;
 	}
 		
 	public void setFaceScore(Double faceScore){

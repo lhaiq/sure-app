@@ -6,14 +6,13 @@ import java.util.Date;
 
 public interface UserService{
 	
-	public int create(UserModel userModel);
-	
+
 	public int createSelective(UserModel userModel);
 	
 	public UserModel findByPrimaryKey(Long id);
 	
 	public int updateByPrimaryKey(UserModel userModel);
-	
+
 	public int updateByPrimaryKeySelective(UserModel userModel);
 	
 	public int deleteByPrimaryKey(Long id);

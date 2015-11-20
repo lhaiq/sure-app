@@ -54,14 +54,11 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public int create(UserModel userModel) {
-        return userRepo.insert(beanMapper.map(userModel, User.class));
-    }
-
-    @Transactional
-    @Override
     public int createSelective(UserModel userModel) {
-        return userRepo.insertSelective(beanMapper.map(userModel, User.class));
+        User user = beanMapper.map(userModel, User.class);
+        int retVal = userRepo.insertSelective(user);
+        userModel.setId(user.getId());
+        return retVal;
     }
 
     @Transactional
@@ -124,7 +121,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void changePass(String phone,String newPass,String authCode) {
+    public void changePass(String phone, String newPass, String authCode) {
 
         //验证码校验
         AuthCodeModel authCodeModel = changePassAuthCodes.get(phone);
@@ -134,7 +131,7 @@ public class UserServiceImpl implements UserService {
         }
 
         //更新密码
-        UserModel userModel =findUserByPhone(phone);
+        UserModel userModel = findUserByPhone(phone);
         String password = DigestUtils.md5DigestAsHex(newPass.getBytes());
         userModel.setPassword(password);
         updateByPrimaryKey(userModel);
@@ -144,6 +141,13 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public void registerUser(UserModel userModel) {
+
+        //判断User是否存在
+        UserModel existedUser = findUserByPhone(userModel.getPhone());
+        if (null != existedUser) {
+            ErrorCode.throwBusinessException(ErrorCode.REGISTER_PHONE_EXISTED);
+        }
+
         //MD5加密
         String password = DigestUtils.md5DigestAsHex(userModel.getPassword().getBytes());
         userModel.setPassword(password);
@@ -152,7 +156,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserModel findUserByPhone(String phone) {
-        return null;
+        User user = userRepo.findUserByPhone(phone);
+        if (null != user) {
+            user.setPassword(null);
+        }
+        return beanMapper.map(user, UserModel.class);
     }
 
     @Override

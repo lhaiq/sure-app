@@ -8,6 +8,7 @@ import com.hkntv.pylon.core.exception.BusinessException;
 public enum ErrorCode {
 
     //AUTH
+    SYSTEM_INTERNAL_ERROR("1000", "内部错误"),
     AUTH_CODE_TIME_OUT("1000", "验证码超时"),
     AUTH_CODE_ERROR("1002", "验证码不正确"),
     AUTH_TOKEN_INVALID("1003", "AUTH TOKEN非法"),
@@ -18,6 +19,10 @@ public enum ErrorCode {
     LOGIN_USERNAME_NOT_EXISTED("1005","用户名不存在"),
     LOGIN_PASSWORD_ERROR("1006","密码错误"),
     PHONE_NOT_REGISTER("1007","该手机号尚未注册"),
+
+    JSON_FORMATTED("1003", "JSON格式错误"),
+    FIELD_MUST("1003", "字段必须填"),
+    IMAGE_EXISTED("1003", "图片不存在"),
 
 
 
@@ -33,5 +38,13 @@ public enum ErrorCode {
 
     public static void throwBusinessException(ErrorCode errorCode) {
         throw new BusinessException(errorCode.errorMsg, errorCode.code);
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public String getErrorMsg() {
+        return errorMsg;
     }
 }

@@ -22,7 +22,7 @@
     delete from image
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.hengsu.sure.core.entity.Image" >
+  <insert id="insert" parameterType="com.hengsu.sure.core.entity.Image" keyProperty="id" useGeneratedKeys="true">
     insert into image (id, filename, path, 
       time, content_type, length
       )
@@ -30,7 +30,7 @@
       #{time,jdbcType=TIMESTAMP}, #{contentType,jdbcType=VARCHAR}, #{length,jdbcType=BIGINT}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.hengsu.sure.core.entity.Image" >
+  <insert id="insertSelective" parameterType="com.hengsu.sure.core.entity.Image" keyProperty="id" useGeneratedKeys="true">
     insert into image
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >

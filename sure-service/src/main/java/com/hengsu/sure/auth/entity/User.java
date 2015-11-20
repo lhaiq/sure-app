@@ -25,6 +25,8 @@ public class User {
 
     private Integer age;
 
+    private Long icon;
+
     private Double faceScore;
 
     private Double credit;
@@ -127,6 +129,14 @@ public class User {
 
     public void setAge(Integer age) {
         this.age = age;
+    }
+
+    public Long getIcon() {
+        return icon;
+    }
+
+    public void setIcon(Long icon) {
+        this.icon = icon;
     }
 
     public Double getFaceScore() {
