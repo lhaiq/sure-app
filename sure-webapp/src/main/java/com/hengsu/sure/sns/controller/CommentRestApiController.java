@@ -30,7 +30,7 @@ public class CommentRestApiController {
 	@Autowired
 	private CommentService commentService;
 	
-	@RequestMapping(value = "/auth/comment/{id}", method = RequestMethod.GET)
+	@RequestMapping(value = "/sns/comment/{id}", method = RequestMethod.GET)
 	public ResponseEntity<ResponseEnvelope<CommentVO>> getCommentById(@PathVariable Long id){
 		CommentModel commentModel = commentService.findByPrimaryKey(id);
 		CommentVO commentVO =beanMapper.map(commentModel, CommentVO.class);
@@ -38,7 +38,7 @@ public class CommentRestApiController {
 		return new ResponseEntity<>(responseEnv, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/auth/comment", method = RequestMethod.POST)
+	@RequestMapping(value = "/sns/comment", method = RequestMethod.POST)
 	public ResponseEntity<ResponseEnvelope<Integer>> createComment(@RequestBody CommentVO commentVO){
 		CommentModel commentModel = beanMapper.map(commentVO, CommentModel.class);
 		Integer  result = commentService.create(commentModel);
@@ -46,14 +46,14 @@ public class CommentRestApiController {
 		return new ResponseEntity<>(responseEnv, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/auth/comment/{id}", method = RequestMethod.DELETE)
+	@RequestMapping(value = "/sns/comment/{id}", method = RequestMethod.DELETE)
 	public ResponseEntity<ResponseEnvelope<Integer>> deleteCommentByPrimaryKey(@PathVariable Long id){
 		Integer  result = commentService.deleteByPrimaryKey(id);
 		ResponseEnvelope<Integer> responseEnv = new ResponseEnvelope<Integer>(result);
 		return new ResponseEntity<>(responseEnv, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/auth/comment/{id}", method = RequestMethod.PUT)
+	@RequestMapping(value = "/sns/comment/{id}", method = RequestMethod.PUT)
 	public ResponseEntity<ResponseEnvelope<Integer>> updateCommentByPrimaryKeySelective(@PathVariable Long id, @RequestBody CommentVO commentVO){
 		CommentModel commentModel = beanMapper.map(commentVO, CommentModel.class);
 		commentModel.setId(id);

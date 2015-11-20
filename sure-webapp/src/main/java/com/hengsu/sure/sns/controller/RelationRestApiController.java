@@ -30,7 +30,7 @@ public class RelationRestApiController {
 	@Autowired
 	private RelationService relationService;
 	
-	@RequestMapping(value = "/auth/relation/{id}", method = RequestMethod.GET)
+	@RequestMapping(value = "/sns/relation/{id}", method = RequestMethod.GET)
 	public ResponseEntity<ResponseEnvelope<RelationVO>> getRelationById(@PathVariable Long id){
 		RelationModel relationModel = relationService.findByPrimaryKey(id);
 		RelationVO relationVO =beanMapper.map(relationModel, RelationVO.class);
@@ -38,7 +38,7 @@ public class RelationRestApiController {
 		return new ResponseEntity<>(responseEnv, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/auth/relation", method = RequestMethod.POST)
+	@RequestMapping(value = "/sns/relation", method = RequestMethod.POST)
 	public ResponseEntity<ResponseEnvelope<Integer>> createRelation(@RequestBody RelationVO relationVO){
 		RelationModel relationModel = beanMapper.map(relationVO, RelationModel.class);
 		Integer  result = relationService.create(relationModel);
@@ -46,14 +46,14 @@ public class RelationRestApiController {
 		return new ResponseEntity<>(responseEnv, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/auth/relation/{id}", method = RequestMethod.DELETE)
+	@RequestMapping(value = "/sns/relation/{id}", method = RequestMethod.DELETE)
 	public ResponseEntity<ResponseEnvelope<Integer>> deleteRelationByPrimaryKey(@PathVariable Long id){
 		Integer  result = relationService.deleteByPrimaryKey(id);
 		ResponseEnvelope<Integer> responseEnv = new ResponseEnvelope<Integer>(result);
 		return new ResponseEntity<>(responseEnv, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/auth/relation/{id}", method = RequestMethod.PUT)
+	@RequestMapping(value = "/sns/relation/{id}", method = RequestMethod.PUT)
 	public ResponseEntity<ResponseEnvelope<Integer>> updateRelationByPrimaryKeySelective(@PathVariable Long id, @RequestBody RelationVO relationVO){
 		RelationModel relationModel = beanMapper.map(relationVO, RelationModel.class);
 		relationModel.setId(id);

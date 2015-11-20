@@ -11,6 +11,7 @@ public class MTimeVO{
 	private Double longitude;
 	private Double latitude;
 	private String content;
+	private Long [] imageIds;
 
 
 	public void setUserId(Long userId){
@@ -52,6 +53,13 @@ public class MTimeVO{
 	public String getContent(){
 		return this.content;
 	}
-		
 
+
+	public void setImageIds(Long[] imageIds) {
+		this.imageIds = imageIds;
+	}
+
+	public Long[] getImageIds() {
+		return imageIds;
+	}
 }

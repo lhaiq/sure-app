@@ -11,6 +11,7 @@ public enum ErrorCode {
     AUTH_CODE_TIME_OUT("1000", "验证码超时"),
     AUTH_CODE_ERROR("1002", "验证码不正确"),
     AUTH_TOKEN_INVALID("1003", "AUTH TOKEN非法"),
+    AUTH_TOKEN_MUST("1003", "AUTH TOKEN 必须填"),
 
     REGISTER_PHONE_EXISTED("1004", "该手机已经注册过"),
 

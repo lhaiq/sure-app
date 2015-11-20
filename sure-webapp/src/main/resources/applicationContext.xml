@@ -37,13 +37,14 @@
     	<property name="validationMessageSource" ref="messageSource"/>
     </bean>
 
-	<context:component-scan base-package="com.hkntv.**.repository" />
-	<context:component-scan base-package="com.hkntv.**.service" />
-	
+	<context:component-scan base-package="com.hengsu.**.*" />
+
 	<context:annotation-config />
-	
+
+
+
 	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-		<property name="basePackage" value="com.hkntv.**.repository" />
+		<property name="basePackage" value="com.hengsu.**.repository" />
 		<property name="sqlSessionFactoryBeanName" value="myBatisSqlSessionFactory" />
 		<property name="annotationClass" value="org.springframework.stereotype.Repository" /> 
 	</bean>

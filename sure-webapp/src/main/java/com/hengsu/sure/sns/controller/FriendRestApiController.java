@@ -30,7 +30,7 @@ public class FriendRestApiController {
 	@Autowired
 	private FriendService friendService;
 	
-	@RequestMapping(value = "/auth/friend/{id}", method = RequestMethod.GET)
+	@RequestMapping(value = "/sns/friend/{id}", method = RequestMethod.GET)
 	public ResponseEntity<ResponseEnvelope<FriendVO>> getFriendById(@PathVariable Long id){
 		FriendModel friendModel = friendService.findByPrimaryKey(id);
 		FriendVO friendVO =beanMapper.map(friendModel, FriendVO.class);
@@ -38,7 +38,7 @@ public class FriendRestApiController {
 		return new ResponseEntity<>(responseEnv, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/auth/friend", method = RequestMethod.POST)
+	@RequestMapping(value = "/sns/friend", method = RequestMethod.POST)
 	public ResponseEntity<ResponseEnvelope<Integer>> createFriend(@RequestBody FriendVO friendVO){
 		FriendModel friendModel = beanMapper.map(friendVO, FriendModel.class);
 		Integer  result = friendService.create(friendModel);
@@ -46,14 +46,14 @@ public class FriendRestApiController {
 		return new ResponseEntity<>(responseEnv, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/auth/friend/{id}", method = RequestMethod.DELETE)
+	@RequestMapping(value = "/sns/friend/{id}", method = RequestMethod.DELETE)
 	public ResponseEntity<ResponseEnvelope<Integer>> deleteFriendByPrimaryKey(@PathVariable Long id){
 		Integer  result = friendService.deleteByPrimaryKey(id);
 		ResponseEnvelope<Integer> responseEnv = new ResponseEnvelope<Integer>(result);
 		return new ResponseEntity<>(responseEnv, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/auth/friend/{id}", method = RequestMethod.PUT)
+	@RequestMapping(value = "/sns/friend/{id}", method = RequestMethod.PUT)
 	public ResponseEntity<ResponseEnvelope<Integer>> updateFriendByPrimaryKeySelective(@PathVariable Long id, @RequestBody FriendVO friendVO){
 		FriendModel friendModel = beanMapper.map(friendVO, FriendModel.class);
 		friendModel.setId(id);
