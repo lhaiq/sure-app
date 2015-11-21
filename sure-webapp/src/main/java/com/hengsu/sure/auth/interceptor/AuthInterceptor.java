@@ -28,6 +28,11 @@ public class AuthInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
+        //放过只过滤已sure下的请求
+        if(!request.getRequestURI().startsWith("/sure")){
+            return true;
+        }
+
         boolean isIgnore = checkIgnore(handler);
 
         if (!isIgnore) {

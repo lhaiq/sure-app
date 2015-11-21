@@ -20,6 +20,7 @@ public class AuthConfig {
         Context<String,Long> context = new Context<>();
         //TODO 需要去掉这行
         context.put("aaaaa",3L);
+        context.put("bbbbb",4L);
         return context;
     }
 }

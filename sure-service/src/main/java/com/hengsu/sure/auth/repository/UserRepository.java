@@ -1,6 +1,7 @@
 package com.hengsu.sure.auth.repository;
 
 import com.hengsu.sure.auth.entity.User;
+
 import java.util.List;
 
 import com.hengsu.sure.auth.model.UserModel;
@@ -27,4 +28,6 @@ public interface UserRepository {
     List<User> selectPage(@Param("user") User user, @Param("pageable") Pageable pageable);
 
     User findUserByPhone(String phone);
+
+    User findUserByFaceId(String faceId);
 }

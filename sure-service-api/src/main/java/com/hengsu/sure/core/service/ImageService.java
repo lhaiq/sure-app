@@ -2,11 +2,8 @@
 package com.hengsu.sure.core.service;
 
 import com.hengsu.sure.core.model.ImageModel;
-import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
-import java.io.InputStream;
-import java.util.Date;
-import java.util.List;
+
 
 public interface ImageService{
 	

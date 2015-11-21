@@ -2,6 +2,7 @@ package com.hengsu.sure.auth.service.impl;
 
 import com.google.common.collect.ImmutableList;
 import com.hengsu.sure.auth.entity.User;
+import com.hengsu.sure.auth.service.FaceService;
 import com.hengsu.sure.auth.service.UserService;
 import com.hengsu.sure.core.ErrorCode;
 import com.hengsu.sure.core.model.AuthCodeModel;
@@ -52,6 +53,10 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private AuthCodeService authCodeService;
 
+    @Autowired
+    private FaceService faceService;
+
+
     @Transactional
     @Override
     public int createSelective(UserModel userModel) {
@@ -92,6 +97,11 @@ public class UserServiceImpl implements UserService {
     public void checkRegisterAuthCode(String phone, String authCode) {
         AuthCodeModel authCodeModel = registerAuthCodes.get(phone);
 
+        //判断手机号是否获取过验证码
+        if (null == authCodeModel) {
+            ErrorCode.throwBusinessException(ErrorCode.AUTH_CODE_NOT_EXISTED);
+        }
+
         //判断是否超时
         if ((System.currentTimeMillis() / 1000 - authCodeModel.getGenerateTime())
                 > registerAuthCodeValidTime) {
@@ -125,13 +135,25 @@ public class UserServiceImpl implements UserService {
 
         //验证码校验
         AuthCodeModel authCodeModel = changePassAuthCodes.get(phone);
+
+        //判断手机号是否获取过验证码
+        if (null == authCodeModel) {
+            ErrorCode.throwBusinessException(ErrorCode.AUTH_CODE_NOT_EXISTED);
+        }
+
         if ((System.currentTimeMillis() / 1000 - authCodeModel.getGenerateTime())
                 > changePassAuthCodeValidTime) {
             ErrorCode.throwBusinessException(ErrorCode.AUTH_CODE_TIME_OUT);
         }
 
-        //更新密码
         UserModel userModel = findUserByPhone(phone);
+
+        //判断用户是否存在
+        if (null == userModel) {
+            ErrorCode.throwBusinessException(ErrorCode.LOGIN_USER_NOT_EXISTED);
+        }
+
+        //更新密码
         String password = DigestUtils.md5DigestAsHex(newPass.getBytes());
         userModel.setPassword(password);
         updateByPrimaryKey(userModel);
@@ -157,15 +179,26 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserModel findUserByPhone(String phone) {
         User user = userRepo.findUserByPhone(phone);
-        if (null != user) {
-            user.setPassword(null);
-        }
+
         return beanMapper.map(user, UserModel.class);
     }
 
     @Override
-    public UserModel login(String phone, String password) {
+    public UserModel findUserByFaceId(String faceId) {
+        User user = userRepo.findUserByFaceId(faceId);
+        return beanMapper.map(user, UserModel.class);
+    }
+
+    @Override
+    public UserModel accountLogin(String phone, String password) {
         UserModel userModel = findUserByPhone(phone);
+
+        //判断用户是否存在
+        if (null == userModel) {
+            ErrorCode.throwBusinessException(ErrorCode.LOGIN_USER_NOT_EXISTED);
+        }
+
+        //密码比对
         password = DigestUtils.md5DigestAsHex(userModel.getPassword().getBytes());
         if (!userModel.getPassword().equals(password)) {
             ErrorCode.throwBusinessException(ErrorCode.LOGIN_PASSWORD_ERROR);
@@ -176,6 +209,27 @@ public class UserServiceImpl implements UserService {
         return userModel;
     }
 
+
+    @Override
+    public UserModel faceLogin(String registerFaceId, String loginFaceId) {
+
+        UserModel userModel = findUserByFaceId(registerFaceId);
+
+        //判断用户是否存在
+        if (null == userModel) {
+            ErrorCode.throwBusinessException(ErrorCode.LOGIN_USER_NOT_EXISTED);
+        }
+
+        //判断为否通过人脸识别
+        boolean isSimilar = faceService.isSimilar(registerFaceId, loginFaceId);
+        if (!isSimilar) {
+            ErrorCode.throwBusinessException(ErrorCode.LOGIN_FACE_ERROR);
+        }
+
+        //密码不返回
+        userModel.setPassword(null);
+        return userModel;
+    }
 
     @Transactional
     @Override
@@ -188,5 +242,6 @@ public class UserServiceImpl implements UserService {
     public int updateByPrimaryKeySelective(UserModel userModel) {
         return userRepo.updateByPrimaryKeySelective(beanMapper.map(userModel, User.class));
     }
+
 
 }

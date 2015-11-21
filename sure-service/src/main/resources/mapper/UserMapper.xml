@@ -42,6 +42,13 @@
     where phone = #{phone,jdbcType=VARCHAR}
   </select>
 
+  <select id="findUserByFaceId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from user
+    where face_id = #{faceId,jdbcType=VARCHAR}
+  </select>
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
     delete from user
     where id = #{id,jdbcType=BIGINT}

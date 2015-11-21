@@ -9,20 +9,22 @@ public enum ErrorCode {
 
     //AUTH
     SYSTEM_INTERNAL_ERROR("1000", "内部错误"),
-    AUTH_CODE_TIME_OUT("1000", "验证码超时"),
+    AUTH_CODE_TIME_OUT("1001", "验证码超时"),
     AUTH_CODE_ERROR("1002", "验证码不正确"),
     AUTH_TOKEN_INVALID("1003", "AUTH TOKEN非法"),
-    AUTH_TOKEN_MUST("1003", "AUTH TOKEN 必须填"),
+    AUTH_TOKEN_MUST("1004", "AUTH TOKEN 必须填"),
 
-    REGISTER_PHONE_EXISTED("1004", "该手机已经注册过"),
+    REGISTER_PHONE_EXISTED("1005", "该手机已经注册过"),
 
-    LOGIN_USERNAME_NOT_EXISTED("1005","用户名不存在"),
-    LOGIN_PASSWORD_ERROR("1006","密码错误"),
+    LOGIN_USER_NOT_EXISTED("1006","用户不存在"),
+    LOGIN_PASSWORD_ERROR("1007","密码错误"),
+    LOGIN_FACE_ERROR("1007","与注册人脸不匹配"),
     PHONE_NOT_REGISTER("1007","该手机号尚未注册"),
 
-    JSON_FORMATTED("1003", "JSON格式错误"),
-    FIELD_MUST("1003", "字段必须填"),
-    IMAGE_EXISTED("1003", "图片不存在"),
+    JSON_FORMATTED("1008", "JSON格式错误"),
+    FIELD_MUST("1009", "字段必须填"),
+    IMAGE_EXISTED("1010", "图片不存在"),
+    AUTH_CODE_NOT_EXISTED("1011", "该手机号尚未获取验证码"),
 
 
 
@@ -46,5 +48,11 @@ public enum ErrorCode {
 
     public String getErrorMsg() {
         return errorMsg;
+    }
+
+    public static void main(String[] args) {
+        for(ErrorCode errorCode:ErrorCode.values()){
+            System.out.println(errorCode.getCode()+"\t"+errorCode.getErrorMsg());
+        }
     }
 }

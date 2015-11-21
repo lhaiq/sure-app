@@ -1,11 +1,13 @@
 package com.hengsu.sure.auth.vo;
 
 import com.hkntv.pylon.core.beans.mapping.annotation.MapClass;
+
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 @MapClass("com.hengsu.sure.auth.model.UserModel")
 public class UserVO{
-	
+
 	private String nickname;
 	private Integer gender;
 	private Double longitude;
@@ -14,6 +16,8 @@ public class UserVO{
 	private Integer age;
 	private Integer car;
 	private Integer city;
+	private Long icon;
+	private String alipay;
 
 	public Integer getAge() {
 		return age;
@@ -21,6 +25,14 @@ public class UserVO{
 
 	public void setAge(Integer age) {
 		this.age = age;
+	}
+
+	public void setAlipay(String alipay) {
+		this.alipay = alipay;
+	}
+
+	public String getAlipay() {
+		return alipay;
 	}
 
 	public Integer getCar() {
@@ -45,6 +57,14 @@ public class UserVO{
 
 	public void setGender(Integer gender) {
 		this.gender = gender;
+	}
+
+	public Long getIcon() {
+		return icon;
+	}
+
+	public void setIcon(Long icon) {
+		this.icon = icon;
 	}
 
 	public Double getLatitude() {
