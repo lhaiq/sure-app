@@ -1,6 +1,7 @@
 package com.hengsu.sure.sns.entity;
 
 import java.util.Date;
+import java.util.List;
 
 public class MTime {
     private Long id;
@@ -15,6 +16,8 @@ public class MTime {
     private String content;
 
     private String images;
+
+
 
     public String getContent() {
         return content;
@@ -71,4 +74,6 @@ public class MTime {
     public void setLatitude(Double latitude) {
         this.latitude = latitude;
     }
+
+
 }

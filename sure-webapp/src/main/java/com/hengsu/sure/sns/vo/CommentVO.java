@@ -7,11 +7,12 @@ import java.util.Date;
 public class CommentVO{
 	
 	private Long id;
-	private Long mId;
+	private Long mid;
 	private String content;
 	private Date time;
 	private Integer type;
-		
+	private Long userId;
+
 	public void setId(Long id){
 		this.id = id;
 	}
@@ -20,13 +21,7 @@ public class CommentVO{
 		return this.id;
 	}
 		
-	public void setMId(Long mId){
-		this.mId = mId;
-	}
-	
-	public Long getMId(){
-		return this.mId;
-	}
+
 		
 	public void setContent(String content){
 		this.content = content;
@@ -51,6 +46,20 @@ public class CommentVO{
 	public Integer getType(){
 		return this.type;
 	}
-		
-		
+
+	public Long getMid() {
+		return mid;
+	}
+
+	public void setMid(Long mid) {
+		this.mid = mid;
+	}
+
+	public Long getUserId() {
+		return userId;
+	}
+
+	public void setUserId(Long userId) {
+		this.userId = userId;
+	}
 }

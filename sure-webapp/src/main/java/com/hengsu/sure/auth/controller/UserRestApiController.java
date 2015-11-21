@@ -161,7 +161,7 @@ public class UserRestApiController {
     @RequestMapping(value = "/auth/changepasscode/{phone}", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEnvelope<String> getChangePassAuthCode(@PathVariable String phone) {
-        userService.generateRegisterAuthCode(phone);
+        userService.generateChangePassAuthCode(phone);
         ResponseEnvelope<String> responseEnv = new ResponseEnvelope<>(ReturnCode.OPERATION_SUCCESS, true);
         return responseEnv;
     }

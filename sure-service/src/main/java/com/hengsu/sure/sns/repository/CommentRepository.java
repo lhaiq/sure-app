@@ -23,4 +23,6 @@ public interface CommentRepository {
     int selectCount(@Param("comment") Comment comment);
 
     List<Comment> selectPage(@Param("comment") Comment comment, @Param("pageable") Pageable pageable);
+
+    int deleteCommentByMid(@Param("mid") Long mId);
 }

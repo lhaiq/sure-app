@@ -18,5 +18,7 @@ public interface MTimeService{
 	public int deleteByPrimaryKey(Long id);
 	
 	public int selectCount(MTimeModel mTimeModel);
+
+	public void deleteMTime(Long id,Long userId);
 	
 }

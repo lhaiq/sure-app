@@ -52,6 +52,10 @@ public class ImageServiceImpl implements ImageService {
     @Transactional
     @Override
     public int deleteByPrimaryKey(Long id) {
+
+        //先查出图片,然后在删除
+        ImageModel imageModel = findByPrimaryKey(id);
+        ossClient.deleteObject(ossBucketName, imageModel.getPath());
         return imageRepo.deleteByPrimaryKey(id);
     }
 

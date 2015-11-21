@@ -2,26 +2,18 @@ package com.hengsu.sure.sns.vo;
 
 import com.hkntv.pylon.core.beans.mapping.annotation.MapClass;
 import java.util.Date;
+import java.util.List;
 
 @MapClass("com.hengsu.sure.sns.model.MTimeModel")
 public class MTimeVO{
 	
-	private Long userId;
 	private Date time;
 	private Double longitude;
 	private Double latitude;
 	private String content;
-	private Long [] imageIds;
+	private List<Long> imageIds;
 
 
-	public void setUserId(Long userId){
-		this.userId = userId;
-	}
-	
-	public Long getUserId(){
-		return this.userId;
-	}
-		
 	public void setTime(Date time){
 		this.time = time;
 	}
@@ -55,11 +47,11 @@ public class MTimeVO{
 	}
 
 
-	public void setImageIds(Long[] imageIds) {
+	public void setImageIds(List<Long> imageIds) {
 		this.imageIds = imageIds;
 	}
 
-	public Long[] getImageIds() {
+	public List<Long> getImageIds() {
 		return imageIds;
 	}
 }

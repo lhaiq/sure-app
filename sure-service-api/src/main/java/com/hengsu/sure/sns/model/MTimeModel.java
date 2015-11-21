@@ -2,6 +2,7 @@ package com.hengsu.sure.sns.model;
 
 import com.hkntv.pylon.core.beans.mapping.annotation.MapClass;
 import java.util.Date;
+import java.util.List;
 
 @MapClass("com.hengsu.sure.sns.entity.MTime")
 public class MTimeModel{
@@ -13,6 +14,7 @@ public class MTimeModel{
 	private Double latitude;
 	private String content;
 	private String images;
+	private List<Long> imageIds;
 		
 	public void setId(Long id){
 		this.id = id;
@@ -69,6 +71,12 @@ public class MTimeModel{
 	public String getImages(){
 		return this.images;
 	}
-		
-		
+
+	public void setImageIds(List<Long> imageIds) {
+		this.imageIds = imageIds;
+	}
+
+	public List<Long> getImageIds() {
+		return imageIds;
+	}
 }

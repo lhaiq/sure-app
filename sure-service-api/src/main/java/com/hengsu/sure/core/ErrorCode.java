@@ -26,6 +26,10 @@ public enum ErrorCode {
     IMAGE_EXISTED("1010", "图片不存在"),
     AUTH_CODE_NOT_EXISTED("1011", "该手机号尚未获取验证码"),
 
+    //时光5
+    MTIME_DELETE_ERROR("5000", "只能删除自己的时光"),
+    COMMENT_DELETE_ERROR("5000", "只能删除自己的评论"),
+
 
 
     ;

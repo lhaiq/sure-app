@@ -109,6 +109,7 @@ project("sure-service-api") {
 		compile(libraries.pylon_core)
 		compile(libraries.thumbnailator)
 		compile(libraries.aliyun_oss)
+		compile(libraries.pylon_data)
 		compile(files("../lib/CCP_REST_SMS_JAVA_v2.6.3r.jar"))
 	}
 }
@@ -118,7 +119,6 @@ project("sure-service") {
 		
 	dependencies {
 		compile(project(":sure-service-api"))
-		compile(libraries.pylon_data)
 		compile(libraries.groovy_all)
 		compile(libraries.c3p0)
 		compile(libraries.immortal_logback)
