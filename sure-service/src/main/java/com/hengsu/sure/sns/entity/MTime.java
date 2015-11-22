@@ -17,6 +17,7 @@ public class MTime {
 
     private String images;
 
+    private Integer cityId;
 
 
     public String getContent() {
@@ -76,4 +77,11 @@ public class MTime {
     }
 
 
+    public void setCityId(Integer cityId) {
+        this.cityId = cityId;
+    }
+
+    public Integer getCityId() {
+        return cityId;
+    }
 }

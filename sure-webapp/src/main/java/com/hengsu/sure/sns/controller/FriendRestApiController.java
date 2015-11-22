@@ -22,44 +22,44 @@ import com.hengsu.sure.sns.vo.FriendVO;
 @RequestMapping("/sure")
 public class FriendRestApiController {
 
-	private final Logger logger = LoggerFactory.getLogger(FriendRestApiController.class);
-	
-	@Autowired
-	private BeanMapper beanMapper;
-	
-	@Autowired
-	private FriendService friendService;
-	
-	@RequestMapping(value = "/sns/friend/{id}", method = RequestMethod.GET)
-	public ResponseEntity<ResponseEnvelope<FriendVO>> getFriendById(@PathVariable Long id){
-		FriendModel friendModel = friendService.findByPrimaryKey(id);
-		FriendVO friendVO =beanMapper.map(friendModel, FriendVO.class);
-		ResponseEnvelope<FriendVO> responseEnv = new ResponseEnvelope<FriendVO>(friendVO);
-		return new ResponseEntity<>(responseEnv, HttpStatus.OK);
-	}
-	
-	@RequestMapping(value = "/sns/friend", method = RequestMethod.POST)
-	public ResponseEntity<ResponseEnvelope<Integer>> createFriend(@RequestBody FriendVO friendVO){
-		FriendModel friendModel = beanMapper.map(friendVO, FriendModel.class);
-		Integer  result = friendService.create(friendModel);
-		ResponseEnvelope<Integer> responseEnv = new ResponseEnvelope<Integer>(result);
-		return new ResponseEntity<>(responseEnv, HttpStatus.OK);
-	}
-	
-	@RequestMapping(value = "/sns/friend/{id}", method = RequestMethod.DELETE)
-	public ResponseEntity<ResponseEnvelope<Integer>> deleteFriendByPrimaryKey(@PathVariable Long id){
-		Integer  result = friendService.deleteByPrimaryKey(id);
-		ResponseEnvelope<Integer> responseEnv = new ResponseEnvelope<Integer>(result);
-		return new ResponseEntity<>(responseEnv, HttpStatus.OK);
-	}
-	
-	@RequestMapping(value = "/sns/friend/{id}", method = RequestMethod.PUT)
-	public ResponseEntity<ResponseEnvelope<Integer>> updateFriendByPrimaryKeySelective(@PathVariable Long id, @RequestBody FriendVO friendVO){
-		FriendModel friendModel = beanMapper.map(friendVO, FriendModel.class);
-		friendModel.setId(id);
-		Integer  result = friendService.updateByPrimaryKeySelective(friendModel);
-		ResponseEnvelope<Integer> responseEnv = new ResponseEnvelope<Integer>(result);
-		return new ResponseEntity<>(responseEnv, HttpStatus.OK);
-	}
-	
+    private final Logger logger = LoggerFactory.getLogger(FriendRestApiController.class);
+
+    @Autowired
+    private BeanMapper beanMapper;
+
+    @Autowired
+    private FriendService friendService;
+
+    @RequestMapping(value = "/sns/friend/{id}", method = RequestMethod.GET)
+    public ResponseEntity<ResponseEnvelope<FriendVO>> getFriendById(@PathVariable Long id) {
+        FriendModel friendModel = friendService.findByPrimaryKey(id);
+        FriendVO friendVO = beanMapper.map(friendModel, FriendVO.class);
+        ResponseEnvelope<FriendVO> responseEnv = new ResponseEnvelope<FriendVO>(friendVO);
+        return new ResponseEntity<>(responseEnv, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/sns/friend", method = RequestMethod.POST)
+    public ResponseEntity<ResponseEnvelope<Integer>> createFriend(@RequestBody FriendVO friendVO) {
+        FriendModel friendModel = beanMapper.map(friendVO, FriendModel.class);
+        Integer result = friendService.create(friendModel);
+        ResponseEnvelope<Integer> responseEnv = new ResponseEnvelope<Integer>(result);
+        return new ResponseEntity<>(responseEnv, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/sns/friend/{id}", method = RequestMethod.DELETE)
+    public ResponseEntity<ResponseEnvelope<Integer>> deleteFriendByPrimaryKey(@PathVariable Long id) {
+        Integer result = friendService.deleteByPrimaryKey(id);
+        ResponseEnvelope<Integer> responseEnv = new ResponseEnvelope<Integer>(result);
+        return new ResponseEntity<>(responseEnv, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/sns/friend/{id}", method = RequestMethod.PUT)
+    public ResponseEntity<ResponseEnvelope<Integer>> updateFriendByPrimaryKeySelective(@PathVariable Long id, @RequestBody FriendVO friendVO) {
+        FriendModel friendModel = beanMapper.map(friendVO, FriendModel.class);
+        friendModel.setId(id);
+        Integer result = friendService.updateByPrimaryKeySelective(friendModel);
+        ResponseEnvelope<Integer> responseEnv = new ResponseEnvelope<Integer>(result);
+        return new ResponseEntity<>(responseEnv, HttpStatus.OK);
+    }
+
 }

@@ -15,6 +15,7 @@
 	<!--scan all @Controller class only-->
     <context:component-scan base-package="com.hengsu.**.controller" use-default-filters="false">
 		<context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+		<context:include-filter type="annotation" expression="org.springframework.web.bind.annotation.ControllerAdvice"/>
 		<context:include-filter type="annotation" expression="com.hkntv.pylon.web.rest.annotation.RestApiController"/>
 		<context:include-filter type="annotation" expression="com.hkntv.pylon.web.framework.annotation.FrameworkController"/>
 	</context:component-scan>

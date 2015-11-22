@@ -107,14 +107,4 @@ public class ImageRestApiController {
     }
 
 
-    @RequestMapping(value = "/core/image/{id}", method = RequestMethod.PUT)
-    public ResponseEntity<ResponseEnvelope<Integer>> updateImageByPrimaryKeySelective(@PathVariable Long id,
-                                                                                      @RequestBody ImageVO imageVO) {
-        ImageModel imageModel = beanMapper.map(imageVO, ImageModel.class);
-        imageModel.setId(id);
-        Integer result = imageService.updateByPrimaryKeySelective(imageModel);
-        ResponseEnvelope<Integer> responseEnv = new ResponseEnvelope<Integer>(result);
-        return new ResponseEntity<>(responseEnv, HttpStatus.OK);
-    }
-
 }

@@ -62,9 +62,9 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public void deleteComment(Long id, Long userId) {
 
-        //检查是否为自己的评论
+        //检查是否为自己的评论或点赞
         CommentModel commentModel = findByPrimaryKey(id);
-        if (commentModel.getUserId() != userId) {
+        if (commentModel.getUserid() != userId) {
             ErrorCode.throwBusinessException(ErrorCode.COMMENT_DELETE_ERROR);
         }
 

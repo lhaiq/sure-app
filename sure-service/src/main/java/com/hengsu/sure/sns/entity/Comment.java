@@ -13,6 +13,8 @@ public class Comment {
 
     private Integer type;
 
+    private Long userid;
+
     public Long getId() {
         return id;
     }
@@ -51,5 +53,13 @@ public class Comment {
 
     public void setType(Integer type) {
         this.type = type;
+    }
+
+    public Long getUserid() {
+        return userid;
+    }
+
+    public void setUserid(Long userid) {
+        this.userid = userid;
     }
 }

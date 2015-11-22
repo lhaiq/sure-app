@@ -4,6 +4,7 @@ import com.hengsu.sure.core.ErrorCode;
 import com.hengsu.sure.core.service.ImageService;
 import com.hengsu.sure.sns.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -56,18 +57,8 @@ public class MTimeServiceImpl implements MTimeService {
     public MTimeModel findByPrimaryKey(Long id) {
         MTime mTime = mTimeRepo.selectByPrimaryKey(id);
         MTimeModel mTimeModel = beanMapper.map(mTime, MTimeModel.class);
-        String images = mTimeModel.getImages();
-
-        if (!StringUtils.isEmpty(images)) {
-            List<Long> imageIds = new ArrayList<>();
-            String[] imageStrs = StringUtils.split(images, ";");
-            for (String imageStr : imageStrs) {
-                imageIds.add(Long.parseLong(imageStr));
-            }
-            mTimeModel.setImageIds(imageIds);
-
-        }
-        return beanMapper.map(mTime, MTimeModel.class);
+        setImageIds(mTimeModel);
+        return mTimeModel;
     }
 
     @Transactional(readOnly = true)
@@ -101,6 +92,16 @@ public class MTimeServiceImpl implements MTimeService {
 
     }
 
+    @Override
+    public List<MTimeModel> listMTimeModels(MTimeModel mTimeModel, Pageable pageable) {
+        List<MTime> mTimes = mTimeRepo.selectPage(beanMapper.map(mTimeModel, MTime.class), pageable);
+        List<MTimeModel> mTimeModels = beanMapper.mapAsList(mTimes, MTimeModel.class);
+        for (MTimeModel param : mTimeModels) {
+            setImageIds(param);
+        }
+        return mTimeModels;
+    }
+
     @Transactional
     @Override
     public int updateByPrimaryKey(MTimeModel mTimeModel) {
@@ -111,6 +112,22 @@ public class MTimeServiceImpl implements MTimeService {
     @Override
     public int updateByPrimaryKeySelective(MTimeModel mTimeModel) {
         return mTimeRepo.updateByPrimaryKeySelective(beanMapper.map(mTimeModel, MTime.class));
+    }
+
+    private void setImageIds(MTimeModel mTimeModel) {
+        String images = mTimeModel.getImages();
+
+        if (!StringUtils.isEmpty(images)) {
+            List<Long> imageIds = new ArrayList<>();
+            String[] imageStrs = images.split(";");
+            for (String imageStr : imageStrs) {
+                imageIds.add(Long.parseLong(imageStr));
+            }
+
+            mTimeModel.setImageIds(imageIds);
+        }
+
+
     }
 
 }

@@ -1,6 +1,7 @@
 package com.hengsu.sure.sns.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -9,6 +10,8 @@ import com.hengsu.sure.sns.repository.RelationRepository;
 import com.hengsu.sure.sns.model.RelationModel;
 import com.hengsu.sure.sns.service.RelationService;
 import com.hkntv.pylon.core.beans.mapping.BeanMapper;
+
+import java.util.List;
 
 @Service
 public class RelationServiceImpl implements RelationService {
@@ -48,6 +51,21 @@ public class RelationServiceImpl implements RelationService {
 	@Override
 	public int selectCount(RelationModel relationModel) {
 		return relationRepo.selectCount(beanMapper.map(relationModel, Relation.class));
+	}
+
+	@Override
+	public void addRelation(RelationModel relationModel) {
+
+	}
+
+	@Override
+	public void deleteRelation(Long fromUser, Long toUser) {
+
+	}
+
+	@Override
+	public List<RelationModel> listRelations(RelationModel relationModel, Pageable pageable) {
+		return null;
 	}
 
 	@Transactional

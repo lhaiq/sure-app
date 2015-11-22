@@ -7,22 +7,19 @@
     <result column="time" property="time" jdbcType="TIMESTAMP" />
     <result column="longitude" property="longitude" jdbcType="DOUBLE" />
     <result column="latitude" property="latitude" jdbcType="DOUBLE" />
-  </resultMap>
-  <resultMap id="ResultMapWithBLOBs" type="com.hengsu.sure.sns.entity.MTime" extends="BaseResultMap" >
+    <result column="city_id" property="cityId" jdbcType="INTEGER" />
     <result column="content" property="content" jdbcType="LONGVARCHAR" />
     <result column="images" property="images" jdbcType="LONGVARCHAR" />
   </resultMap>
+
   <sql id="Base_Column_List" >
-    id, user_id, time, longitude, latitude
+    id, user_id, time, longitude, latitude, city_id, content, images
   </sql>
-  <sql id="Blob_Column_List" >
-    content, images
-  </sql>
-  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Long" >
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
     <include refid="Base_Column_List" />
-    ,
-    <include refid="Blob_Column_List" />
+
     from mtime
     where id = #{id,jdbcType=BIGINT}
   </select>
@@ -32,11 +29,11 @@
   </delete>
   <insert id="insert" parameterType="com.hengsu.sure.sns.entity.MTime" >
     insert into mtime (id, user_id, time, 
-      longitude, latitude, content, 
-      images)
+      longitude, latitude, city_id, 
+      content, images)
     values (#{id,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{time,jdbcType=TIMESTAMP}, 
-      #{longitude,jdbcType=DOUBLE}, #{latitude,jdbcType=DOUBLE}, #{content,jdbcType=LONGVARCHAR}, 
-      #{images,jdbcType=LONGVARCHAR})
+      #{longitude,jdbcType=DOUBLE}, #{latitude,jdbcType=DOUBLE}, #{cityId,jdbcType=INTEGER}, 
+      #{content,jdbcType=LONGVARCHAR}, #{images,jdbcType=LONGVARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.hengsu.sure.sns.entity.MTime" >
     insert into mtime
@@ -55,6 +52,9 @@
       </if>
       <if test="latitude != null" >
         latitude,
+      </if>
+      <if test="cityId != null" >
+        city_id,
       </if>
       <if test="content != null" >
         content,
@@ -79,6 +79,9 @@
       <if test="latitude != null" >
         #{latitude,jdbcType=DOUBLE},
       </if>
+      <if test="cityId != null" >
+        #{cityId,jdbcType=INTEGER},
+      </if>
       <if test="content != null" >
         #{content,jdbcType=LONGVARCHAR},
       </if>
@@ -102,6 +105,9 @@
       <if test="latitude != null" >
         latitude = #{latitude,jdbcType=DOUBLE},
       </if>
+      <if test="cityId != null" >
+        city_id = #{cityId,jdbcType=INTEGER},
+      </if>
       <if test="content != null" >
         content = #{content,jdbcType=LONGVARCHAR},
       </if>
@@ -111,22 +117,14 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.hengsu.sure.sns.entity.MTime" >
-    update mtime
-    set user_id = #{userId,jdbcType=BIGINT},
-      time = #{time,jdbcType=TIMESTAMP},
-      longitude = #{longitude,jdbcType=DOUBLE},
-      latitude = #{latitude,jdbcType=DOUBLE},
-      content = #{content,jdbcType=LONGVARCHAR},
-      images = #{images,jdbcType=LONGVARCHAR}
-    where id = #{id,jdbcType=BIGINT}
-  </update>
+
   <update id="updateByPrimaryKey" parameterType="com.hengsu.sure.sns.entity.MTime" >
     update mtime
     set user_id = #{userId,jdbcType=BIGINT},
       time = #{time,jdbcType=TIMESTAMP},
       longitude = #{longitude,jdbcType=DOUBLE},
-      latitude = #{latitude,jdbcType=DOUBLE}
+      latitude = #{latitude,jdbcType=DOUBLE},
+      city_id = #{cityId,jdbcType=INTEGER}
     where id = #{id,jdbcType=BIGINT}
   </update>
   <select id="selectCount" resultType="java.lang.Integer" parameterType="com.hengsu.sure.sns.entity.MTime" >
@@ -146,6 +144,9 @@
       </if>
       <if test="latitude != null" >
         and latitude = #{latitude,jdbcType=DOUBLE}
+      </if>
+      <if test="cityId != null" >
+        and city_id = #{cityId,jdbcType=INTEGER}
       </if>
       <if test="content != null" >
         and content = #{content,jdbcType=LONGVARCHAR}
@@ -173,6 +174,9 @@
     </if>
     <if test="param1.latitude != null" >
       and latitude = #{param1.latitude,jdbcType=DOUBLE}
+    </if>
+    <if test="param1.cityId != null" >
+      and city_id = #{param1.cityId,jdbcType=INTEGER}
     </if>
     <if test="param1.content != null" >
       and content = #{param1.content,jdbcType=LONGVARCHAR}

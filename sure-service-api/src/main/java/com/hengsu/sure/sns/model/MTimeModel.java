@@ -10,11 +10,14 @@ public class MTimeModel{
 	private Long id;
 	private Long userId;
 	private Date time;
+	private Integer cityId;
 	private Double longitude;
 	private Double latitude;
 	private String content;
 	private String images;
 	private List<Long> imageIds;
+	private Long commentsCount;
+	private Long statusesCount;
 		
 	public void setId(Long id){
 		this.id = id;
@@ -78,5 +81,29 @@ public class MTimeModel{
 
 	public List<Long> getImageIds() {
 		return imageIds;
+	}
+
+	public void setCityId(Integer cityId) {
+		this.cityId = cityId;
+	}
+
+	public Integer getCityId() {
+		return cityId;
+	}
+
+	public Long getCommentsCount() {
+		return commentsCount;
+	}
+
+	public void setCommentsCount(Long commentsCount) {
+		this.commentsCount = commentsCount;
+	}
+
+	public Long getStatusesCount() {
+		return statusesCount;
+	}
+
+	public void setStatusesCount(Long statusesCount) {
+		this.statusesCount = statusesCount;
 	}
 }

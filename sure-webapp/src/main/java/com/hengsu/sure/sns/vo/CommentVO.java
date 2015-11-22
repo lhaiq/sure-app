@@ -11,7 +11,6 @@ public class CommentVO{
 	private String content;
 	private Date time;
 	private Integer type;
-	private Long userId;
 
 	public void setId(Long id){
 		this.id = id;
@@ -55,11 +54,5 @@ public class CommentVO{
 		this.mid = mid;
 	}
 
-	public Long getUserId() {
-		return userId;
-	}
 
-	public void setUserId(Long userId) {
-		this.userId = userId;
-	}
 }

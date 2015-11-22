@@ -8,7 +8,7 @@ import java.util.Date;
 public class ListCommentsVO {
 
     private Long id;
-    private Long mid;
+    private Long mId;
     private String content;
     private Date time;
     private Integer type;
@@ -31,12 +31,12 @@ public class ListCommentsVO {
         this.id = id;
     }
 
-    public Long getMid() {
-        return mid;
+    public void setmId(Long mId) {
+        this.mId = mId;
     }
 
-    public void setMid(Long mid) {
-        this.mid = mid;
+    public Long getmId() {
+        return mId;
     }
 
     public Date getTime() {

@@ -1,4 +1,4 @@
-package com.hengsu.sure.core.handler;
+package com.hengsu.sure.core.controller;
 
 import com.hengsu.sure.core.ErrorCode;
 import com.hkntv.pylon.web.rest.ResponseEnvelope;
@@ -43,7 +43,7 @@ public class RestApiRequestEntityExceptionHandler {
         }
 
         RestApiError restApiError = new RestApiError();
-        restApiError.setStatusCode(ErrorCode.FIELD_MUST.toString());
+        restApiError.setStatusCode(ErrorCode.FIELD_MUST.getCode().toString());
         restApiError.setMessage(fieldErrorsMap.toString());
         restApiError.setRawMessage(fieldErrorsMap.toString());
 
@@ -72,4 +72,6 @@ public class RestApiRequestEntityExceptionHandler {
         return new ResponseEntity<Object>(envelope, HttpStatus.OK);
     }
 
+
+    //MissingServletRequestParameterException
 }

@@ -2,6 +2,7 @@ package com.hengsu.sure.sns.controller;
 
 import com.hengsu.sure.auth.model.UserModel;
 import com.hengsu.sure.auth.service.UserService;
+import com.hengsu.sure.sns.CommentType;
 import com.hengsu.sure.sns.vo.ListCommentsVO;
 import com.hengsu.sure.sns.vo.SNSUserVO;
 import org.slf4j.Logger;
@@ -25,6 +26,7 @@ import com.hengsu.sure.sns.model.CommentModel;
 import com.hengsu.sure.sns.vo.CommentVO;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @RestApiController
@@ -43,17 +45,41 @@ public class CommentRestApiController {
     private UserService userService;
 
     /**
-     * 添加评论或点赞
+     * 添加评论
      *
      * @param commentVO
      * @return
      */
     @RequestMapping(value = "/sns/{mid}/comment", method = RequestMethod.POST)
     public ResponseEntity<ResponseEnvelope<Integer>> createComment(
+            @PathVariable Long mid,
             @RequestBody CommentVO commentVO,
             @Value("#{request.getAttribute('userId')}") Long userId) {
         CommentModel commentModel = beanMapper.map(commentVO, CommentModel.class);
-        Integer result = commentService.create(commentModel);
+        commentModel.setmId(mid);
+        commentModel.setUserid(userId);
+        commentModel.setType(CommentType.COMMENT.getCode());
+        commentModel.setTime(new Date());
+        Integer result = commentService.createSelective(commentModel);
+        ResponseEnvelope<Integer> responseEnv = new ResponseEnvelope<Integer>(result);
+        return new ResponseEntity<>(responseEnv, HttpStatus.OK);
+    }
+
+    /**
+     * 添加点赞
+     *
+     * @return
+     */
+    @RequestMapping(value = "/sns/{mid}/statue", method = RequestMethod.POST)
+    public ResponseEntity<ResponseEnvelope<Integer>> createStatues(
+            @PathVariable Long mid,
+            @Value("#{request.getAttribute('userId')}") Long userId) {
+        CommentModel commentModel = new CommentModel();
+        commentModel.setmId(mid);
+        commentModel.setUserid(userId);
+        commentModel.setTime(new Date());
+        commentModel.setType(CommentType.STATUSES.getCode());
+        Integer result = commentService.createSelective(commentModel);
         ResponseEnvelope<Integer> responseEnv = new ResponseEnvelope<Integer>(result);
         return new ResponseEntity<>(responseEnv, HttpStatus.OK);
     }
@@ -65,7 +91,22 @@ public class CommentRestApiController {
      * @return
      */
     @RequestMapping(value = "/sns/comment/{id}", method = RequestMethod.DELETE)
-    public ResponseEntity<ResponseEnvelope<Long>> deleteCommentByPrimaryKey(
+    public ResponseEntity<ResponseEnvelope<Long>> cancelComment(
+            @PathVariable Long id,
+            @Value("#{request.getAttribute('userId')}") Long userId) {
+        commentService.deleteComment(id, userId);
+        ResponseEnvelope<Long> responseEnv = new ResponseEnvelope<>(id, true);
+        return new ResponseEntity<>(responseEnv, HttpStatus.OK);
+    }
+
+    /**
+     * 取消点赞
+     *
+     * @param id
+     * @return
+     */
+    @RequestMapping(value = "/sns/statue/{id}", method = RequestMethod.DELETE)
+    public ResponseEntity<ResponseEnvelope<Long>> cancelStatue(
             @PathVariable Long id,
             @Value("#{request.getAttribute('userId')}") Long userId) {
         commentService.deleteComment(id, userId);
@@ -90,7 +131,8 @@ public class CommentRestApiController {
         //分页查询
         Pageable pageable = new PageRequest(page, size);
         CommentModel param = new CommentModel();
-        param.setMid(mid);
+        param.setType(CommentType.COMMENT.getCode());
+        param.setmId(mid);
         List<CommentModel> commentModels = commentService.listComments(param, pageable);
         Integer count = commentService.selectCount(param);
 
@@ -99,7 +141,7 @@ public class CommentRestApiController {
         List<ListCommentsVO> listCommentsVOs = new ArrayList<>();
         for (CommentModel commentModel : commentModels) {
             ListCommentsVO listCommentsVO = beanMapper.map(commentModel, ListCommentsVO.class);
-            UserModel userModel = userService.findByPrimaryKey(commentModel.getUserId());
+            UserModel userModel = userService.findByPrimaryKey(commentModel.getUserid());
             SNSUserVO snsUserVO = beanMapper.map(userModel, SNSUserVO.class);
             listCommentsVO.setUser(snsUserVO);
             listCommentsVOs.add(listCommentsVO);
