@@ -22,6 +22,10 @@
     delete from comment
     where id = #{id,jdbcType=BIGINT}
   </delete>
+  <delete id="deleteCommentByMid" parameterType="java.lang.Long" >
+    delete from comment
+    where m_id = #{mId,jdbcType=BIGINT}
+  </delete>
   <insert id="insert" parameterType="com.hengsu.sure.sns.entity.Comment" >
     insert into comment (id, m_id, content, 
       time, type, userId

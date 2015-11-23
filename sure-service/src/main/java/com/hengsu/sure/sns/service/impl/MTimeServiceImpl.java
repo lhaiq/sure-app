@@ -67,6 +67,7 @@ public class MTimeServiceImpl implements MTimeService {
         return mTimeRepo.selectCount(beanMapper.map(mTimeModel, MTime.class));
     }
 
+    @Transactional
     @Override
     public void deleteMTime(Long id, Long userId) {
 

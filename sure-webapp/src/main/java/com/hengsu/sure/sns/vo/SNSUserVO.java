@@ -11,6 +11,9 @@ public class SNSUserVO {
     private Integer age;
     private Integer city;
     private Long icon;
+    private Long fansCount;
+    private Long attentionCount;
+    private Long friendCount;
 
     public Integer getAge() {
         return age;
@@ -58,5 +61,29 @@ public class SNSUserVO {
 
     public void setNickname(String nickname) {
         this.nickname = nickname;
+    }
+
+    public Long getAttentionCount() {
+        return attentionCount;
+    }
+
+    public void setAttentionCount(Long attentionCount) {
+        this.attentionCount = attentionCount;
+    }
+
+    public Long getFansCount() {
+        return fansCount;
+    }
+
+    public void setFansCount(Long fansCount) {
+        this.fansCount = fansCount;
+    }
+
+    public Long getFriendCount() {
+        return friendCount;
+    }
+
+    public void setFriendCount(Long friendCount) {
+        this.friendCount = friendCount;
     }
 }

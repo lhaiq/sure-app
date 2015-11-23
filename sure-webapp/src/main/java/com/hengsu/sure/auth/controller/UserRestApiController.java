@@ -7,6 +7,10 @@ import com.hengsu.sure.auth.service.UserService;
 import com.hengsu.sure.auth.vo.LoginSuccessVO;
 import com.hengsu.sure.core.Context;
 import com.hengsu.sure.core.util.RandomUtil;
+import com.hengsu.sure.sns.RelationType;
+import com.hengsu.sure.sns.model.RelationModel;
+import com.hengsu.sure.sns.service.RelationService;
+import com.hengsu.sure.sns.vo.SNSUserVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -40,6 +44,9 @@ public class UserRestApiController {
     @Autowired
     @Qualifier("authContext")
     private Context<String, Long> authContext;
+
+    @Autowired
+    private RelationService relationService;
 
     /**
      * 注册获取验证码
@@ -95,7 +102,11 @@ public class UserRestApiController {
         returnUser.setPassword(null);
         LoginSuccessVO loginSuccessVO = new LoginSuccessVO();
         loginSuccessVO.setAuthToken(authToken);
-        loginSuccessVO.setUser(returnUser);
+        SNSUserVO snsUserVO = beanMapper.map(userModel, SNSUserVO.class);
+        snsUserVO.setAttentionCount(0L);
+        snsUserVO.setFriendCount(0L);
+        snsUserVO.setFansCount(0L);
+        loginSuccessVO.setUser(snsUserVO);
 
         //auth token保存到缓存
         authContext.put(authToken, userModel.getId());
@@ -120,7 +131,9 @@ public class UserRestApiController {
         LoginSuccessVO loginSuccessVO = new LoginSuccessVO();
         String authToken = RandomUtil.generateAuthToken();
         loginSuccessVO.setAuthToken(authToken);
-        loginSuccessVO.setUser(userModel);
+        SNSUserVO snsUserVO = beanMapper.map(userModel, SNSUserVO.class);
+        setSNSInfo(snsUserVO);
+        loginSuccessVO.setUser(snsUserVO);
         authContext.put(authToken, userModel.getId());
 
         ResponseEnvelope<LoginSuccessVO> responseEnv = new ResponseEnvelope<>(loginSuccessVO, true);
@@ -144,7 +157,10 @@ public class UserRestApiController {
         LoginSuccessVO loginSuccessVO = new LoginSuccessVO();
         String authToken = RandomUtil.generateAuthToken();
         loginSuccessVO.setAuthToken(authToken);
-        loginSuccessVO.setUser(userModel);
+        SNSUserVO snsUserVO = beanMapper.map(userModel, SNSUserVO.class);
+        setSNSInfo(snsUserVO);
+        loginSuccessVO.setUser(snsUserVO);
+
         authContext.put(authToken, userModel.getId());
 
         ResponseEnvelope<LoginSuccessVO> responseEnv = new ResponseEnvelope<>(loginSuccessVO, true);
@@ -194,6 +210,28 @@ public class UserRestApiController {
         Integer result = userService.updateByPrimaryKeySelective(userModel);
         ResponseEnvelope<Integer> responseEnv = new ResponseEnvelope<Integer>(result, true);
         return new ResponseEntity<>(responseEnv, HttpStatus.OK);
+    }
+
+    public void setSNSInfo(SNSUserVO snsUserVO) {
+        Long userId = snsUserVO.getId();
+
+        //粉丝数
+        RelationModel fansParam = new RelationModel();
+        fansParam.setToUser(userId);
+        fansParam.setType(RelationType.RELATION.getCode());
+        snsUserVO.setFansCount(Long.valueOf(relationService.selectCount(fansParam)));
+
+        //关注
+        RelationModel attentionParam = new RelationModel();
+        attentionParam.setFromUser(userId);
+        attentionParam.setType(RelationType.RELATION.getCode());
+        snsUserVO.setAttentionCount(Long.valueOf(relationService.selectCount(attentionParam)));
+
+        //朋友
+        RelationModel friendParam = new RelationModel();
+        friendParam.setFromUser(userId);
+        friendParam.setType(RelationType.FRIEND.getCode());
+        snsUserVO.setFriendCount(Long.valueOf(relationService.selectCount(friendParam)));
     }
 
 }

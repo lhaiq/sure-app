@@ -3,6 +3,7 @@ package com.hengsu.sure.sns.controller;
 import com.hengsu.sure.ReturnCode;
 import com.hengsu.sure.auth.model.UserModel;
 import com.hengsu.sure.auth.service.UserService;
+import com.hengsu.sure.sns.RelationType;
 import com.hengsu.sure.sns.vo.SNSUserVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,6 +57,7 @@ public class RelationRestApiController {
             @Value("#{request.getAttribute('userId')}") Long userId) {
         RelationModel relationModel = beanMapper.map(relationVO, RelationModel.class);
         relationModel.setFromUser(userId);
+        relationModel.setType(RelationType.RELATION.getCode());
         relationModel.setTime(new Date());
         relationService.addRelation(relationModel);
         ResponseEnvelope<String> responseEnv = new ResponseEnvelope<>(ReturnCode.OPERATION_SUCCESS, true);
@@ -72,7 +74,7 @@ public class RelationRestApiController {
     public ResponseEntity<ResponseEnvelope<String>> deleteFans(
             @PathVariable Long id,
             @Value("#{request.getAttribute('userId')}") Long userId) {
-        relationService.deleteRelation(userId, id);
+        relationService.deleteRelation(id, userId, RelationType.RELATION.getCode());
         ResponseEnvelope<String> responseEnv = new ResponseEnvelope<>(ReturnCode.OPERATION_SUCCESS, true);
         return new ResponseEntity<>(responseEnv, HttpStatus.OK);
     }
@@ -84,12 +86,12 @@ public class RelationRestApiController {
      * @return
      */
     @RequestMapping(value = "/sns/relation/attention/{id}", method = RequestMethod.DELETE)
-    public ResponseEntity<ResponseEnvelope<Integer>> cancelAttention(
+    public ResponseEntity<ResponseEnvelope<String>> cancelAttention(
             @PathVariable Long id,
             @Value("#{request.getAttribute('userId')}") Long userId) {
         Integer result = relationService.deleteByPrimaryKey(id);
-        relationService.deleteRelation(id, userId);
-        ResponseEnvelope<Integer> responseEnv = new ResponseEnvelope<Integer>(result);
+        relationService.deleteRelation(userId, id, RelationType.RELATION.getCode());
+        ResponseEnvelope<String> responseEnv = new ResponseEnvelope<>(ReturnCode.OPERATION_SUCCESS,true);
         return new ResponseEntity<>(responseEnv, HttpStatus.OK);
     }
 
@@ -101,7 +103,7 @@ public class RelationRestApiController {
      * @param size
      * @return
      */
-    @RequestMapping(value = "/sns/relation/fans", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/sns/relation/fans", method = RequestMethod.GET)
     public ResponseEntity<ResponseEnvelope<Page<SNSUserVO>>> listFans(
             @Value("#{request.getAttribute('userId')}") Long userId,
             @RequestParam Integer page,
@@ -109,6 +111,7 @@ public class RelationRestApiController {
 
         RelationModel param = new RelationModel();
         param.setToUser(userId);
+        param.setType(RelationType.RELATION.getCode());
         Pageable pageable = new PageRequest(page, size);
         List<RelationModel> relationModels = relationService.listRelations(param, pageable);
 
@@ -133,7 +136,7 @@ public class RelationRestApiController {
      * @param size
      * @return
      */
-    @RequestMapping(value = "/sns/relation/attention", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/sns/relation/attention", method = RequestMethod.GET)
     public ResponseEntity<ResponseEnvelope<Page<SNSUserVO>>> listAttention(
             @Value("#{request.getAttribute('userId')}") Long userId,
             @RequestParam Integer page,
@@ -141,6 +144,7 @@ public class RelationRestApiController {
 
         RelationModel param = new RelationModel();
         param.setFromUser(userId);
+        param.setType(RelationType.RELATION.getCode());
         Pageable pageable = new PageRequest(page, size);
         List<RelationModel> relationModels = relationService.listRelations(param, pageable);
 
@@ -148,7 +152,39 @@ public class RelationRestApiController {
 
         List<SNSUserVO> snsUserVOs = new ArrayList<>();
         for (RelationModel relationModel : relationModels) {
-            UserModel userModel = userService.findByPrimaryKey(relationModel.getFromUser());
+            UserModel userModel = userService.findByPrimaryKey(relationModel.getToUser());
+            snsUserVOs.add(beanMapper.map(userModel, SNSUserVO.class));
+        }
+
+        Page<SNSUserVO> pageContent = new PageImpl<SNSUserVO>(snsUserVOs, pageable, count);
+        ResponseEnvelope<Page<SNSUserVO>> responseEnv = new ResponseEnvelope<>(pageContent, true);
+        return new ResponseEntity<>(responseEnv, HttpStatus.OK);
+    }
+
+    /**
+     * 朋友列表
+     * @param userId
+     * @param page
+     * @param size
+     * @return
+     */
+    @RequestMapping(value = "/sns/relation/friend", method = RequestMethod.DELETE)
+    public ResponseEntity<ResponseEnvelope<Page<SNSUserVO>>> listFriends(
+            @Value("#{request.getAttribute('userId')}") Long userId,
+            @RequestParam Integer page,
+            @RequestParam Integer size) {
+
+        RelationModel param = new RelationModel();
+        param.setFromUser(userId);
+        param.setType(RelationType.FRIEND.getCode());
+        Pageable pageable = new PageRequest(page, size);
+        List<RelationModel> relationModels = relationService.listRelations(param, pageable);
+
+        Integer count = relationService.selectCount(param);
+
+        List<SNSUserVO> snsUserVOs = new ArrayList<>();
+        for (RelationModel relationModel : relationModels) {
+            UserModel userModel = userService.findByPrimaryKey(relationModel.getToUser());
             snsUserVOs.add(beanMapper.map(userModel, SNSUserVO.class));
         }
 

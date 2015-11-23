@@ -28,7 +28,11 @@ public enum ErrorCode {
 
     //时光5
     MTIME_DELETE_ERROR("5000", "只能删除自己的时光"),
-    COMMENT_DELETE_ERROR("5000", "只能删除自己的评论"),
+    COMMENT_DELETE_ERROR("5001", "只能删除自己的评论"),
+
+    RELATION_EXISTED("5002", "关系已存在"),
+
+    RELATION_ERROR("5003", "不能关注自己或加自己为好友"),
 
 
 

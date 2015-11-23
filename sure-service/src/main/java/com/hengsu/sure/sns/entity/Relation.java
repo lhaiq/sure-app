@@ -11,6 +11,8 @@ public class Relation {
 
     private Date time;
 
+    private Integer type;
+
     public Long getId() {
         return id;
     }
@@ -41,5 +43,13 @@ public class Relation {
 
     public void setTime(Date time) {
         this.time = time;
+    }
+
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
     }
 }

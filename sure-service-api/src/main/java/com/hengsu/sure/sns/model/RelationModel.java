@@ -10,6 +10,7 @@ public class RelationModel{
 	private Long fromUser;
 	private Long toUser;
 	private Date time;
+	private Integer type;
 		
 	public void setId(Long id){
 		this.id = id;
@@ -41,6 +42,14 @@ public class RelationModel{
 	
 	public Date getTime(){
 		return this.time;
+	}
+		
+	public void setType(Integer type){
+		this.type = type;
+	}
+	
+	public Integer getType(){
+		return this.type;
 	}
 		
 		

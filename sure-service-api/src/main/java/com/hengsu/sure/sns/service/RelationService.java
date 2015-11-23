@@ -24,7 +24,7 @@ public interface RelationService{
 
 	public void addRelation(RelationModel relationModel);
 
-	public void deleteRelation(Long fromUser,Long toUser);
+	public void deleteRelation(Long fromUser,Long toUser,Integer type);
 
 	public List<RelationModel> listRelations(RelationModel relationModel,Pageable pageable);
 	
