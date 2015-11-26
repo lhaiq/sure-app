@@ -26,6 +26,7 @@ public class UserModel{
 	private Integer status;
 	private String faceId;
 	private String alipay;
+	private String clientId;
 		
 	public void setId(Long id){
 		this.id = id;
@@ -186,6 +187,12 @@ public class UserModel{
 	public String getAlipay(){
 		return this.alipay;
 	}
-		
-		
+
+	public void setClientId(String clientId) {
+		this.clientId = clientId;
+	}
+
+	public String getClientId() {
+		return clientId;
+	}
 }

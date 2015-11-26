@@ -16,10 +16,10 @@ public enum ErrorCode {
 
     REGISTER_PHONE_EXISTED("1005", "该手机已经注册过"),
 
-    LOGIN_USER_NOT_EXISTED("1006","用户不存在"),
-    LOGIN_PASSWORD_ERROR("1007","密码错误"),
-    LOGIN_FACE_ERROR("1007","与注册人脸不匹配"),
-    PHONE_NOT_REGISTER("1007","该手机号尚未注册"),
+    LOGIN_USER_NOT_EXISTED("1006", "用户不存在"),
+    LOGIN_PASSWORD_ERROR("1007", "密码错误"),
+    LOGIN_FACE_ERROR("1007", "与注册人脸不匹配"),
+    PHONE_NOT_REGISTER("1007", "该手机号尚未注册"),
 
     JSON_FORMATTED("1008", "JSON格式错误"),
     FIELD_MUST("1009", "字段必须填"),
@@ -34,8 +34,10 @@ public enum ErrorCode {
 
     RELATION_ERROR("5003", "不能关注自己或加自己为好友"),
 
-
-
+    //600邀约
+    HAVE_UNFINISHED_INVITATION("600", "还有未完成的邀约"),
+    INVITATION_FINISHED("6001", "该邀约已经完成"),
+    INVITATION_PUBLISHER_NOT_MATCH("6002", "只能更新自己的邀约"),
     ;
 
     private String code;
@@ -59,8 +61,8 @@ public enum ErrorCode {
     }
 
     public static void main(String[] args) {
-        for(ErrorCode errorCode:ErrorCode.values()){
-            System.out.println(errorCode.getCode()+"\t"+errorCode.getErrorMsg());
+        for (ErrorCode errorCode : ErrorCode.values()) {
+            System.out.println(errorCode.getCode() + "\t" + errorCode.getErrorMsg());
         }
     }
 }

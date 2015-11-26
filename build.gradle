@@ -1,15 +1,15 @@
 apply from: "./libraries.gradle"
 
 buildscript {
-	repositories {
-		maven { url hkntvMavenCentral }
-	}
-	dependencies {
-		//Provides additional optional and provided dependency configurations for Gradle along with Maven POM generation support
-		classpath ("org.springframework.build.gradle:propdeps-plugin:0.0.7")
-		classpath ("com.hkntv.gradleplugin:gradleplugin-restdoc:1.1.0-SNAPSHOT")
-		classpath ('org.gradle.api.plugins:gradle-cargo-plugin:1.5')
-	}
+    repositories {
+        maven { url hkntvMavenCentral }
+    }
+    dependencies {
+        //Provides additional optional and provided dependency configurations for Gradle along with Maven POM generation support
+        classpath("org.springframework.build.gradle:propdeps-plugin:0.0.7")
+        classpath("com.hkntv.gradleplugin:gradleplugin-restdoc:1.1.0-SNAPSHOT")
+        classpath('org.gradle.api.plugins:gradle-cargo-plugin:1.5')
+    }
 }
 
 apply plugin: 'sonar-runner'
@@ -31,33 +31,31 @@ sonarRunner {
     }
 }
 
-
 //configuration for all projects
 allprojects { project ->
-	apply plugin: 'idea'
+    apply plugin: 'idea'
     apply plugin: 'eclipse'
 
-	ext.releaseBuild = version.endsWith('RELEASE')
+    ext.releaseBuild = version.endsWith('RELEASE')
     ext.snapshotBuild = version.endsWith('SNAPSHOT')
 
     repositories {
         maven { url hkntvMavenCentral }
     }
-    
+
 }
 
 //find out the java projects
-ext.javaProjects = subprojects.findAll { project -> project.name != 'docs' && project.name != 'manual' && project.name != 'guides'}
+ext.javaProjects = subprojects.findAll { project -> project.name != 'docs' && project.name != 'manual' && project.name != 'guides' }
 
 //find out the itegrate test projects
 ext.itestProjects = subprojects.findAll { project -> project.name.startsWith('itest') }
 
-
 //find out the webapp projects
-ext.webappProjects = subprojects.findAll {project -> project.name.endsWith('webapp')}
+ext.webappProjects = subprojects.findAll { project -> project.name.endsWith('webapp') }
 
 //find out the app projects
-ext.appProjects = subprojects.findAll {project -> project.name.endsWith('app')} - webappProjects
+ext.appProjects = subprojects.findAll { project -> project.name.endsWith('app') } - webappProjects
 
 //document/manual/guide project should change the eclipse import
 configure(allprojects - javaProjects) {
@@ -86,58 +84,59 @@ configure(javaProjects) {
 
 //configure the application project which should ends with app
 configure(appProjects) {
-	apply from: "$rootDir/gradle/appProjects.gradle"
+    apply from: "$rootDir/gradle/appProjects.gradle"
 }
 
 //configure the web application project which should ends with webapp
 configure(webappProjects) {
-	apply from: "$rootDir/gradle/webappProjects.gradle"
+    apply from: "$rootDir/gradle/webappProjects.gradle"
 }
 
 configure(rootProject) {
-	apply plugin: 'build-dashboard'
-	task wrapper(type: Wrapper) {
-		description = "Generates gradlew[.bat] scripts"
-	}
+    apply plugin: 'build-dashboard'
+    task wrapper(type: Wrapper) {
+        description = "Generates gradlew[.bat] scripts"
+    }
 }
 
 
 project("sure-service-api") {
-	description = "The core module of sure project"
-		
-	dependencies {
-		compile(libraries.pylon_core)
-		compile(libraries.thumbnailator)
-		compile(libraries.aliyun_oss)
-		compile(libraries.pylon_data)
-		compile(files("../lib/CCP_REST_SMS_JAVA_v2.6.3r.jar"))
-	}
+    description = "The core module of sure project"
+
+    dependencies {
+        compile(libraries.pylon_core)
+        compile(libraries.thumbnailator)
+        compile(libraries.aliyun_oss)
+        compile(libraries.pylon_data)
+        compile(fileTree(dir: "../lib", include: "*.jar"))
+    }
 }
 
 project("sure-service") {
-	description = "The service module of sure project"
-		
-	dependencies {
-		compile(project(":sure-service-api"))
-		compile(libraries.groovy_all)
-		compile(libraries.c3p0)
-		compile(libraries.immortal_logback)
-		compile(libraries.commons_codec)
-		testCompile(libraries.pylon_test)
-		
-	}
+    description = "The service module of sure project"
+
+    dependencies {
+        compile(project(":sure-service-api"))
+        compile(libraries.groovy_all)
+        compile(libraries.c3p0)
+        compile(libraries.immortal_logback)
+        compile(libraries.commons_codec)
+        testCompile(libraries.pylon_test)
+
+    }
 }
 
 project("sure-webapp") {
-	description = "sure web application"
-	dependencies {
-		compile(project(":sure-service"))
-		compile(libraries.pylon_web)
-		compile(libraries.jackson_databind)
-		compile(libraries.hibernate_validator)
-		compile(libraries.logback_classic)
-		compile(libraries.groovy_all)
-		compile(libraries.commons_fileupload)
-		compile(libraries.commons_io)
-		compile(libraries.c3p0)	}
+    description = "sure web application"
+    dependencies {
+        compile(project(":sure-service"))
+        compile(libraries.pylon_web)
+        compile(libraries.jackson_databind)
+        compile(libraries.hibernate_validator)
+        compile(libraries.logback_classic)
+        compile(libraries.groovy_all)
+        compile(libraries.commons_fileupload)
+        compile(libraries.commons_io)
+        compile(libraries.c3p0)
+    }
 }

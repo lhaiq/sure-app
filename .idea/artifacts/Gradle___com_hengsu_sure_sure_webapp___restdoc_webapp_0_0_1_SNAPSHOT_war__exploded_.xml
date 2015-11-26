@@ -89,6 +89,9 @@
           <element id="library" level="project" name="Gradle: org.aspectj:aspectjrt:1.8.0" />
           <element id="library" level="project" name="Gradle: org.slf4j:jcl-over-slf4j:1.7.7" />
           <element id="library" level="project" name="Gradle: org.springframework:spring-jdbc:4.0.5.RELEASE" />
+          <element id="library" level="module" name="Gradle: gexin-rp-sdk-base-4.0.0.2" module-name="sure-service-api" />
+          <element id="library" level="module" name="Gradle: gexin-rp-sdk-http-4.0.0.2" module-name="sure-service-api" />
+          <element id="library" level="module" name="Gradle: gexin-rp-sdk-template-4.0.0.2" module-name="sure-service-api" />
           <element id="library" level="project" name="Gradle: org.codehaus.groovy:groovy-all:2.0.7" />
           <element id="library" level="project" name="Gradle: com.hkntv.immortal:immortal-logback:1.1.0-SNAPSHOT" />
           <element id="library" level="project" name="Gradle: com.hkntv.immortal:immortal-client:1.1.0-SNAPSHOT" />

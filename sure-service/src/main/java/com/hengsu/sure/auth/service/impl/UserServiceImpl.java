@@ -18,7 +18,9 @@ import com.hengsu.sure.auth.model.UserModel;
 import com.hkntv.pylon.core.beans.mapping.BeanMapper;
 import org.springframework.util.DigestUtils;
 
+import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -229,6 +231,21 @@ public class UserServiceImpl implements UserService {
         //密码不返回
         userModel.setPassword(null);
         return userModel;
+    }
+
+    //根据距离查询
+    @Override
+    public List<UserModel> queryUserByTimeAndLocation(Long sec, Double distance, Double longitude, Double latitude) {
+
+        //经纬度范围
+        double range = 180 / Math.PI * distance / 6372.797;
+        double ingR = range / Math.cos(latitude * Math.PI / 180.0);
+        double maxLat = latitude + range;
+        double minLat = latitude - range;
+        double maxLng = longitude + ingR;
+        double minLng = longitude - ingR;
+        Date date = new Date(System.currentTimeMillis() / 1000 - sec);
+        return null;
     }
 
     @Transactional

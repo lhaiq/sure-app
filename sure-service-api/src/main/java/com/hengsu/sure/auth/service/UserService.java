@@ -4,6 +4,7 @@ package com.hengsu.sure.auth.service;
 import com.hengsu.sure.auth.model.UserModel;
 
 import java.util.Date;
+import java.util.List;
 
 public interface UserService {
 
@@ -37,5 +38,7 @@ public interface UserService {
     public UserModel accountLogin(String phone, String password);
 
     public UserModel faceLogin(String registerFaceId, String loginFaceId);
+
+    public List<UserModel> queryUserByTimeAndLocation(Long sec, Double distance, Double longitude, Double latitude);
 
 }
