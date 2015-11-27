@@ -33,7 +33,7 @@ public class PushServiceImpl implements PushService {
     private String appKey;
 
 
-    @Autowired
+//    @Autowired
     private IGtPush push;
 
     @Override

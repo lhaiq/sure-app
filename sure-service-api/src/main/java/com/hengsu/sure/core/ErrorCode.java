@@ -13,6 +13,7 @@ public enum ErrorCode {
     AUTH_CODE_ERROR("1002", "验证码不正确"),
     AUTH_TOKEN_INVALID("1003", "AUTH TOKEN非法"),
     AUTH_TOKEN_MUST("1004", "AUTH TOKEN 必须填"),
+    DELETE_ONLY_SELF("1011", "只能删除自己"),
 
     REGISTER_PHONE_EXISTED("1005", "该手机已经注册过"),
 
