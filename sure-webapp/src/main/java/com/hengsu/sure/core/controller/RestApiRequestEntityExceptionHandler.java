@@ -12,6 +12,7 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
@@ -72,6 +73,25 @@ public class RestApiRequestEntityExceptionHandler {
         return new ResponseEntity<Object>(envelope, HttpStatus.OK);
     }
 
+    /**
+     * handle parameter missing
+     *
+     * @param ex
+     * @return
+     */
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public ResponseEntity<Object> processMissing(MissingServletRequestParameterException ex) {
 
-    //MissingServletRequestParameterException
+        logger.error(ex.getMessage());
+
+        RestApiError restApiError = new RestApiError();
+        restApiError.setStatusCode(ErrorCode.PARAMETER_MUST.getCode().toString());
+        restApiError.setMessage(ex.getMessage());
+        restApiError.setRawMessage(ex.getMessage());
+        ResponseEnvelope<Object> envelope = new ResponseEnvelope<Object>(restApiError, false);
+        return new ResponseEntity<Object>(envelope, HttpStatus.OK);
+    }
+
+
+    //
 }

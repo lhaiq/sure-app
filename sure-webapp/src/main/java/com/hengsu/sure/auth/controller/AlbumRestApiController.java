@@ -37,13 +37,11 @@ public class AlbumRestApiController {
     @RequestMapping(value = "/auth/album", method = RequestMethod.GET)
     public ResponseEntity<ResponseEnvelope<Page<AlbumModel>>> getAlbumById(
             @Value("#{request.getAttribute('userId')}") Long userId,
-            @RequestParam Integer page,
-            @RequestParam Integer size) {
+            Pageable pageable) {
 
         //设置查询参数
         AlbumModel param = new AlbumModel();
         param.setUserId(userId);
-        Pageable pageable = new PageRequest(page, size, Sort.Direction.DESC, "create_time");
 
         //返回数据
         Integer count = albumService.selectCount(param);

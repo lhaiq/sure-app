@@ -24,6 +24,7 @@ public enum ErrorCode {
 
     JSON_FORMATTED("1008", "JSON格式错误"),
     FIELD_MUST("1009", "字段必须填"),
+    PARAMETER_MUST("1009", "字段必须填"),
     IMAGE_EXISTED("1010", "图片不存在"),
     AUTH_CODE_NOT_EXISTED("1011", "该手机号尚未获取验证码"),
 

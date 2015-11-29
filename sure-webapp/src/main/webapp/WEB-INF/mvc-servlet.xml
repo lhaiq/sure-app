@@ -38,6 +38,10 @@
 		      <property name="supportedMediaTypes" value = "text/plain;charset=UTF-8" />
 		    </bean>
 		</mvc:message-converters>
+		<mvc:argument-resolvers>
+			<bean class="org.springframework.data.web.PageableHandlerMethodArgumentResolver">
+			</bean>
+		</mvc:argument-resolvers>
     </mvc:annotation-driven>
 	
 	<mvc:interceptors>
