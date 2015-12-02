@@ -27,6 +27,8 @@ import com.hkntv.pylon.web.rest.annotation.RestApiController;
 import com.hengsu.sure.auth.model.UserModel;
 import com.hengsu.sure.auth.vo.UserVO;
 
+import javax.validation.Valid;
+
 
 @RestApiController
 @RequestMapping("/sure")
@@ -72,7 +74,7 @@ public class UserRestApiController {
     @IgnoreAuth
     @RequestMapping(value = "/auth/validatecode", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEnvelope<String> validateAuthCode(@RequestBody ValidateAuthCodeRequest authCodeRequest) {
+    public ResponseEnvelope<String> validateAuthCode(@Valid@RequestBody ValidateAuthCodeRequest authCodeRequest) {
         userService.checkRegisterAuthCode(authCodeRequest.getPhone(), authCodeRequest.getCode());
         ResponseEnvelope<String> responseEnv = new ResponseEnvelope<>(ReturnCode.OPERATION_SUCCESS, true);
         return responseEnv;
@@ -88,7 +90,7 @@ public class UserRestApiController {
     @IgnoreAuth
     @RequestMapping(value = "/auth/register", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEnvelope<LoginSuccessVO> register(@RequestBody RegisterRequest registerRequest) {
+    public ResponseEnvelope<LoginSuccessVO> register(@Valid@RequestBody RegisterRequest registerRequest) {
 
         //将注册信息保存
         UserModel userModel = beanMapper.map(registerRequest, UserModel.class);
@@ -124,7 +126,7 @@ public class UserRestApiController {
     @IgnoreAuth
     @RequestMapping(value = "/auth/accountlogin", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEnvelope<LoginSuccessVO> accountLogin(@RequestBody LoginRequest loginRequest) {
+    public ResponseEnvelope<LoginSuccessVO> accountLogin(@Valid@RequestBody LoginRequest loginRequest) {
         UserModel userModel = userService.accountLogin(loginRequest.getPhone(), loginRequest.getPassword());
 
         //登录成功后生成auth token，并保存到内存
@@ -150,7 +152,7 @@ public class UserRestApiController {
     @IgnoreAuth
     @RequestMapping(value = "/auth/facelogin", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEnvelope<LoginSuccessVO> faceLogin(@RequestBody FaceLoginRequest faceLoginRequest) {
+    public ResponseEnvelope<LoginSuccessVO> faceLogin(@Valid@RequestBody FaceLoginRequest faceLoginRequest) {
         UserModel userModel = userService.faceLogin(faceLoginRequest.getRegisterFaceId(), faceLoginRequest.getLoginFaceId());
 
         //登录成功后生成auth token，并保存到内存

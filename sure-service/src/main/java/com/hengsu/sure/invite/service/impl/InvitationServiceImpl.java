@@ -105,16 +105,26 @@ public class InvitationServiceImpl implements InvitationService {
             ErrorCode.throwBusinessException(ErrorCode.HAVE_UNFINISHED_INVITATION);
         }
 
-        //将邀约信息保存
-        invitationModel.setCreateTime(new Date());
-        createSelective(invitationModel);
-
         //查询符合条件的user
         List<UserModel> userModels = userService.queryUserByTimeAndLocation(
                 DEFAULT_INTERVAL,
                 DEFAULT_DISTANCE,
                 invitationModel.getLongitude(),
                 invitationModel.getLatitude());
+
+        if (userModels.size() == 0) {
+            invitationModel.setStatus(InvitationStatus.VOID.getCode());
+            //将邀约信息保存
+            invitationModel.setCreateTime(new Date());
+            createSelective(invitationModel);
+            return;
+        }
+
+        //将邀约信息保存
+        invitationModel.setCreateTime(new Date());
+        invitationModel.setStatus(InvitationStatus.UNFINISHED.getCode());
+        createSelective(invitationModel);
+
 
         //查询发布者
         UserModel userModel = userService.findByPrimaryKey(invitationModel.getUserId());

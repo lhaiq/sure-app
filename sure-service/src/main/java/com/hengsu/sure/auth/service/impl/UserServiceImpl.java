@@ -18,10 +18,7 @@ import com.hengsu.sure.auth.model.UserModel;
 import com.hkntv.pylon.core.beans.mapping.BeanMapper;
 import org.springframework.util.DigestUtils;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -90,14 +87,14 @@ public class UserServiceImpl implements UserService {
     @Override
     public void generateRegisterAuthCode(String phone) {
         String authCode = RandomUtil.createRandom(true, 4);
-        registerAuthCodes.put(authCode, new AuthCodeModel(authCode));
+        registerAuthCodes.put(phone, new AuthCodeModel(authCode));
         authCodeService.sendAuthCode(ImmutableList.of(phone), registerAuthCodeTemplateId,
                 new String[]{authCode});
     }
 
     @Override
     public void checkRegisterAuthCode(String phone, String authCode) {
-        AuthCodeModel authCodeModel = registerAuthCodes.get(phone);
+        AuthCodeModel authCodeModel = registerAuthCodes.remove(phone);
 
         //判断手机号是否获取过验证码
         if (null == authCodeModel) {
@@ -136,7 +133,7 @@ public class UserServiceImpl implements UserService {
     public void changePass(String phone, String newPass, String authCode) {
 
         //验证码校验
-        AuthCodeModel authCodeModel = changePassAuthCodes.get(phone);
+        AuthCodeModel authCodeModel = changePassAuthCodes.remove(phone);
 
         //判断手机号是否获取过验证码
         if (null == authCodeModel) {
@@ -245,7 +242,8 @@ public class UserServiceImpl implements UserService {
         double maxLng = longitude + ingR;
         double minLng = longitude - ingR;
         Date date = new Date(System.currentTimeMillis() / 1000 - sec);
-        return null;
+        //TODO
+        return new ArrayList<>();
     }
 
     @Transactional
@@ -259,6 +257,5 @@ public class UserServiceImpl implements UserService {
     public int updateByPrimaryKeySelective(UserModel userModel) {
         return userRepo.updateByPrimaryKeySelective(beanMapper.map(userModel, User.class));
     }
-
 
 }

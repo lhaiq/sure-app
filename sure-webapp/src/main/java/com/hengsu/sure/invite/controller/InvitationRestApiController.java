@@ -37,8 +37,11 @@ public class InvitationRestApiController {
      * @return
      */
     @RequestMapping(value = "/invite/invitation", method = RequestMethod.POST)
-    public ResponseEntity<ResponseEnvelope<String>> createInvitation(@RequestBody InvitationVO invitationVO) {
+    public ResponseEntity<ResponseEnvelope<String>> createInvitation(
+            @RequestBody InvitationVO invitationVO,
+            @Value("#{request.getAttribute('userId')}") Long userId) {
         InvitationModel invitationModel = beanMapper.map(invitationVO, InvitationModel.class);
+        invitationModel.setUserId(userId);
         invitationService.publishInvitation(invitationModel);
         ResponseEnvelope<String> responseEnv = new ResponseEnvelope<>(ReturnCode.OPERATION_SUCCESS, true);
         return new ResponseEntity<>(responseEnv, HttpStatus.OK);

@@ -1,11 +1,15 @@
 package com.hengsu.sure.auth.request;
 
+import org.hibernate.validator.constraints.NotEmpty;
+
 /**
  * Created by haiquanli on 15/11/21.
  */
 public class FaceLoginRequest {
 
+    @NotEmpty
     private String registerFaceId;
+    @NotEmpty
     private String loginFaceId;
 
     public String getLoginFaceId() {

@@ -6,7 +6,8 @@ package com.hengsu.sure.invite;
 public enum InvitationStatus {
 
     UNFINISHED(0, "unfinished"),
-    FINISHED(1, "finished"),;
+    FINISHED(1, "finished"),
+    VOID(2, "void"),;
 
     private Integer code;
     private String desc;
