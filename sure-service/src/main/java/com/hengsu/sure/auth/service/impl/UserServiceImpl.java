@@ -169,6 +169,10 @@ public class UserServiceImpl implements UserService {
             ErrorCode.throwBusinessException(ErrorCode.REGISTER_PHONE_EXISTED);
         }
 
+        //设定默认nick name
+        String phone = userModel.getPhone();
+        userModel.setNickname(phone.substring(phone.length()-6));
+
         //MD5加密
         String password = DigestUtils.md5DigestAsHex(userModel.getPassword().getBytes());
         userModel.setPassword(password);
@@ -257,5 +261,7 @@ public class UserServiceImpl implements UserService {
     public int updateByPrimaryKeySelective(UserModel userModel) {
         return userRepo.updateByPrimaryKeySelective(beanMapper.map(userModel, User.class));
     }
+
+
 
 }

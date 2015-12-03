@@ -12,12 +12,11 @@ public class GoodsModel{
 	private String images;
 	private Date startTime;
 	private Date endTime;
-	private String desc;
-	private Integer cityId;
+	private String description;
 	private String address;
 	private Integer invoice;
 	private String invoiceDesc;
-
+	private Integer cityId;
 	private List<Long> imageIds;
 		
 	public void setId(Long id){
@@ -60,12 +59,12 @@ public class GoodsModel{
 		return this.endTime;
 	}
 		
-	public void setDesc(String desc){
-		this.desc = desc;
+	public void setDescription(String description){
+		this.description = description;
 	}
 	
-	public String getDesc(){
-		return this.desc;
+	public String getDescription(){
+		return this.description;
 	}
 		
 	public void setAddress(String address){
@@ -91,15 +90,15 @@ public class GoodsModel{
 	public String getInvoiceDesc(){
 		return this.invoiceDesc;
 	}
-
-
-	public void setCityId(Integer cityId) {
+		
+	public void setCityId(Integer cityId){
 		this.cityId = cityId;
 	}
-
-	public Integer getCityId() {
-		return cityId;
+	
+	public Integer getCityId(){
+		return this.cityId;
 	}
+
 
 	public void setImageIds(List<Long> imageIds) {
 		this.imageIds = imageIds;

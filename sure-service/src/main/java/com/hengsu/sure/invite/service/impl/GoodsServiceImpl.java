@@ -1,6 +1,8 @@
 package com.hengsu.sure.invite.service.impl;
 
 import com.hengsu.sure.sns.model.MTimeModel;
+import com.hkntv.pylon.data.common.annotation.ReadWrite;
+import com.hkntv.pylon.data.common.util.ReadWriteType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -39,6 +41,7 @@ public class GoodsServiceImpl implements GoodsService {
 
     @Transactional
     @Override
+    @ReadWrite(type = ReadWriteType.READ)
     public int deleteByPrimaryKey(Long id) {
         return goodsRepo.deleteByPrimaryKey(id);
     }
@@ -61,7 +64,7 @@ public class GoodsServiceImpl implements GoodsService {
         Goods goods = beanMapper.map(goodsModel, Goods.class);
         List<Goods> goodses = goodsRepo.selectPage(goods, pageable);
         List<GoodsModel> goodsModels = beanMapper.mapAsList(goodses, GoodsModel.class);
-        for(GoodsModel goodsModel1:goodsModels){
+        for (GoodsModel goodsModel1 : goodsModels) {
             setImageIds(goodsModel1);
         }
         return goodsModels;

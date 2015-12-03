@@ -2,12 +2,15 @@ package com.hengsu.sure.auth.request;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
+import javax.validation.constraints.Size;
+
 /**
  * Created by haiquanli on 15/11/19.
  */
 public class RegisterRequest {
 
     @NotEmpty
+    @Size(min = 11,max = 11)
     private String phone;
     @NotEmpty
     private String password;

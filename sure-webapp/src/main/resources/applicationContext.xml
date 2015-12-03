@@ -42,7 +42,6 @@
 	<context:annotation-config />
 
 
-
 	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
 		<property name="basePackage" value="com.hengsu.**.repository" />
 		<property name="sqlSessionFactoryBeanName" value="myBatisSqlSessionFactory" />
@@ -58,10 +57,12 @@
 		<property name="dataSource" ref="dataSource" />
 	</bean>
 	
-	<pylon-datasource:jdbc-matrix id="dataSource">
+	<pylon-datasource:jdbc-matrix id="dataSource" >
 		<pylon-datasource:readWriteDataSource name="readwrite">
 			<pylon-datasource:writeDataSource logicName="sure" />
 		</pylon-datasource:readWriteDataSource>
 	</pylon-datasource:jdbc-matrix>
+
+
 
 </beans>

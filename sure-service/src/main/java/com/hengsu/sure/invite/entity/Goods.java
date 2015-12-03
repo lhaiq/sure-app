@@ -13,13 +13,15 @@ public class Goods {
 
     private Date endTime;
 
-    private String desc;
+    private String description;
 
     private String address;
 
     private Integer invoice;
 
     private String invoiceDesc;
+
+    private Integer cityId;
 
     public Long getId() {
         return id;
@@ -61,12 +63,12 @@ public class Goods {
         this.endTime = endTime;
     }
 
-    public String getDesc() {
-        return desc;
+    public String getDescription() {
+        return description;
     }
 
-    public void setDesc(String desc) {
-        this.desc = desc;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getAddress() {
@@ -91,5 +93,13 @@ public class Goods {
 
     public void setInvoiceDesc(String invoiceDesc) {
         this.invoiceDesc = invoiceDesc;
+    }
+
+    public Integer getCityId() {
+        return cityId;
+    }
+
+    public void setCityId(Integer cityId) {
+        this.cityId = cityId;
     }
 }

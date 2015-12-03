@@ -11,10 +11,11 @@ public class GoodsVO{
 	private String images;
 	private Date startTime;
 	private Date endTime;
-	private String desc;
+	private String description;
 	private String address;
 	private Integer invoice;
 	private String invoiceDesc;
+	private Integer cityId;
 		
 	public void setId(Long id){
 		this.id = id;
@@ -56,12 +57,12 @@ public class GoodsVO{
 		return this.endTime;
 	}
 		
-	public void setDesc(String desc){
-		this.desc = desc;
+	public void setDescription(String description){
+		this.description = description;
 	}
 	
-	public String getDesc(){
-		return this.desc;
+	public String getDescription(){
+		return this.description;
 	}
 		
 	public void setAddress(String address){
@@ -86,6 +87,14 @@ public class GoodsVO{
 	
 	public String getInvoiceDesc(){
 		return this.invoiceDesc;
+	}
+		
+	public void setCityId(Integer cityId){
+		this.cityId = cityId;
+	}
+	
+	public Integer getCityId(){
+		return this.cityId;
 	}
 		
 		
