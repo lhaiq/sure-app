@@ -66,9 +66,9 @@ public class RestApiRequestEntityExceptionHandler {
         logger.error(webRequest.getContextPath() + ":" + ex.getMessage());
 
         RestApiError restApiError = new RestApiError();
-        restApiError.setStatusCode(ErrorCode.FIELD_MUST.getCode().toString());
-        restApiError.setMessage(ErrorCode.FIELD_MUST.getCode().toString());
-        restApiError.setRawMessage(ErrorCode.FIELD_MUST.getCode().toString());
+        restApiError.setStatusCode(ErrorCode.JSON_FORMAT_ERROR.getCode().toString());
+        restApiError.setMessage(ErrorCode.JSON_FORMAT_ERROR.getErrorMsg());
+        restApiError.setRawMessage(ex.getMessage());
         ResponseEnvelope<Object> envelope = new ResponseEnvelope<Object>(restApiError, false);
         return new ResponseEntity<Object>(envelope, HttpStatus.OK);
     }

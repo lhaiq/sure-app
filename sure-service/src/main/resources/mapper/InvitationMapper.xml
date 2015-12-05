@@ -233,6 +233,15 @@
       status = #{status,jdbcType=INTEGER}
     where id = #{id,jdbcType=BIGINT}
   </update>
+
+
+    <select id="getInvitedCount" resultType="java.lang.Integer">
+        select
+        count(*)
+        from invitation
+        where user_id = #{param1,jdbcType=BIGINT} and create_time>#{param2,jdbcType=TIMESTAMP} and create_time &gt;=#{param2,jdbcType=TIMESTAMP}
+    </select>
+
     <select id="selectCount" resultType="java.lang.Integer" parameterType="com.hengsu.sure.invite.entity.Invitation">
         select count(*) from invitation
         <where>

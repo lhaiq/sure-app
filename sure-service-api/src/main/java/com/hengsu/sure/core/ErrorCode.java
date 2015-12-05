@@ -30,6 +30,7 @@ public enum ErrorCode {
 
     DELETE_ONLY_SELF("1014", "只能删除自己"),
     AUTH_CODE_NOT_EXISTED("1015", "该手机号尚未获取验证码"),
+    JSON_FORMAT_ERROR("1016", "json格式错误"),
 
     //时光5
     MTIME_DELETE_ERROR("5000", "只能删除自己的时光"),
@@ -40,7 +41,7 @@ public enum ErrorCode {
     RELATION_ERROR("5003", "不能关注自己或加自己为好友"),
 
     //600邀约
-    HAVE_UNFINISHED_INVITATION("600", "还有未完成的邀约"),
+    HAVE_EXCEED_INVITATION("6000", "超出邀约次数"),
     INVITATION_FINISHED("6001", "该邀约已经完成"),
     INVITATION_PUBLISHER_NOT_MATCH("6002", "只能更新自己的邀约"),
     ;

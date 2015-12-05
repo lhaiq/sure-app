@@ -6,7 +6,11 @@ import com.hengsu.sure.auth.service.UserService;
 import com.hengsu.sure.core.ErrorCode;
 import com.hengsu.sure.core.service.PushService;
 import com.hengsu.sure.invite.InvitationStatus;
+import com.hengsu.sure.invite.model.InvitationResultModel;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,6 +20,7 @@ import com.hengsu.sure.invite.model.InvitationModel;
 import com.hengsu.sure.invite.service.InvitationService;
 import com.hkntv.pylon.core.beans.mapping.BeanMapper;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -24,6 +29,7 @@ public class InvitationServiceImpl implements InvitationService {
 
     private static final Double DEFAULT_DISTANCE = 10.0;
     private static final Long DEFAULT_INTERVAL = 30 * 60L;
+    private static final Integer DEFAULT_COUNT = 4;
 
     private static final String INVITATION_REQUEST = "invitation_request";
     private static final String INVITATION_RECEIVE = "invitation_receive";
@@ -41,6 +47,9 @@ public class InvitationServiceImpl implements InvitationService {
 
     @Autowired
     private PushService pushService;
+
+    @Value("${push.retry.count}")
+    private Integer retryCount;
 
     @Transactional
     @Override
@@ -94,31 +103,47 @@ public class InvitationServiceImpl implements InvitationService {
 
     @Transactional
     @Override
-    public void publishInvitation(InvitationModel invitationModel) {
+    public InvitationResultModel publishInvitation(InvitationModel invitationModel) {
 
-        //判断是否有邀约尚未完成
-        InvitationModel param = new InvitationModel();
-        param.setUserId(invitationModel.getUserId());
-        param.setStatus(InvitationStatus.UNFINISHED.getCode());
-        Integer count = selectCount(param);
-        if (count > 0) {
-            ErrorCode.throwBusinessException(ErrorCode.HAVE_UNFINISHED_INVITATION);
+        //判断是否超出次数
+        Integer invitedCount = getInvitedCount(invitationModel.getUserId());
+        if (invitedCount >= retryCount) {
+            ErrorCode.throwBusinessException(ErrorCode.HAVE_EXCEED_INVITATION);
         }
 
-        //查询符合条件的user
-        List<UserModel> userModels = userService.queryUserByTimeAndLocation(
-                DEFAULT_INTERVAL,
-                DEFAULT_DISTANCE,
-                invitationModel.getLongitude(),
-                invitationModel.getLatitude());
+        //剩余次数
+        InvitationResultModel invitationResultModel = new InvitationResultModel();
+        Integer residueCount = retryCount - (invitedCount + 1);
+        invitationResultModel.setResidueCount(residueCount);
 
-        if (userModels.size() == 0) {
+
+        List<UserModel> userModels = null;
+
+        //查询符合条件的user,
+        for (int i = 1; i < DEFAULT_COUNT; i++) {
+            userModels = userService.queryUserByTimeAndLocation(
+                    DEFAULT_INTERVAL * i,
+                    DEFAULT_DISTANCE * i,
+                    invitationModel.getLongitude(),
+                    invitationModel.getLatitude(),
+                    invitationModel.getUserId(),
+                    invitationModel.getCity());
+
+            if (CollectionUtils.isNotEmpty(userModels)) {
+                continue;
+            }
+        }
+
+        //判断是否有合适的人
+        if (CollectionUtils.isEmpty(userModels)) {
             invitationModel.setStatus(InvitationStatus.VOID.getCode());
             //将邀约信息保存
             invitationModel.setCreateTime(new Date());
             createSelective(invitationModel);
-            return;
+            invitationResultModel.setSendCount(0);
+            return invitationResultModel;
         }
+
 
         //将邀约信息保存
         invitationModel.setCreateTime(new Date());
@@ -136,6 +161,9 @@ public class InvitationServiceImpl implements InvitationService {
         message.put("user", userModel);
         message.put("count", userModels.size());
         pushService.pushMessage(message.toJSONString(), userModels);
+        invitationResultModel.setSendCount(userModels.size());
+
+        return invitationResultModel;
     }
 
     @Override
@@ -184,6 +212,12 @@ public class InvitationServiceImpl implements InvitationService {
         pushService.pushMessage(message.toJSONString(),
                 userService.findByPrimaryKey(receivedUserId));
 
+    }
+
+    private Integer getInvitedCount(Long userId) {
+        Date startDate = DateUtils.truncate(new Date(), Calendar.DATE);
+        Date endDate = DateUtils.addDays(startDate, 1);
+        return invitationRepo.getInvitedCount(userId, startDate, endDate);
     }
 
 

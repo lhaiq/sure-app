@@ -39,6 +39,11 @@ public interface UserService {
 
     public UserModel faceLogin(String registerFaceId, String loginFaceId);
 
-    public List<UserModel> queryUserByTimeAndLocation(Long sec, Double distance, Double longitude, Double latitude);
+    public List<UserModel> queryUserByTimeAndLocation(Long sec,
+                                                      Double distance,
+                                                      Double longitude,
+                                                      Double latitude,
+                                                      Long userId,
+                                                      Integer cityId);
 
 }

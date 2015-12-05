@@ -171,7 +171,7 @@ public class UserServiceImpl implements UserService {
 
         //设定默认nick name
         String phone = userModel.getPhone();
-        userModel.setNickname(phone.substring(phone.length()-6));
+        userModel.setNickname(phone.substring(phone.length() - 6));
 
         //MD5加密
         String password = DigestUtils.md5DigestAsHex(userModel.getPassword().getBytes());
@@ -236,7 +236,12 @@ public class UserServiceImpl implements UserService {
 
     //根据距离查询
     @Override
-    public List<UserModel> queryUserByTimeAndLocation(Long sec, Double distance, Double longitude, Double latitude) {
+    public List<UserModel> queryUserByTimeAndLocation(Long sec,
+                                                      Double distance,
+                                                      Double longitude,
+                                                      Double latitude,
+                                                      Long userId,
+                                                      Integer cityId) {
 
         //经纬度范围
         double range = 180 / Math.PI * distance / 6372.797;
@@ -261,7 +266,6 @@ public class UserServiceImpl implements UserService {
     public int updateByPrimaryKeySelective(UserModel userModel) {
         return userRepo.updateByPrimaryKeySelective(beanMapper.map(userModel, User.class));
     }
-
 
 
 }

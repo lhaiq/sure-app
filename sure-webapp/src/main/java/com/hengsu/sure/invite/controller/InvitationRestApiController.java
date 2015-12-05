@@ -1,12 +1,15 @@
 package com.hengsu.sure.invite.controller;
 
 import com.hengsu.sure.ReturnCode;
+import com.hengsu.sure.core.Constants;
+import com.hengsu.sure.invite.model.InvitationResultModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import com.hkntv.pylon.core.beans.mapping.BeanMapper;
@@ -16,6 +19,8 @@ import com.hkntv.pylon.web.rest.annotation.RestApiController;
 import com.hengsu.sure.invite.service.InvitationService;
 import com.hengsu.sure.invite.model.InvitationModel;
 import com.hengsu.sure.invite.vo.InvitationVO;
+
+import javax.validation.Valid;
 
 @RestApiController
 @RequestMapping("/sure")
@@ -37,13 +42,17 @@ public class InvitationRestApiController {
      * @return
      */
     @RequestMapping(value = "/invite/invitation", method = RequestMethod.POST)
-    public ResponseEntity<ResponseEnvelope<String>> createInvitation(
-            @RequestBody InvitationVO invitationVO,
+    public ResponseEntity<ResponseEnvelope<InvitationResultModel>> createInvitation(
+            @Valid @RequestBody InvitationVO invitationVO,
             @Value("#{request.getAttribute('userId')}") Long userId) {
         InvitationModel invitationModel = beanMapper.map(invitationVO, InvitationModel.class);
+        invitationModel.setScene(StringUtils.collectionToDelimitedString(invitationVO.getScenes(),
+                Constants.DEFAULT_DELI));
+        invitationModel.setTime(StringUtils.collectionToDelimitedString(invitationVO.getTimeSolts(),
+                Constants.DEFAULT_DELI));
         invitationModel.setUserId(userId);
-        invitationService.publishInvitation(invitationModel);
-        ResponseEnvelope<String> responseEnv = new ResponseEnvelope<>(ReturnCode.OPERATION_SUCCESS, true);
+        InvitationResultModel response = invitationService.publishInvitation(invitationModel);
+        ResponseEnvelope<InvitationResultModel> responseEnv = new ResponseEnvelope<>(response, true);
         return new ResponseEntity<>(responseEnv, HttpStatus.OK);
     }
 

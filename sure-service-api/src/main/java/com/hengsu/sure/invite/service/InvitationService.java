@@ -2,6 +2,7 @@
 package com.hengsu.sure.invite.service;
 
 import com.hengsu.sure.invite.model.InvitationModel;
+import com.hengsu.sure.invite.model.InvitationResultModel;
 
 import java.util.Date;
 
@@ -33,8 +34,9 @@ public interface InvitationService {
      * 发布邀约
      *
      * @param invitationModel
+     * @return
      */
-    public void publishInvitation(InvitationModel invitationModel);
+    public InvitationResultModel publishInvitation(InvitationModel invitationModel);
 
     /**
      * 拒绝邀约
