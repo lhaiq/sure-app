@@ -138,5 +138,14 @@
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="Gradle: protobuf-java-2.5.0">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../lib/protobuf-java-2.5.0.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
   </component>
 </module>

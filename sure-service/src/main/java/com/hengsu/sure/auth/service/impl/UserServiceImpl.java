@@ -202,7 +202,7 @@ public class UserServiceImpl implements UserService {
         }
 
         //密码比对
-        password = DigestUtils.md5DigestAsHex(userModel.getPassword().getBytes());
+        password = DigestUtils.md5DigestAsHex(password.getBytes());
         if (!userModel.getPassword().equals(password)) {
             ErrorCode.throwBusinessException(ErrorCode.LOGIN_PASSWORD_ERROR);
         }

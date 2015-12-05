@@ -32,40 +32,38 @@ public class PushServiceImpl implements PushService {
     @Value("${push.app.key}")
     private String appKey;
 
-
-    //    @Autowired
+    @Autowired
     private IGtPush push;
 
     @Override
     public void pushMessage(String data, List<UserModel> users) {
 
         System.out.println(data);
-//        TransmissionTemplate transmissionTemplate = transmissionTemplate(data);
-//        ListMessage message = new ListMessage();
-//        message.setData(transmissionTemplate);
-//
-//        //设置消息离线，并设置离线时间
-//        message.setOffline(true);
-//
-//        //离线有效时间，单位为毫秒，可选
-//        message.setOfflineExpireTime(24 * 1000 * 3600);
-//
-//        //设置推送目标
-//        List<Target> targets = new ArrayList<>();
-//        for (UserModel user : users) {
-//            Target target = new Target();
-//            target.setAppId(appId);
-//            target.setClientId(user.getClientId());
-//            targets.add(target);
-//        }
-//
-//        //获取taskId
-//        String taskId = push.getContentId(message);
-//        logger.info("push request:{}", JSON.toJSON(targets));
+        TransmissionTemplate transmissionTemplate = transmissionTemplate(data);
+        ListMessage message = new ListMessage();
+        message.setData(transmissionTemplate);
+
+        //设置消息离线，并设置离线时间
+        message.setOffline(true);
+
+        //离线有效时间，单位为毫秒，可选
+        message.setOfflineExpireTime(24 * 1000 * 3600);
+
+        //设置推送目标
+        List<Target> targets = new ArrayList<>();
+        for (UserModel user : users) {
+            Target target = new Target();
+            target.setAppId(appId);
+            target.setClientId(user.getClientId());
+            targets.add(target);
+        }
+
+        //获取taskId
+        String taskId = push.getContentId(message);
+        logger.info("push request:{}", JSON.toJSON(targets));
         //使用taskID对目标进行推送
-        //TODO 生产环境
-//        IPushResult result = push.pushMessageToList(taskId, targets);
-//        logger.info("push response: {}", result.getResponse().toString());
+        IPushResult result = push.pushMessageToList(taskId, targets);
+        logger.info("push response: {}", result.getResponse().toString());
 
     }
 
@@ -83,4 +81,11 @@ public class PushServiceImpl implements PushService {
         template.setTransmissionContent(data);
         return template;
     }
+
+//    public static void main(String[] args) {
+//        UserModel userModel = new UserModel();
+//        userModel.setClientId("5ec4b8fc9d9147e7743eb626cb30fe15");
+//        PushService pushService = new PushServiceImpl();
+//        pushService.pushMessage("恒速科技", userModel);
+//    }
 }

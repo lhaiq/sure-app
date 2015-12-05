@@ -18,6 +18,7 @@ public class UserVO{
 	private Integer city;
 	private Long icon;
 	private String alipay;
+	private String clientId;
 
 	public Integer getAge() {
 		return age;
@@ -97,5 +98,13 @@ public class UserVO{
 
 	public void setRole(String role) {
 		this.role = role;
+	}
+
+	public void setClientId(String clientId) {
+		this.clientId = clientId;
+	}
+
+	public String getClientId() {
+		return clientId;
 	}
 }

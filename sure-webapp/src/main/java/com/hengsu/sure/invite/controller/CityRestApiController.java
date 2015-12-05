@@ -35,7 +35,7 @@ public class CityRestApiController {
     public ResponseEntity<ResponseEnvelope<CityVO>> getCityById(@PathVariable Long id) {
         CityModel cityModel = cityService.findByPrimaryKey(id);
         CityVO cityVO = beanMapper.map(cityModel, CityVO.class);
-        ResponseEnvelope<CityVO> responseEnv = new ResponseEnvelope<CityVO>(cityVO);
+        ResponseEnvelope<CityVO> responseEnv = new ResponseEnvelope<CityVO>(cityVO,true);
         return new ResponseEntity<>(responseEnv, HttpStatus.OK);
     }
 
