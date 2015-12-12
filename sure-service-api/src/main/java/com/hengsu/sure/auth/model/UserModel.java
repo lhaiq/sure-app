@@ -14,7 +14,7 @@ public class UserModel{
 	private Double longitude;
 	private Double latitude;
 	private Date locationModifyTime;
-	private String role;
+	private Integer role;
 	private Double balance;
 	private Integer age;
 	private Long icon;
@@ -92,11 +92,11 @@ public class UserModel{
 		return this.locationModifyTime;
 	}
 		
-	public void setRole(String role){
+	public void setRole(Integer role){
 		this.role = role;
 	}
 	
-	public String getRole(){
+	public Integer getRole(){
 		return this.role;
 	}
 		

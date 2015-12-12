@@ -7,22 +7,24 @@ import java.util.Date;
 public class IndentModel{
 	
 	private Long id;
-	private Long userId;
-	private Integer cityId;
-	private String scene;
-	private Integer gender;
-	private String age;
-	private String date;
-	private String time;
-	private String car;
-	private String price;
-	private String state;
-	private Date createTime;
+	private String indentNo;
+	private Long customerId;
+	private Long sellerId;
+	private Long tradeId;
+	private Double money;
 	private Integer status;
-	private Long relationId;
+	private Long referId;
 	private Integer type;
 	private Double longitude;
 	private Double latitude;
+	private Date createTime;
+	private Date applyTime;
+	private Date canceledTime;
+	private String snapshot;
+	private String cancelReason;
+	private Long handleId;
+	private Date startTime;
+	private Date endTime;
 		
 	public void setId(Long id){
 		this.id = id;
@@ -32,92 +34,44 @@ public class IndentModel{
 		return this.id;
 	}
 		
-	public void setUserId(Long userId){
-		this.userId = userId;
+	public void setIndentNo(String indentNo){
+		this.indentNo = indentNo;
 	}
 	
-	public Long getUserId(){
-		return this.userId;
+	public String getIndentNo(){
+		return this.indentNo;
 	}
 		
-	public void setCityId(Integer cityId){
-		this.cityId = cityId;
+	public void setCustomerId(Long customerId){
+		this.customerId = customerId;
 	}
 	
-	public Integer getCityId(){
-		return this.cityId;
+	public Long getCustomerId(){
+		return this.customerId;
 	}
 		
-	public void setScene(String scene){
-		this.scene = scene;
+	public void setSellerId(Long sellerId){
+		this.sellerId = sellerId;
 	}
 	
-	public String getScene(){
-		return this.scene;
+	public Long getSellerId(){
+		return this.sellerId;
 	}
 		
-	public void setGender(Integer gender){
-		this.gender = gender;
+	public void setTradeId(Long tradeId){
+		this.tradeId = tradeId;
 	}
 	
-	public Integer getGender(){
-		return this.gender;
+	public Long getTradeId(){
+		return this.tradeId;
 	}
 		
-	public void setAge(String age){
-		this.age = age;
+	public void setMoney(Double money){
+		this.money = money;
 	}
 	
-	public String getAge(){
-		return this.age;
-	}
-		
-	public void setDate(String date){
-		this.date = date;
-	}
-	
-	public String getDate(){
-		return this.date;
-	}
-		
-	public void setTime(String time){
-		this.time = time;
-	}
-	
-	public String getTime(){
-		return this.time;
-	}
-		
-	public void setCar(String car){
-		this.car = car;
-	}
-	
-	public String getCar(){
-		return this.car;
-	}
-		
-	public void setPrice(String price){
-		this.price = price;
-	}
-	
-	public String getPrice(){
-		return this.price;
-	}
-		
-	public void setState(String state){
-		this.state = state;
-	}
-	
-	public String getState(){
-		return this.state;
-	}
-		
-	public void setCreateTime(Date createTime){
-		this.createTime = createTime;
-	}
-	
-	public Date getCreateTime(){
-		return this.createTime;
+	public Double getMoney(){
+		return this.money;
 	}
 		
 	public void setStatus(Integer status){
@@ -128,12 +82,12 @@ public class IndentModel{
 		return this.status;
 	}
 		
-	public void setRelationId(Long relationId){
-		this.relationId = relationId;
+	public void setReferId(Long referId){
+		this.referId = referId;
 	}
 	
-	public Long getRelationId(){
-		return this.relationId;
+	public Long getReferId(){
+		return this.referId;
 	}
 		
 	public void setType(Integer type){
@@ -158,6 +112,70 @@ public class IndentModel{
 	
 	public Double getLatitude(){
 		return this.latitude;
+	}
+		
+	public void setCreateTime(Date createTime){
+		this.createTime = createTime;
+	}
+	
+	public Date getCreateTime(){
+		return this.createTime;
+	}
+		
+	public void setApplyTime(Date applyTime){
+		this.applyTime = applyTime;
+	}
+	
+	public Date getApplyTime(){
+		return this.applyTime;
+	}
+		
+	public void setCanceledTime(Date canceledTime){
+		this.canceledTime = canceledTime;
+	}
+	
+	public Date getCanceledTime(){
+		return this.canceledTime;
+	}
+		
+	public void setSnapshot(String snapshot){
+		this.snapshot = snapshot;
+	}
+	
+	public String getSnapshot(){
+		return this.snapshot;
+	}
+		
+	public void setCancelReason(String cancelReason){
+		this.cancelReason = cancelReason;
+	}
+	
+	public String getCancelReason(){
+		return this.cancelReason;
+	}
+		
+	public void setHandleId(Long handleId){
+		this.handleId = handleId;
+	}
+	
+	public Long getHandleId(){
+		return this.handleId;
+	}
+		
+	public void setStartTime(Date startTime){
+		this.startTime = startTime;
+	}
+	
+	public Date getStartTime(){
+		return this.startTime;
+	}
+		
+	public void setEndTime(Date endTime){
+		this.endTime = endTime;
+	}
+	
+	public Date getEndTime(){
+		return this.endTime;
 	}
 		
 		

@@ -44,6 +44,10 @@ public enum ErrorCode {
     HAVE_EXCEED_INVITATION("6000", "超出邀约次数"),
     INVITATION_FINISHED("6001", "该邀约已经完成"),
     INVITATION_PUBLISHER_NOT_MATCH("6002", "只能更新自己的邀约"),
+    INVITATION_ROLE_ERROR("6003", "只有买家才能发布即时邀约"),
+    CANNOT_RECEIVE_SLEF_INVITATION("6004", "不能接受自己的即时邀约"),
+    CANNOT_CANCEL_OTHERS_INDENT("6005", "只能取消自己的订单"),
+    CANNOT_CANCEL_STATUS_ERROR("6006", "只能取消未完成的订单"),
     ;
 
     private String code;

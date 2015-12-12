@@ -10,7 +10,7 @@
     <result column="longitude" property="longitude" jdbcType="DOUBLE" />
     <result column="latitude" property="latitude" jdbcType="DOUBLE" />
     <result column="location_modify_time" property="locationModifyTime" jdbcType="TIMESTAMP" />
-    <result column="role" property="role" jdbcType="VARCHAR" />
+    <result column="role" property="role" jdbcType="INTEGER" />
     <result column="balance" property="balance" jdbcType="DOUBLE" />
     <result column="age" property="age" jdbcType="INTEGER" />
     <result column="icon" property="icon" jdbcType="BIGINT" />
@@ -63,7 +63,7 @@
       alipay)
     values (#{id,jdbcType=BIGINT}, #{phone,jdbcType=VARCHAR}, #{nickname,jdbcType=VARCHAR}, 
       #{gender,jdbcType=INTEGER}, #{password,jdbcType=VARCHAR}, #{longitude,jdbcType=DOUBLE}, 
-      #{latitude,jdbcType=DOUBLE}, #{locationModifyTime,jdbcType=TIMESTAMP}, #{role,jdbcType=VARCHAR}, 
+      #{latitude,jdbcType=DOUBLE}, #{locationModifyTime,jdbcType=TIMESTAMP}, #{role,jdbcType=INTEGER},
       #{balance,jdbcType=DOUBLE}, #{age,jdbcType=INTEGER}, #{icon,jdbcType=BIGINT}, #{faceScore,jdbcType=DOUBLE}, 
       #{credit,jdbcType=DOUBLE}, #{skills,jdbcType=DOUBLE}, #{car,jdbcType=INTEGER}, 
       #{city,jdbcType=INTEGER}, #{status,jdbcType=INTEGER}, #{faceId,jdbcType=VARCHAR}, 
@@ -159,7 +159,7 @@
         #{locationModifyTime,jdbcType=TIMESTAMP},
       </if>
       <if test="role != null" >
-        #{role,jdbcType=VARCHAR},
+        #{role,jdbcType=INTEGER},
       </if>
       <if test="balance != null" >
         #{balance,jdbcType=DOUBLE},
@@ -221,7 +221,7 @@
         location_modify_time = #{locationModifyTime,jdbcType=TIMESTAMP},
       </if>
       <if test="role != null" >
-        role = #{role,jdbcType=VARCHAR},
+        role = #{role,jdbcType=INTEGER},
       </if>
       <if test="balance != null" >
         balance = #{balance,jdbcType=DOUBLE},
@@ -268,7 +268,7 @@
       longitude = #{longitude,jdbcType=DOUBLE},
       latitude = #{latitude,jdbcType=DOUBLE},
       location_modify_time = #{locationModifyTime,jdbcType=TIMESTAMP},
-      role = #{role,jdbcType=VARCHAR},
+      role = #{role,jdbcType=INTEGER},
       balance = #{balance,jdbcType=DOUBLE},
       age = #{age,jdbcType=INTEGER},
       icon = #{icon,jdbcType=BIGINT},
@@ -310,7 +310,7 @@
         and location_modify_time = #{locationModifyTime,jdbcType=TIMESTAMP}
       </if>
       <if test="role != null" >
-        and role = #{role,jdbcType=VARCHAR}
+        and role = #{role,jdbcType=INTEGER}
       </if>
       <if test="balance != null" >
         and balance = #{balance,jdbcType=DOUBLE}
@@ -376,7 +376,7 @@
       and location_modify_time = #{param1.locationModifyTime,jdbcType=TIMESTAMP}
     </if>
     <if test="param1.role != null" >
-      and role = #{param1.role,jdbcType=VARCHAR}
+      and role = #{param1.role,jdbcType=INTEGER}
     </if>
     <if test="param1.balance != null" >
       and balance = #{param1.balance,jdbcType=DOUBLE}

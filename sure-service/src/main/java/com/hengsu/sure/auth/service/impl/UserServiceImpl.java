@@ -1,24 +1,28 @@
 package com.hengsu.sure.auth.service.impl;
 
 import com.google.common.collect.ImmutableList;
+import com.hengsu.sure.auth.UserRole;
 import com.hengsu.sure.auth.entity.User;
+import com.hengsu.sure.auth.model.UserModel;
+import com.hengsu.sure.auth.repository.UserRepository;
 import com.hengsu.sure.auth.service.FaceService;
 import com.hengsu.sure.auth.service.UserService;
 import com.hengsu.sure.core.ErrorCode;
 import com.hengsu.sure.core.model.AuthCodeModel;
 import com.hengsu.sure.core.service.AuthCodeService;
 import com.hengsu.sure.core.util.RandomUtil;
+import com.hkntv.pylon.core.beans.mapping.BeanMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import com.hengsu.sure.auth.repository.UserRepository;
-import com.hengsu.sure.auth.model.UserModel;
-import com.hkntv.pylon.core.beans.mapping.BeanMapper;
 import org.springframework.util.DigestUtils;
 
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -76,6 +80,13 @@ public class UserServiceImpl implements UserService {
     public UserModel findByPrimaryKey(Long id) {
         User user = userRepo.selectByPrimaryKey(id);
         return beanMapper.map(user, UserModel.class);
+    }
+
+    @Override
+    public UserModel findByPrimaryKeyNoPass(Long id) {
+        UserModel userModel = findByPrimaryKey(id);
+        userModel.setPassword(null);
+        return userModel;
     }
 
     @Transactional(readOnly = true)
@@ -241,6 +252,7 @@ public class UserServiceImpl implements UserService {
                                                       Double longitude,
                                                       Double latitude,
                                                       Long userId,
+                                                      UserRole userRole,
                                                       Integer cityId) {
 
         //经纬度范围
@@ -252,7 +264,8 @@ public class UserServiceImpl implements UserService {
         double minLng = longitude - ingR;
         Date date = new Date(System.currentTimeMillis() / 1000 - sec);
         //TODO
-        return new ArrayList<>();
+        List<User> users = userRepo.selectPage(new User(), new PageRequest(0, 10));
+        return beanMapper.mapAsList(users, UserModel.class);
     }
 
     @Transactional

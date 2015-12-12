@@ -1,6 +1,7 @@
 
 package com.hengsu.sure.auth.service;
 
+import com.hengsu.sure.auth.UserRole;
 import com.hengsu.sure.auth.model.UserModel;
 
 import java.util.Date;
@@ -12,6 +13,8 @@ public interface UserService {
     public int createSelective(UserModel userModel);
 
     public UserModel findByPrimaryKey(Long id);
+
+    public UserModel findByPrimaryKeyNoPass(Long id);
 
     public int updateByPrimaryKey(UserModel userModel);
 
@@ -44,6 +47,7 @@ public interface UserService {
                                                       Double longitude,
                                                       Double latitude,
                                                       Long userId,
+                                                      UserRole userRole,
                                                       Integer cityId);
 
 }

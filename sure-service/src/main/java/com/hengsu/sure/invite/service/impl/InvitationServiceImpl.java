@@ -1,6 +1,7 @@
 package com.hengsu.sure.invite.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hengsu.sure.auth.UserRole;
 import com.hengsu.sure.auth.model.UserModel;
 import com.hengsu.sure.auth.service.UserService;
 import com.hengsu.sure.core.ErrorCode;
@@ -30,6 +31,7 @@ public class InvitationServiceImpl implements InvitationService {
     private static final Double DEFAULT_DISTANCE = 10.0;
     private static final Long DEFAULT_INTERVAL = 30 * 60L;
     private static final Integer DEFAULT_COUNT = 4;
+    private static final Integer DEAULT_PUBLISH_COUNT = 20;
 
     private static final String INVITATION_REQUEST = "invitation_request";
     private static final String INVITATION_RECEIVE = "invitation_receive";
@@ -105,6 +107,14 @@ public class InvitationServiceImpl implements InvitationService {
     @Override
     public InvitationResultModel publishInvitation(InvitationModel invitationModel) {
 
+        //角色是否为买家
+        Long userId = invitationModel.getUserId();
+        UserModel userModel = userService.findByPrimaryKeyNoPass(userId);
+        if (UserRole.CUSTOMER.getCode() != userModel.getRole()) {
+            ErrorCode.throwBusinessException(ErrorCode.INVITATION_ROLE_ERROR);
+        }
+
+
         //判断是否超出次数
         Integer invitedCount = getInvitedCount(invitationModel.getUserId());
         if (invitedCount >= retryCount) {
@@ -127,9 +137,10 @@ public class InvitationServiceImpl implements InvitationService {
                     invitationModel.getLongitude(),
                     invitationModel.getLatitude(),
                     invitationModel.getUserId(),
+                    UserRole.CUSTOMER,
                     invitationModel.getCity());
 
-            if (CollectionUtils.isNotEmpty(userModels)) {
+            if (CollectionUtils.isNotEmpty(userModels) || userModels.size() <= DEAULT_PUBLISH_COUNT) {
                 continue;
             }
         }
@@ -150,9 +161,9 @@ public class InvitationServiceImpl implements InvitationService {
         invitationModel.setStatus(InvitationStatus.UNFINISHED.getCode());
         createSelective(invitationModel);
 
+        //返回邀约Id
+        invitationResultModel.setInvitationId(invitationModel.getId());
 
-        //查询发布者
-        UserModel userModel = userService.findByPrimaryKey(invitationModel.getUserId());
 
         //广播邀约
         JSONObject message = new JSONObject();
@@ -174,13 +185,18 @@ public class InvitationServiceImpl implements InvitationService {
     @Override
     public void receiveInvitation(Long id, Long userId) {
 
-        //判断该邀约是否已经确认
+        //判断该邀约是否已经完成
         InvitationModel invitationModel = findByPrimaryKey(id);
-        if (invitationModel.getStatus() == InvitationStatus.FINISHED.getCode()) {
+        if (invitationModel.getStatus() != InvitationStatus.UNFINISHED.getCode()) {
             ErrorCode.throwBusinessException(ErrorCode.INVITATION_FINISHED);
         }
         UserModel userModel = userService.findByPrimaryKey(invitationModel.getUserId());
-        UserModel receivedUser = userService.findByPrimaryKey(userId);
+        UserModel receivedUser = userService.findByPrimaryKeyNoPass(userId);
+
+        //不能接受自己的邀约
+        if (userModel.getId() == receivedUser.getId()) {
+            ErrorCode.throwBusinessException(ErrorCode.CANNOT_RECEIVE_SLEF_INVITATION);
+        }
 
         //向发布邀约者推送消息
         JSONObject message = new JSONObject();

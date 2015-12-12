@@ -71,21 +71,7 @@ public class InvitationRestApiController {
         return new ResponseEntity<>(responseEnv, HttpStatus.OK);
     }
 
-    /**
-     * 确定邀约
-     *
-     * @param id
-     * @return
-     */
-    @RequestMapping(value = "/invite/invitation/confirm/{id}", method = RequestMethod.GET)
-    public ResponseEntity<ResponseEnvelope<String>> confirmInvitation(
-            @PathVariable Long id,
-            @Value("#{request.getAttribute('userId')}") Long userId,
-            @RequestParam Long receivedUserId) {
-        invitationService.confirmInvitation(id, userId, receivedUserId);
-        ResponseEnvelope<String> responseEnv = new ResponseEnvelope<>(ReturnCode.OPERATION_SUCCESS, true);
-        return new ResponseEntity<>(responseEnv, HttpStatus.OK);
-    }
+
 
 
 }

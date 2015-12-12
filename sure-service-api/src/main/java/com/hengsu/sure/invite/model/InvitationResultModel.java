@@ -5,8 +5,18 @@ package com.hengsu.sure.invite.model;
  */
 public class InvitationResultModel {
 
+    private Long invitationId;
     private Integer residueCount;
     private Integer sendCount;
+
+
+    public void setInvitationId(Long invitationId) {
+        this.invitationId = invitationId;
+    }
+
+    public Long getInvitationId() {
+        return invitationId;
+    }
 
     public void setResidueCount(Integer residueCount) {
         this.residueCount = residueCount;

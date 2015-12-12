@@ -19,7 +19,7 @@ public class User {
 
     private Date locationModifyTime;
 
-    private String role;
+    private Integer role;
 
     private Double balance;
 
@@ -107,11 +107,11 @@ public class User {
         this.locationModifyTime = locationModifyTime;
     }
 
-    public String getRole() {
+    public Integer getRole() {
         return role;
     }
 
-    public void setRole(String role) {
+    public void setRole(Integer role) {
         this.role = role;
     }
 
