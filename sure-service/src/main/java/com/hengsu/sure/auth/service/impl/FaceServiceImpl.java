@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 public class FaceServiceImpl implements FaceService {
     @Override
     public boolean isSimilar(String registerFaceId, String loginFaceId) {
+        //TODO 后面再做
         return true;
     }
 }

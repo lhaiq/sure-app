@@ -81,6 +81,7 @@ public class ImageRestApiController {
      * @param files
      * @return
      */
+    @IgnoreAuth
     @RequestMapping(value = "/core/image", method = RequestMethod.POST)
     public ResponseEntity<ResponseEnvelope<List<Long>>> createImage(@RequestParam("file") CommonsMultipartFile[] files
     ) {

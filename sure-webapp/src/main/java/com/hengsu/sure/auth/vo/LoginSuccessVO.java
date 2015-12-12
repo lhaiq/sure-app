@@ -8,7 +8,7 @@ import com.hengsu.sure.sns.vo.SNSUserVO;
  */
 public class LoginSuccessVO {
 
-    private SNSUserVO user;
+    private UserVO user;
 
     private String authToken;
 
@@ -20,11 +20,11 @@ public class LoginSuccessVO {
         this.authToken = authToken;
     }
 
-    public void setUser(SNSUserVO user) {
+    public void setUser(UserVO user) {
         this.user = user;
     }
 
-    public SNSUserVO getUser() {
+    public UserVO getUser() {
         return user;
     }
 }
