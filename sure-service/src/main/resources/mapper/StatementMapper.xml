@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hengsu.sure.invite.repository.StatementRepository" >
+  <resultMap id="BaseResultMap" type="com.hengsu.sure.invite.entity.Statement" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="INTEGER" />
+    <result column="money" property="money" jdbcType="DOUBLE" />
+    <result column="time" property="time" jdbcType="TIMESTAMP" />
+    <result column="user_id" property="userId" jdbcType="BIGINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, name, type, money, time, user_id
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from statement
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from statement
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.hengsu.sure.invite.entity.Statement" >
+    insert into statement (id, name, type, 
+      money, time, user_id
+      )
+    values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER}, 
+      #{money,jdbcType=DOUBLE}, #{time,jdbcType=TIMESTAMP}, #{userId,jdbcType=BIGINT}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.hengsu.sure.invite.entity.Statement" >
+    insert into statement
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="money != null" >
+        money,
+      </if>
+      <if test="time != null" >
+        time,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=INTEGER},
+      </if>
+      <if test="money != null" >
+        #{money,jdbcType=DOUBLE},
+      </if>
+      <if test="time != null" >
+        #{time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hengsu.sure.invite.entity.Statement" >
+    update statement
+    <set >
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="money != null" >
+        money = #{money,jdbcType=DOUBLE},
+      </if>
+      <if test="time != null" >
+        time = #{time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=BIGINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hengsu.sure.invite.entity.Statement" >
+    update statement
+    set name = #{name,jdbcType=VARCHAR},
+      type = #{type,jdbcType=INTEGER},
+      money = #{money,jdbcType=DOUBLE},
+      time = #{time,jdbcType=TIMESTAMP},
+      user_id = #{userId,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectCount" resultType="java.lang.Integer" parameterType="com.hengsu.sure.invite.entity.Statement" >
+    select count(*) from statement
+    <where >
+      <if test="id != null" >
+        and id = #{id,jdbcType=BIGINT}
+      </if>
+      <if test="name != null" >
+        and name = #{name,jdbcType=VARCHAR}
+      </if>
+      <if test="type != null" >
+        and type = #{type,jdbcType=INTEGER}
+      </if>
+      <if test="money != null" >
+        and money = #{money,jdbcType=DOUBLE}
+      </if>
+      <if test="time != null" >
+        and time = #{time,jdbcType=TIMESTAMP}
+      </if>
+      <if test="userId != null" >
+        and user_id = #{userId,jdbcType=BIGINT}
+      </if>
+    </where>
+  </select>
+  <select id="selectPage" resultMap="BaseResultMap" >
+    select 
+    <include refid="Base_Column_List" />
+    from statement where 1 = 1 
+    <if test="param1.id != null" >
+      and id = #{param1.id,jdbcType=BIGINT}
+    </if>
+    <if test="param1.name != null" >
+      and name = #{param1.name,jdbcType=VARCHAR}
+    </if>
+    <if test="param1.type != null" >
+      and type = #{param1.type,jdbcType=INTEGER}
+    </if>
+    <if test="param1.money != null" >
+      and money = #{param1.money,jdbcType=DOUBLE}
+    </if>
+    <if test="param1.time != null" >
+      and time = #{param1.time,jdbcType=TIMESTAMP}
+    </if>
+    <if test="param1.userId != null" >
+      and user_id = #{param1.userId,jdbcType=BIGINT}
+    </if>
+    <if test="param2.sort != null" >
+      order by 
+      <foreach collection="param2.sort" item="order" separator="," >
+        ${order.property} ${order.direction}
+      </foreach>
+    </if>
+    <if test="param2.offset >= 0 and param2.pageSize > 0" >
+      limit ${param2.offset}, ${param2.pageSize}
+    </if>
+  </select>
+</mapper>

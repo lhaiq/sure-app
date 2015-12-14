@@ -15,6 +15,7 @@ import com.hengsu.sure.invite.model.IndentModel;
 import com.hengsu.sure.invite.service.IndentService;
 import com.hkntv.pylon.core.beans.mapping.BeanMapper;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -68,7 +69,12 @@ public class IndentServiceImpl implements IndentService {
 		tradeService.createSelective(tradeModel);
 		Long tradeId = tradeModel.getId();
 
-		//TODO 检查交易
+		//TODO 检查交易 金额是否足够
+
+		//生成订单
+//		tradeModel.get
+
+		//生成流水
 
 
 	}
@@ -92,6 +98,7 @@ public class IndentServiceImpl implements IndentService {
 		IndentModel param = new IndentModel();
 		param.setId(indentModel.getId());
 		param.setStatus(IndentStatus.CANCELING.getCode());
+		param.setApplyTime(new Date());
 		updateByPrimaryKeySelective(param);
 
 	}

@@ -25,6 +25,8 @@ public class IndentModel{
 	private Long handleId;
 	private Date startTime;
 	private Date endTime;
+	private Double price;
+	private Integer quantity;
 		
 	public void setId(Long id){
 		this.id = id;
@@ -176,6 +178,22 @@ public class IndentModel{
 	
 	public Date getEndTime(){
 		return this.endTime;
+	}
+		
+	public void setPrice(Double price){
+		this.price = price;
+	}
+	
+	public Double getPrice(){
+		return this.price;
+	}
+		
+	public void setQuantity(Integer quantity){
+		this.quantity = quantity;
+	}
+	
+	public Integer getQuantity(){
+		return this.quantity;
 	}
 		
 		

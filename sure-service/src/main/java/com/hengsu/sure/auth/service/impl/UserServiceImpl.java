@@ -3,9 +3,11 @@ package com.hengsu.sure.auth.service.impl;
 import com.google.common.collect.ImmutableList;
 import com.hengsu.sure.auth.UserRole;
 import com.hengsu.sure.auth.entity.User;
+import com.hengsu.sure.auth.model.UserLBSModel;
 import com.hengsu.sure.auth.model.UserModel;
 import com.hengsu.sure.auth.repository.UserRepository;
 import com.hengsu.sure.auth.service.FaceService;
+import com.hengsu.sure.auth.service.UserLBSService;
 import com.hengsu.sure.auth.service.UserService;
 import com.hengsu.sure.core.ErrorCode;
 import com.hengsu.sure.core.model.AuthCodeModel;
@@ -58,6 +60,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private FaceService faceService;
+
+    @Autowired
+    private UserLBSService userLBSService;
 
 
     @Transactional
@@ -243,6 +248,24 @@ public class UserServiceImpl implements UserService {
         //密码不返回
         userModel.setPassword(null);
         return userModel;
+    }
+
+    @Transactional
+    @Override
+    public void updateLBS(UserLBSModel userLBSModel) {
+
+        Date updateDate = new Date();
+        //更新到user
+        UserModel userModel = new UserModel();
+        userModel.setId(userLBSModel.getUserId());
+        userModel.setLongitude(userLBSModel.getLongitude());
+        userModel.setLatitude(userLBSModel.getLatitude());
+        userModel.setLocationModifyTime(updateDate);
+        updateByPrimaryKeySelective(userModel);
+
+        //更新到lbs
+        userLBSModel.setTime(updateDate);
+        userLBSService.createSelective(userLBSModel);
     }
 
     //根据距离查询

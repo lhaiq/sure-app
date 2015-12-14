@@ -13,8 +13,6 @@ public class Rent {
 
     private Integer gender;
 
-    private String age;
-
     private String date;
 
     private String time;
@@ -23,19 +21,15 @@ public class Rent {
 
     private String address;
 
-    private Double latitude;
-
-    private Double longitude;
-
     private Double price;
 
     private String state;
 
-    private Long receivedUser;
-
     private Date createTime;
 
     private Integer status;
+
+    private String images;
 
     public Long getId() {
         return id;
@@ -77,14 +71,6 @@ public class Rent {
         this.gender = gender;
     }
 
-    public String getAge() {
-        return age;
-    }
-
-    public void setAge(String age) {
-        this.age = age;
-    }
-
     public String getDate() {
         return date;
     }
@@ -117,22 +103,6 @@ public class Rent {
         this.address = address;
     }
 
-    public Double getLatitude() {
-        return latitude;
-    }
-
-    public void setLatitude(Double latitude) {
-        this.latitude = latitude;
-    }
-
-    public Double getLongitude() {
-        return longitude;
-    }
-
-    public void setLongitude(Double longitude) {
-        this.longitude = longitude;
-    }
-
     public Double getPrice() {
         return price;
     }
@@ -149,14 +119,6 @@ public class Rent {
         this.state = state;
     }
 
-    public Long getReceivedUser() {
-        return receivedUser;
-    }
-
-    public void setReceivedUser(Long receivedUser) {
-        this.receivedUser = receivedUser;
-    }
-
     public Date getCreateTime() {
         return createTime;
     }
@@ -171,5 +133,13 @@ public class Rent {
 
     public void setStatus(Integer status) {
         this.status = status;
+    }
+
+    public String getImages() {
+        return images;
+    }
+
+    public void setImages(String images) {
+        this.images = images;
     }
 }

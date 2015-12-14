@@ -2,6 +2,7 @@
 package com.hengsu.sure.auth.service;
 
 import com.hengsu.sure.auth.UserRole;
+import com.hengsu.sure.auth.model.UserLBSModel;
 import com.hengsu.sure.auth.model.UserModel;
 
 import java.util.Date;
@@ -41,6 +42,8 @@ public interface UserService {
     public UserModel accountLogin(String phone, String password);
 
     public UserModel faceLogin(String registerFaceId, String loginFaceId);
+
+    public void updateLBS(UserLBSModel userLBSModel);
 
     public List<UserModel> queryUserByTimeAndLocation(Long sec,
                                                       Double distance,

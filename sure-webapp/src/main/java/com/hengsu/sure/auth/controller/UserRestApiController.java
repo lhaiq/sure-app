@@ -2,9 +2,11 @@ package com.hengsu.sure.auth.controller;
 
 import com.hengsu.sure.ReturnCode;
 import com.hengsu.sure.auth.annotation.IgnoreAuth;
+import com.hengsu.sure.auth.model.UserLBSModel;
 import com.hengsu.sure.auth.request.*;
 import com.hengsu.sure.auth.service.UserService;
 import com.hengsu.sure.auth.vo.LoginSuccessVO;
+import com.hengsu.sure.auth.vo.UserLBSVO;
 import com.hengsu.sure.core.Context;
 import com.hengsu.sure.core.util.RandomUtil;
 import com.hengsu.sure.sns.RelationType;
@@ -74,7 +76,7 @@ public class UserRestApiController {
     @IgnoreAuth
     @RequestMapping(value = "/auth/validatecode", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEnvelope<String> validateAuthCode(@Valid@RequestBody ValidateAuthCodeRequest authCodeRequest) {
+    public ResponseEnvelope<String> validateAuthCode(@Valid @RequestBody ValidateAuthCodeRequest authCodeRequest) {
         userService.checkRegisterAuthCode(authCodeRequest.getPhone(), authCodeRequest.getCode());
         ResponseEnvelope<String> responseEnv = new ResponseEnvelope<>(ReturnCode.OPERATION_SUCCESS, true);
         return responseEnv;
@@ -90,7 +92,7 @@ public class UserRestApiController {
     @IgnoreAuth
     @RequestMapping(value = "/auth/register", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEnvelope<LoginSuccessVO> register(@Valid@RequestBody RegisterRequest registerRequest) {
+    public ResponseEnvelope<LoginSuccessVO> register(@Valid @RequestBody RegisterRequest registerRequest) {
 
         //将注册信息保存
         UserModel userModel = beanMapper.map(registerRequest, UserModel.class);
@@ -126,7 +128,7 @@ public class UserRestApiController {
     @IgnoreAuth
     @RequestMapping(value = "/auth/accountlogin", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEnvelope<LoginSuccessVO> accountLogin(@Valid@RequestBody LoginRequest loginRequest) {
+    public ResponseEnvelope<LoginSuccessVO> accountLogin(@Valid @RequestBody LoginRequest loginRequest) {
         UserModel userModel = userService.accountLogin(loginRequest.getPhone(), loginRequest.getPassword());
 
         //登录成功后生成auth token，并保存到内存
@@ -152,7 +154,7 @@ public class UserRestApiController {
     @IgnoreAuth
     @RequestMapping(value = "/auth/facelogin", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEnvelope<LoginSuccessVO> faceLogin(@Valid@RequestBody FaceLoginRequest faceLoginRequest) {
+    public ResponseEnvelope<LoginSuccessVO> faceLogin(@Valid @RequestBody FaceLoginRequest faceLoginRequest) {
         UserModel userModel = userService.faceLogin(faceLoginRequest.getRegisterFaceId(), faceLoginRequest.getLoginFaceId());
 
         //登录成功后生成auth token，并保存到内存
@@ -210,6 +212,25 @@ public class UserRestApiController {
         userModel.setId(userId);
         Integer result = userService.updateByPrimaryKeySelective(userModel);
         ResponseEnvelope<Integer> responseEnv = new ResponseEnvelope<Integer>(result, true);
+        return new ResponseEntity<>(responseEnv, HttpStatus.OK);
+    }
+
+    /**
+     * 更新位置信息
+     *
+     * @param userVO
+     * @param userId
+     * @return
+     */
+    @RequestMapping(value = "/auth/userlbs", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity<ResponseEnvelope<String>> updateUserLBS(
+            @Valid @RequestBody UserLBSVO userVO,
+            @Value("#{request.getAttribute('userId')}") Long userId) {
+        UserLBSModel userLBSModel = beanMapper.map(userVO, UserLBSModel.class);
+        userLBSModel.setUserId(userId);
+        userService.updateLBS(userLBSModel);
+        ResponseEnvelope<String> responseEnv = new ResponseEnvelope<>(ReturnCode.OPERATION_SUCCESS, true);
         return new ResponseEntity<>(responseEnv, HttpStatus.OK);
     }
 

@@ -11,18 +11,15 @@ public class RentModel{
 	private Integer city;
 	private String scene;
 	private Integer gender;
-	private String age;
 	private String date;
 	private String time;
 	private Integer car;
 	private String address;
-	private Double latitude;
-	private Double longitude;
 	private Double price;
 	private String state;
-	private Long receivedUser;
 	private Date createTime;
 	private Integer status;
+	private String images;
 		
 	public void setId(Long id){
 		this.id = id;
@@ -64,14 +61,6 @@ public class RentModel{
 		return this.gender;
 	}
 		
-	public void setAge(String age){
-		this.age = age;
-	}
-	
-	public String getAge(){
-		return this.age;
-	}
-		
 	public void setDate(String date){
 		this.date = date;
 	}
@@ -104,22 +93,6 @@ public class RentModel{
 		return this.address;
 	}
 		
-	public void setLatitude(Double latitude){
-		this.latitude = latitude;
-	}
-	
-	public Double getLatitude(){
-		return this.latitude;
-	}
-		
-	public void setLongitude(Double longitude){
-		this.longitude = longitude;
-	}
-	
-	public Double getLongitude(){
-		return this.longitude;
-	}
-		
 	public void setPrice(Double price){
 		this.price = price;
 	}
@@ -136,14 +109,6 @@ public class RentModel{
 		return this.state;
 	}
 		
-	public void setReceivedUser(Long receivedUser){
-		this.receivedUser = receivedUser;
-	}
-	
-	public Long getReceivedUser(){
-		return this.receivedUser;
-	}
-		
 	public void setCreateTime(Date createTime){
 		this.createTime = createTime;
 	}
@@ -158,6 +123,14 @@ public class RentModel{
 	
 	public Integer getStatus(){
 		return this.status;
+	}
+		
+	public void setImages(String images){
+		this.images = images;
+	}
+	
+	public String getImages(){
+		return this.images;
 	}
 		
 		
