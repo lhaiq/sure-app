@@ -1,137 +1,154 @@
 package com.hengsu.sure.invite.vo;
 
 import com.hkntv.pylon.core.beans.mapping.annotation.MapClass;
+import org.hibernate.validator.constraints.NotEmpty;
+
+import javax.validation.constraints.NotNull;
 import java.util.Date;
+import java.util.List;
 
 @MapClass("com.hengsu.sure.invite.model.RentModel")
 public class RentVO{
 	
 	private Long id;
-	private Long userId;
+
+	@NotNull
 	private Integer city;
-	private String scene;
+
+	@NotEmpty
+	private List<String> scenes;
+
+	@NotNull
 	private Integer gender;
-	private String date;
+
+	@NotEmpty
+	private List<String> dates;
 	private String time;
 	private Integer car;
 	private String address;
+
+	@NotNull
 	private Double price;
+
+	@NotNull
+	private Double money;
+
+	@NotEmpty
 	private String state;
 	private Date createTime;
 	private Integer status;
-	private String images;
-		
-	public void setId(Long id){
-		this.id = id;
+
+	private List<String> images;
+
+	public String getAddress() {
+		return address;
 	}
-	
-	public Long getId(){
-		return this.id;
-	}
-		
-	public void setUserId(Long userId){
-		this.userId = userId;
-	}
-	
-	public Long getUserId(){
-		return this.userId;
-	}
-		
-	public void setCity(Integer city){
-		this.city = city;
-	}
-	
-	public Integer getCity(){
-		return this.city;
-	}
-		
-	public void setScene(String scene){
-		this.scene = scene;
-	}
-	
-	public String getScene(){
-		return this.scene;
-	}
-		
-	public void setGender(Integer gender){
-		this.gender = gender;
-	}
-	
-	public Integer getGender(){
-		return this.gender;
-	}
-		
-	public void setDate(String date){
-		this.date = date;
-	}
-	
-	public String getDate(){
-		return this.date;
-	}
-		
-	public void setTime(String time){
-		this.time = time;
-	}
-	
-	public String getTime(){
-		return this.time;
-	}
-		
-	public void setCar(Integer car){
-		this.car = car;
-	}
-	
-	public Integer getCar(){
-		return this.car;
-	}
-		
-	public void setAddress(String address){
+
+	public void setAddress(String address) {
 		this.address = address;
 	}
-	
-	public String getAddress(){
-		return this.address;
+
+	public Integer getCar() {
+		return car;
 	}
-		
-	public void setPrice(Double price){
-		this.price = price;
+
+	public void setCar(Integer car) {
+		this.car = car;
 	}
-	
-	public Double getPrice(){
-		return this.price;
+
+	public Integer getCity() {
+		return city;
 	}
-		
-	public void setState(String state){
-		this.state = state;
+
+	public void setCity(Integer city) {
+		this.city = city;
 	}
-	
-	public String getState(){
-		return this.state;
+
+	public Date getCreateTime() {
+		return createTime;
 	}
-		
-	public void setCreateTime(Date createTime){
+
+	public void setCreateTime(Date createTime) {
 		this.createTime = createTime;
 	}
-	
-	public Date getCreateTime(){
-		return this.createTime;
+
+	public List<String> getDates() {
+		return dates;
 	}
-		
-	public void setStatus(Integer status){
-		this.status = status;
+
+	public void setDates(List<String> dates) {
+		this.dates = dates;
 	}
-	
-	public Integer getStatus(){
-		return this.status;
+
+	public Integer getGender() {
+		return gender;
 	}
-		
-	public void setImages(String images){
+
+	public void setGender(Integer gender) {
+		this.gender = gender;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public List<String> getImages() {
+		return images;
+	}
+
+	public void setImages(List<String> images) {
 		this.images = images;
 	}
-	
-	public String getImages(){
-		return this.images;
+
+	public Double getPrice() {
+		return price;
 	}
-		
-		
+
+	public void setPrice(Double price) {
+		this.price = price;
+	}
+
+	public List<String> getScenes() {
+		return scenes;
+	}
+
+	public void setScenes(List<String> scenes) {
+		this.scenes = scenes;
+	}
+
+	public String getState() {
+		return state;
+	}
+
+	public void setState(String state) {
+		this.state = state;
+	}
+
+	public Integer getStatus() {
+		return status;
+	}
+
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
+
+	public String getTime() {
+		return time;
+	}
+
+	public void setTime(String time) {
+		this.time = time;
+	}
+
+	public void setMoney(Double money) {
+		this.money = money;
+	}
+
+	public Double getMoney() {
+		return money;
+	}
 }

@@ -17,21 +17,15 @@ public class Invitation {
 
     private String date;
 
+    private Double money;
+
     private String time;
 
     private Integer car;
 
-    private String address;
-
-    private Double latitude;
-
-    private Double longitude;
-
     private Double price;
 
     private String state;
-
-    private Long receivedUser;
 
     private Date createTime;
 
@@ -93,6 +87,14 @@ public class Invitation {
         this.date = date;
     }
 
+    public Double getMoney() {
+        return money;
+    }
+
+    public void setMoney(Double money) {
+        this.money = money;
+    }
+
     public String getTime() {
         return time;
     }
@@ -109,30 +111,6 @@ public class Invitation {
         this.car = car;
     }
 
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public Double getLatitude() {
-        return latitude;
-    }
-
-    public void setLatitude(Double latitude) {
-        this.latitude = latitude;
-    }
-
-    public Double getLongitude() {
-        return longitude;
-    }
-
-    public void setLongitude(Double longitude) {
-        this.longitude = longitude;
-    }
-
     public Double getPrice() {
         return price;
     }
@@ -147,14 +125,6 @@ public class Invitation {
 
     public void setState(String state) {
         this.state = state;
-    }
-
-    public Long getReceivedUser() {
-        return receivedUser;
-    }
-
-    public void setReceivedUser(Long receivedUser) {
-        this.receivedUser = receivedUser;
     }
 
     public Date getCreateTime() {

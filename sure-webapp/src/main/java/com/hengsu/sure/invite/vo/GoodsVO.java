@@ -12,10 +12,11 @@ public class GoodsVO{
 	private Date startTime;
 	private Date endTime;
 	private String description;
-	private String address;
-	private Integer invoice;
-	private String invoiceDesc;
 	private Integer cityId;
+	private Integer quantity;
+	private Double price;
+	private Double money;
+	private Long goodsType;
 		
 	public void setId(Long id){
 		this.id = id;
@@ -65,36 +66,44 @@ public class GoodsVO{
 		return this.description;
 	}
 		
-	public void setAddress(String address){
-		this.address = address;
-	}
-	
-	public String getAddress(){
-		return this.address;
-	}
-		
-	public void setInvoice(Integer invoice){
-		this.invoice = invoice;
-	}
-	
-	public Integer getInvoice(){
-		return this.invoice;
-	}
-		
-	public void setInvoiceDesc(String invoiceDesc){
-		this.invoiceDesc = invoiceDesc;
-	}
-	
-	public String getInvoiceDesc(){
-		return this.invoiceDesc;
-	}
-		
 	public void setCityId(Integer cityId){
 		this.cityId = cityId;
 	}
 	
 	public Integer getCityId(){
 		return this.cityId;
+	}
+		
+	public void setQuantity(Integer quantity){
+		this.quantity = quantity;
+	}
+	
+	public Integer getQuantity(){
+		return this.quantity;
+	}
+		
+	public void setPrice(Double price){
+		this.price = price;
+	}
+	
+	public Double getPrice(){
+		return this.price;
+	}
+		
+	public void setMoney(Double money){
+		this.money = money;
+	}
+	
+	public Double getMoney(){
+		return this.money;
+	}
+		
+	public void setGoodsType(Long goodsType){
+		this.goodsType = goodsType;
+	}
+	
+	public Long getGoodsType(){
+		return this.goodsType;
 	}
 		
 		

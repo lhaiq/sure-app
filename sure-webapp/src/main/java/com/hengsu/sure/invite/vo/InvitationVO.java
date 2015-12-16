@@ -25,26 +25,12 @@ public class InvitationVO {
     private List<String> timeSolts;
     @NotNull
     private Integer car;
-    @NotNull
-    private String address;
-    @NotNull
-    private Double latitude;
-    @NotNull
-    private Double longitude;
+
     @NotNull
     private Double price;
     private String state;
-    private Long receivedUser;
     private Date createTime;
     private Integer status;
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
 
     public String getAge() {
         return age;
@@ -102,36 +88,12 @@ public class InvitationVO {
         this.id = id;
     }
 
-    public Double getLatitude() {
-        return latitude;
-    }
-
-    public void setLatitude(Double latitude) {
-        this.latitude = latitude;
-    }
-
-    public Double getLongitude() {
-        return longitude;
-    }
-
-    public void setLongitude(Double longitude) {
-        this.longitude = longitude;
-    }
-
     public Double getPrice() {
         return price;
     }
 
     public void setPrice(Double price) {
         this.price = price;
-    }
-
-    public Long getReceivedUser() {
-        return receivedUser;
-    }
-
-    public void setReceivedUser(Long receivedUser) {
-        this.receivedUser = receivedUser;
     }
 
     public List<String> getScenes() {
@@ -165,6 +127,4 @@ public class InvitationVO {
     public void setTimeSolts(List<String> timeSolts) {
         this.timeSolts = timeSolts;
     }
-
-
 }

@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hengsu.sure.invite.repository.GoodsTypeRepository" >
+  <resultMap id="BaseResultMap" type="com.hengsu.sure.invite.entity.GoodsType" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="description" property="description" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, name, description
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from goods_type
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from goods_type
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.hengsu.sure.invite.entity.GoodsType" >
+    insert into goods_type (id, name, description
+      )
+    values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.hengsu.sure.invite.entity.GoodsType" >
+    insert into goods_type
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="description != null" >
+        description,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null" >
+        #{description,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hengsu.sure.invite.entity.GoodsType" >
+    update goods_type
+    <set >
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null" >
+        description = #{description,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hengsu.sure.invite.entity.GoodsType" >
+    update goods_type
+    set name = #{name,jdbcType=VARCHAR},
+      description = #{description,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectCount" resultType="java.lang.Integer" parameterType="com.hengsu.sure.invite.entity.GoodsType" >
+    select count(*) from goods_type
+    <where >
+      <if test="id != null" >
+        and id = #{id,jdbcType=BIGINT}
+      </if>
+      <if test="name != null" >
+        and name = #{name,jdbcType=VARCHAR}
+      </if>
+      <if test="description != null" >
+        and description = #{description,jdbcType=VARCHAR}
+      </if>
+    </where>
+  </select>
+  <select id="selectPage" resultMap="BaseResultMap" >
+    select 
+    <include refid="Base_Column_List" />
+    from goods_type where 1 = 1 
+    <if test="param1.id != null" >
+      and id = #{param1.id,jdbcType=BIGINT}
+    </if>
+    <if test="param1.name != null" >
+      and name = #{param1.name,jdbcType=VARCHAR}
+    </if>
+    <if test="param1.description != null" >
+      and description = #{param1.description,jdbcType=VARCHAR}
+    </if>
+    <if test="param2.sort != null" >
+      order by 
+      <foreach collection="param2.sort" item="order" separator="," >
+        ${order.property} ${order.direction}
+      </foreach>
+    </if>
+    <if test="param2.offset >= 0 and param2.pageSize > 0" >
+      limit ${param2.offset}, ${param2.pageSize}
+    </if>
+  </select>
+</mapper>

@@ -15,13 +15,15 @@ public class Goods {
 
     private String description;
 
-    private String address;
-
-    private Integer invoice;
-
-    private String invoiceDesc;
-
     private Integer cityId;
+
+    private Integer quantity;
+
+    private Double price;
+
+    private Double money;
+
+    private Long goodsType;
 
     public Long getId() {
         return id;
@@ -71,35 +73,43 @@ public class Goods {
         this.description = description;
     }
 
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public Integer getInvoice() {
-        return invoice;
-    }
-
-    public void setInvoice(Integer invoice) {
-        this.invoice = invoice;
-    }
-
-    public String getInvoiceDesc() {
-        return invoiceDesc;
-    }
-
-    public void setInvoiceDesc(String invoiceDesc) {
-        this.invoiceDesc = invoiceDesc;
-    }
-
     public Integer getCityId() {
         return cityId;
     }
 
     public void setCityId(Integer cityId) {
         this.cityId = cityId;
+    }
+
+    public Integer getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
+    }
+
+    public Double getPrice() {
+        return price;
+    }
+
+    public void setPrice(Double price) {
+        this.price = price;
+    }
+
+    public Double getMoney() {
+        return money;
+    }
+
+    public void setMoney(Double money) {
+        this.money = money;
+    }
+
+    public Long getGoodsType() {
+        return goodsType;
+    }
+
+    public void setGoodsType(Long goodsType) {
+        this.goodsType = goodsType;
     }
 }

@@ -14,8 +14,8 @@ public class RentModel{
 	private String date;
 	private String time;
 	private Integer car;
-	private String address;
 	private Double price;
+	private Double money;
 	private String state;
 	private Date createTime;
 	private Integer status;
@@ -85,20 +85,20 @@ public class RentModel{
 		return this.car;
 	}
 		
-	public void setAddress(String address){
-		this.address = address;
-	}
-	
-	public String getAddress(){
-		return this.address;
-	}
-		
 	public void setPrice(Double price){
 		this.price = price;
 	}
 	
 	public Double getPrice(){
 		return this.price;
+	}
+		
+	public void setMoney(Double money){
+		this.money = money;
+	}
+	
+	public Double getMoney(){
+		return this.money;
 	}
 		
 	public void setState(String state){

@@ -19,9 +19,9 @@ public class Rent {
 
     private Integer car;
 
-    private String address;
-
     private Double price;
+
+    private Double money;
 
     private String state;
 
@@ -95,20 +95,20 @@ public class Rent {
         this.car = car;
     }
 
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
     public Double getPrice() {
         return price;
     }
 
     public void setPrice(Double price) {
         this.price = price;
+    }
+
+    public Double getMoney() {
+        return money;
+    }
+
+    public void setMoney(Double money) {
+        this.money = money;
     }
 
     public String getState() {

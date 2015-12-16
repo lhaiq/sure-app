@@ -8,14 +8,15 @@
     <result column="start_time" property="startTime" jdbcType="TIMESTAMP" />
     <result column="end_time" property="endTime" jdbcType="TIMESTAMP" />
     <result column="description" property="description" jdbcType="VARCHAR" />
-    <result column="address" property="address" jdbcType="VARCHAR" />
-    <result column="invoice" property="invoice" jdbcType="INTEGER" />
-    <result column="invoice_desc" property="invoiceDesc" jdbcType="VARCHAR" />
     <result column="city_id" property="cityId" jdbcType="INTEGER" />
+    <result column="quantity" property="quantity" jdbcType="INTEGER" />
+    <result column="price" property="price" jdbcType="DOUBLE" />
+    <result column="money" property="money" jdbcType="DOUBLE" />
+    <result column="goods_type" property="goodsType" jdbcType="BIGINT" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, name, images, start_time, end_time, description, address, invoice, invoice_desc, 
-    city_id
+    id, name, images, start_time, end_time, description, city_id, quantity, price, money, 
+    goods_type
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
@@ -30,12 +31,12 @@
   <insert id="insert" parameterType="com.hengsu.sure.invite.entity.Goods" >
     insert into goods (id, name, images, 
       start_time, end_time, description, 
-      address, invoice, invoice_desc, 
-      city_id)
+      city_id, quantity, price, 
+      money, goods_type)
     values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{images,jdbcType=VARCHAR}, 
       #{startTime,jdbcType=TIMESTAMP}, #{endTime,jdbcType=TIMESTAMP}, #{description,jdbcType=VARCHAR}, 
-      #{address,jdbcType=VARCHAR}, #{invoice,jdbcType=INTEGER}, #{invoiceDesc,jdbcType=VARCHAR}, 
-      #{cityId,jdbcType=INTEGER})
+      #{cityId,jdbcType=INTEGER}, #{quantity,jdbcType=INTEGER}, #{price,jdbcType=DOUBLE}, 
+      #{money,jdbcType=DOUBLE}, #{goodsType,jdbcType=BIGINT})
   </insert>
   <insert id="insertSelective" parameterType="com.hengsu.sure.invite.entity.Goods" >
     insert into goods
@@ -58,17 +59,20 @@
       <if test="description != null" >
         description,
       </if>
-      <if test="address != null" >
-        address,
-      </if>
-      <if test="invoice != null" >
-        invoice,
-      </if>
-      <if test="invoiceDesc != null" >
-        invoice_desc,
-      </if>
       <if test="cityId != null" >
         city_id,
+      </if>
+      <if test="quantity != null" >
+        quantity,
+      </if>
+      <if test="price != null" >
+        price,
+      </if>
+      <if test="money != null" >
+        money,
+      </if>
+      <if test="goodsType != null" >
+        goods_type,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -90,17 +94,20 @@
       <if test="description != null" >
         #{description,jdbcType=VARCHAR},
       </if>
-      <if test="address != null" >
-        #{address,jdbcType=VARCHAR},
-      </if>
-      <if test="invoice != null" >
-        #{invoice,jdbcType=INTEGER},
-      </if>
-      <if test="invoiceDesc != null" >
-        #{invoiceDesc,jdbcType=VARCHAR},
-      </if>
       <if test="cityId != null" >
         #{cityId,jdbcType=INTEGER},
+      </if>
+      <if test="quantity != null" >
+        #{quantity,jdbcType=INTEGER},
+      </if>
+      <if test="price != null" >
+        #{price,jdbcType=DOUBLE},
+      </if>
+      <if test="money != null" >
+        #{money,jdbcType=DOUBLE},
+      </if>
+      <if test="goodsType != null" >
+        #{goodsType,jdbcType=BIGINT},
       </if>
     </trim>
   </insert>
@@ -122,17 +129,20 @@
       <if test="description != null" >
         description = #{description,jdbcType=VARCHAR},
       </if>
-      <if test="address != null" >
-        address = #{address,jdbcType=VARCHAR},
-      </if>
-      <if test="invoice != null" >
-        invoice = #{invoice,jdbcType=INTEGER},
-      </if>
-      <if test="invoiceDesc != null" >
-        invoice_desc = #{invoiceDesc,jdbcType=VARCHAR},
-      </if>
       <if test="cityId != null" >
         city_id = #{cityId,jdbcType=INTEGER},
+      </if>
+      <if test="quantity != null" >
+        quantity = #{quantity,jdbcType=INTEGER},
+      </if>
+      <if test="price != null" >
+        price = #{price,jdbcType=DOUBLE},
+      </if>
+      <if test="money != null" >
+        money = #{money,jdbcType=DOUBLE},
+      </if>
+      <if test="goodsType != null" >
+        goods_type = #{goodsType,jdbcType=BIGINT},
       </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
@@ -144,10 +154,11 @@
       start_time = #{startTime,jdbcType=TIMESTAMP},
       end_time = #{endTime,jdbcType=TIMESTAMP},
       description = #{description,jdbcType=VARCHAR},
-      address = #{address,jdbcType=VARCHAR},
-      invoice = #{invoice,jdbcType=INTEGER},
-      invoice_desc = #{invoiceDesc,jdbcType=VARCHAR},
-      city_id = #{cityId,jdbcType=INTEGER}
+      city_id = #{cityId,jdbcType=INTEGER},
+      quantity = #{quantity,jdbcType=INTEGER},
+      price = #{price,jdbcType=DOUBLE},
+      money = #{money,jdbcType=DOUBLE},
+      goods_type = #{goodsType,jdbcType=BIGINT}
     where id = #{id,jdbcType=BIGINT}
   </update>
   <select id="selectCount" resultType="java.lang.Integer" parameterType="com.hengsu.sure.invite.entity.Goods" >
@@ -171,17 +182,20 @@
       <if test="description != null" >
         and description = #{description,jdbcType=VARCHAR}
       </if>
-      <if test="address != null" >
-        and address = #{address,jdbcType=VARCHAR}
-      </if>
-      <if test="invoice != null" >
-        and invoice = #{invoice,jdbcType=INTEGER}
-      </if>
-      <if test="invoiceDesc != null" >
-        and invoice_desc = #{invoiceDesc,jdbcType=VARCHAR}
-      </if>
       <if test="cityId != null" >
         and city_id = #{cityId,jdbcType=INTEGER}
+      </if>
+      <if test="quantity != null" >
+        and quantity = #{quantity,jdbcType=INTEGER}
+      </if>
+      <if test="price != null" >
+        and price = #{price,jdbcType=DOUBLE}
+      </if>
+      <if test="money != null" >
+        and money = #{money,jdbcType=DOUBLE}
+      </if>
+      <if test="goodsType != null" >
+        and goods_type = #{goodsType,jdbcType=BIGINT}
       </if>
     </where>
   </select>
@@ -207,17 +221,20 @@
     <if test="param1.description != null" >
       and description = #{param1.description,jdbcType=VARCHAR}
     </if>
-    <if test="param1.address != null" >
-      and address = #{param1.address,jdbcType=VARCHAR}
-    </if>
-    <if test="param1.invoice != null" >
-      and invoice = #{param1.invoice,jdbcType=INTEGER}
-    </if>
-    <if test="param1.invoiceDesc != null" >
-      and invoice_desc = #{param1.invoiceDesc,jdbcType=VARCHAR}
-    </if>
     <if test="param1.cityId != null" >
       and city_id = #{param1.cityId,jdbcType=INTEGER}
+    </if>
+    <if test="param1.quantity != null" >
+      and quantity = #{param1.quantity,jdbcType=INTEGER}
+    </if>
+    <if test="param1.price != null" >
+      and price = #{param1.price,jdbcType=DOUBLE}
+    </if>
+    <if test="param1.money != null" >
+      and money = #{param1.money,jdbcType=DOUBLE}
+    </if>
+    <if test="param1.goodsType != null" >
+      and goods_type = #{param1.goodsType,jdbcType=BIGINT}
     </if>
     <if test="param2.sort != null" >
       order by 

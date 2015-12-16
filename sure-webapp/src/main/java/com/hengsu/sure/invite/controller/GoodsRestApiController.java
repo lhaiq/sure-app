@@ -60,14 +60,6 @@ public class GoodsRestApiController {
         return new ResponseEntity<>(responseEnv, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/invite/goods/{id}", method = RequestMethod.PUT)
-    public ResponseEntity<ResponseEnvelope<Integer>> updateGoodsByPrimaryKeySelective(@PathVariable Long id, @RequestBody GoodsVO goodsVO) {
-        GoodsModel goodsModel = beanMapper.map(goodsVO, GoodsModel.class);
-        goodsModel.setId(id);
-        Integer result = goodsService.updateByPrimaryKeySelective(goodsModel);
-        ResponseEnvelope<Integer> responseEnv = new ResponseEnvelope<Integer>(result);
-        return new ResponseEntity<>(responseEnv, HttpStatus.OK);
-    }
 
     /**
      * 轻奢列表
@@ -75,11 +67,13 @@ public class GoodsRestApiController {
      * @param pageable
      * @return
      */
-    @RequestMapping(value = "/invite/goods", method = RequestMethod.GET)
+    @RequestMapping(value = "/invite/{typeId}/goods", method = RequestMethod.GET)
     public ResponseEntity<ResponseEnvelope<Page<GoodsModel>>> listGoods(
+            @PathVariable Long typeId,
             @RequestParam Integer cityId,
             Pageable pageable) {
         GoodsModel param = new GoodsModel();
+        param.setGoodsType(typeId);
         param.setCityId(cityId);
         List<GoodsModel> goodsModes = goodsService.selectPage(param, pageable);
         Integer count = goodsService.selectCount(param);

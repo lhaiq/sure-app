@@ -1,5 +1,6 @@
 package com.hengsu.sure.invite.service.impl;
 
+import com.hengsu.sure.invite.RentStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -9,6 +10,8 @@ import com.hengsu.sure.invite.repository.RentRepository;
 import com.hengsu.sure.invite.model.RentModel;
 import com.hengsu.sure.invite.service.RentService;
 import com.hkntv.pylon.core.beans.mapping.BeanMapper;
+
+import java.util.Date;
 
 @Service
 public class RentServiceImpl implements RentService {
@@ -48,6 +51,16 @@ public class RentServiceImpl implements RentService {
 	@Override
 	public int selectCount(RentModel rentModel) {
 		return rentRepo.selectCount(beanMapper.map(rentModel, Rent.class));
+	}
+
+	@Transactional
+	@Override
+	public void publishRent(RentModel rentModel) {
+
+		//设置时间
+		rentModel.setCreateTime(new Date());
+		rentModel.setStatus(RentStatus.PUBLISH.getCode());
+		createSelective(rentModel);
 	}
 
 	@Transactional

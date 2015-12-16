@@ -1,11 +1,14 @@
 package com.hengsu.sure.invite.controller;
 
+import com.hengsu.sure.ReturnCode;
+import com.hengsu.sure.core.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -46,15 +49,24 @@ public class RentRestApiController {
 	 * @return
 	 */
 	@RequestMapping(value = "/invite/rent", method = RequestMethod.POST)
-	public ResponseEntity<ResponseEnvelope<Integer>> createRent(
+	public ResponseEntity<ResponseEnvelope<String>> createRent(
 			@RequestBody RentVO rentVO,
 			@Value("#{request.getAttribute('userId')}") Long userId){
 		RentModel rentModel = beanMapper.map(rentVO, RentModel.class);
-		Integer  result = rentService.create(rentModel);
-		ResponseEnvelope<Integer> responseEnv = new ResponseEnvelope<Integer>(result);
+		rentModel.setUserId(userId);
+
+		rentModel.setScene(StringUtils.collectionToDelimitedString(rentVO.getScenes(),
+				Constants.DEFAULT_DELI));
+		rentModel.setImages(StringUtils.collectionToDelimitedString(rentVO.getImages(),
+				Constants.DEFAULT_DELI));
+		rentModel.setDate(StringUtils.collectionToDelimitedString(rentVO.getDates(),
+				Constants.DEFAULT_DELI));
+
+		rentService.publishRent(rentModel);
+		ResponseEnvelope<String> responseEnv = new ResponseEnvelope<>(ReturnCode.OPERATION_SUCCESS,true);
 		return new ResponseEntity<>(responseEnv, HttpStatus.OK);
 	}
-	
+
 	@RequestMapping(value = "/invite/rent/{id}", method = RequestMethod.DELETE)
 	public ResponseEntity<ResponseEnvelope<Integer>> deleteRentByPrimaryKey(@PathVariable Long id){
 		Integer  result = rentService.deleteByPrimaryKey(id);

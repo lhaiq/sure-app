@@ -10,15 +10,15 @@
     <result column="date" property="date" jdbcType="VARCHAR" />
     <result column="time" property="time" jdbcType="VARCHAR" />
     <result column="car" property="car" jdbcType="INTEGER" />
-    <result column="address" property="address" jdbcType="VARCHAR" />
     <result column="price" property="price" jdbcType="DOUBLE" />
+    <result column="money" property="money" jdbcType="DOUBLE" />
     <result column="state" property="state" jdbcType="VARCHAR" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="status" property="status" jdbcType="INTEGER" />
     <result column="images" property="images" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, user_id, city, scene, gender, date, time, car, address, price, state, create_time, 
+    id, user_id, city, scene, gender, date, time, car, price, money, state, create_time, 
     status, images
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
@@ -34,14 +34,14 @@
   <insert id="insert" parameterType="com.hengsu.sure.invite.entity.Rent" >
     insert into rent (id, user_id, city, 
       scene, gender, date, 
-      time, car, address, 
-      price, state, create_time, 
-      status, images)
+      time, car, price, money, 
+      state, create_time, status, 
+      images)
     values (#{id,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{city,jdbcType=INTEGER}, 
       #{scene,jdbcType=VARCHAR}, #{gender,jdbcType=INTEGER}, #{date,jdbcType=VARCHAR}, 
-      #{time,jdbcType=VARCHAR}, #{car,jdbcType=INTEGER}, #{address,jdbcType=VARCHAR}, 
-      #{price,jdbcType=DOUBLE}, #{state,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{status,jdbcType=INTEGER}, #{images,jdbcType=VARCHAR})
+      #{time,jdbcType=VARCHAR}, #{car,jdbcType=INTEGER}, #{price,jdbcType=DOUBLE}, #{money,jdbcType=DOUBLE}, 
+      #{state,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{status,jdbcType=INTEGER}, 
+      #{images,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.hengsu.sure.invite.entity.Rent" >
     insert into rent
@@ -70,11 +70,11 @@
       <if test="car != null" >
         car,
       </if>
-      <if test="address != null" >
-        address,
-      </if>
       <if test="price != null" >
         price,
+      </if>
+      <if test="money != null" >
+        money,
       </if>
       <if test="state != null" >
         state,
@@ -114,11 +114,11 @@
       <if test="car != null" >
         #{car,jdbcType=INTEGER},
       </if>
-      <if test="address != null" >
-        #{address,jdbcType=VARCHAR},
-      </if>
       <if test="price != null" >
         #{price,jdbcType=DOUBLE},
+      </if>
+      <if test="money != null" >
+        #{money,jdbcType=DOUBLE},
       </if>
       <if test="state != null" >
         #{state,jdbcType=VARCHAR},
@@ -158,11 +158,11 @@
       <if test="car != null" >
         car = #{car,jdbcType=INTEGER},
       </if>
-      <if test="address != null" >
-        address = #{address,jdbcType=VARCHAR},
-      </if>
       <if test="price != null" >
         price = #{price,jdbcType=DOUBLE},
+      </if>
+      <if test="money != null" >
+        money = #{money,jdbcType=DOUBLE},
       </if>
       <if test="state != null" >
         state = #{state,jdbcType=VARCHAR},
@@ -188,8 +188,8 @@
       date = #{date,jdbcType=VARCHAR},
       time = #{time,jdbcType=VARCHAR},
       car = #{car,jdbcType=INTEGER},
-      address = #{address,jdbcType=VARCHAR},
       price = #{price,jdbcType=DOUBLE},
+      money = #{money,jdbcType=DOUBLE},
       state = #{state,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       status = #{status,jdbcType=INTEGER},
@@ -223,11 +223,11 @@
       <if test="car != null" >
         and car = #{car,jdbcType=INTEGER}
       </if>
-      <if test="address != null" >
-        and address = #{address,jdbcType=VARCHAR}
-      </if>
       <if test="price != null" >
         and price = #{price,jdbcType=DOUBLE}
+      </if>
+      <if test="money != null" >
+        and money = #{money,jdbcType=DOUBLE}
       </if>
       <if test="state != null" >
         and state = #{state,jdbcType=VARCHAR}
@@ -271,11 +271,11 @@
     <if test="param1.car != null" >
       and car = #{param1.car,jdbcType=INTEGER}
     </if>
-    <if test="param1.address != null" >
-      and address = #{param1.address,jdbcType=VARCHAR}
-    </if>
     <if test="param1.price != null" >
       and price = #{param1.price,jdbcType=DOUBLE}
+    </if>
+    <if test="param1.money != null" >
+      and money = #{param1.money,jdbcType=DOUBLE}
     </if>
     <if test="param1.state != null" >
       and state = #{param1.state,jdbcType=VARCHAR}
