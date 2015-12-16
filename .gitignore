@@ -56,7 +56,8 @@ Thumbs.db
 #intelliJ
 #####################
 /.idea
-
+/.gradle
+*.iml
 #sbt
 #####################
 /project
