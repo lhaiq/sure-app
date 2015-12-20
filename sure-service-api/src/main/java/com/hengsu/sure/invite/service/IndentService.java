@@ -16,6 +16,8 @@ public interface IndentService {
 
     public IndentModel findByPrimaryKey(Long id);
 
+    public IndentModel findByNo(String no);
+
     public int updateByPrimaryKey(IndentModel indentModel);
 
     public int updateByPrimaryKeySelective(IndentModel indentModel);

@@ -1,28 +1,31 @@
 package com.hengsu.sure.core.service.impl;
 
 import com.cloopen.rest.sdk.CCPRestSmsSDK;
-import com.hengsu.sure.core.service.AuthCodeService;
+import com.hengsu.sure.core.model.SubAccountModel;
+import com.hengsu.sure.core.service.YunTongXunService;
 
-import com.hkntv.pylon.core.exception.BusinessException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
-import java.util.HashMap;
 import java.util.List;
 
 /**
  * Created by haiquanli on 15/11/19.
  */
 @Service
-public class AuthCodeServiceImpl implements AuthCodeService {
+public class YunTongXunServiceImpl implements YunTongXunService {
 
-    private static final String PHONE_DELIMITER = ",";
 
     private static final String MSM_DEFAULT_RETURN_CODE = "000000";
 
+    private String yunTongXunUrl;
+
+    private String createAccountPath=yunTongXunUrl+"/{SoftVersion}/Accounts/{accountSid}/SubAccounts";
+
     @Autowired
     private CCPRestSmsSDK smsClient;
+
+//    private
 
 
     @Override
@@ -35,5 +38,11 @@ public class AuthCodeServiceImpl implements AuthCodeService {
 //            throw new BusinessException(statusCode.toString(), result.get("statusMsg").toString());
 //        }
 
+    }
+
+    @Override
+    public SubAccountModel createSubAccount(String name, String accountSid) {
+        //TODO
+        return null;
     }
 }

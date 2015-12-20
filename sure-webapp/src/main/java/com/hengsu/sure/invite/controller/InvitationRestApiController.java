@@ -1,24 +1,26 @@
 package com.hengsu.sure.invite.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.hengsu.sure.ReturnCode;
-import com.hengsu.sure.core.Constants;
+import com.hengsu.sure.invite.model.InvitationConfirmModel;
+import com.hengsu.sure.invite.model.InvitationModel;
 import com.hengsu.sure.invite.model.InvitationResultModel;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.*;
-
+import com.hengsu.sure.invite.service.InvitationService;
+import com.hengsu.sure.invite.vo.InvitationConfirmVO;
+import com.hengsu.sure.invite.vo.InvitationVO;
 import com.hkntv.pylon.core.beans.mapping.BeanMapper;
 import com.hkntv.pylon.web.rest.ResponseEnvelope;
 import com.hkntv.pylon.web.rest.annotation.RestApiController;
-
-import com.hengsu.sure.invite.service.InvitationService;
-import com.hengsu.sure.invite.model.InvitationModel;
-import com.hengsu.sure.invite.vo.InvitationVO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.validation.Valid;
 
@@ -46,10 +48,8 @@ public class InvitationRestApiController {
             @Valid @RequestBody InvitationVO invitationVO,
             @Value("#{request.getAttribute('userId')}") Long userId) {
         InvitationModel invitationModel = beanMapper.map(invitationVO, InvitationModel.class);
-        invitationModel.setScene(StringUtils.collectionToDelimitedString(invitationVO.getScenes(),
-                Constants.DEFAULT_DELI));
-        invitationModel.setTime(StringUtils.collectionToDelimitedString(invitationVO.getTimeSolts(),
-                Constants.DEFAULT_DELI));
+        invitationModel.setScene(JSON.toJSONString(invitationVO.getScenes()));
+        invitationModel.setTime(JSON.toJSONString(invitationVO.getTimeSolts()));
         invitationModel.setUserId(userId);
         InvitationResultModel response = invitationService.publishInvitation(invitationModel);
         ResponseEnvelope<InvitationResultModel> responseEnv = new ResponseEnvelope<>(response, true);
@@ -71,6 +71,24 @@ public class InvitationRestApiController {
         return new ResponseEntity<>(responseEnv, HttpStatus.OK);
     }
 
+    /**
+     * 确认邀约
+     *
+     * @param id
+     * @return
+     */
+    @RequestMapping(value = "/invite/invitation/confirm/{id}", method = RequestMethod.POST)
+    public ResponseEntity<ResponseEnvelope<String>> confirmInvitation(
+            @PathVariable Long id,
+            @RequestBody InvitationConfirmVO confirmVO,
+            @Value("#{request.getAttribute('userId')}") Long userId) {
+        InvitationConfirmModel confirmModel = beanMapper.map(confirmVO,InvitationConfirmModel.class);
+        confirmModel.setId(id);
+        confirmModel.setUserId(userId);
+        invitationService.confirmInvitation(confirmModel);
+        ResponseEnvelope<String> responseEnv = new ResponseEnvelope<>(ReturnCode.OPERATION_SUCCESS, true);
+        return new ResponseEntity<>(responseEnv, HttpStatus.OK);
+    }
 
 
 

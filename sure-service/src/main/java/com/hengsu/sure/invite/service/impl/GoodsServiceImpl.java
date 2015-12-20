@@ -1,5 +1,6 @@
 package com.hengsu.sure.invite.service.impl;
 
+import com.hengsu.sure.core.Constants;
 import com.hengsu.sure.sns.model.MTimeModel;
 import com.hkntv.pylon.data.common.annotation.ReadWrite;
 import com.hkntv.pylon.data.common.util.ReadWriteType;
@@ -64,9 +65,9 @@ public class GoodsServiceImpl implements GoodsService {
         Goods goods = beanMapper.map(goodsModel, Goods.class);
         List<Goods> goodses = goodsRepo.selectPage(goods, pageable);
         List<GoodsModel> goodsModels = beanMapper.mapAsList(goodses, GoodsModel.class);
-        for (GoodsModel goodsModel1 : goodsModels) {
-            setImageIds(goodsModel1);
-        }
+//        for (GoodsModel goodsModel1 : goodsModels) {
+//            setImageIds(goodsModel1);
+//        }
         return goodsModels;
     }
 
@@ -82,20 +83,5 @@ public class GoodsServiceImpl implements GoodsService {
         return goodsRepo.updateByPrimaryKeySelective(beanMapper.map(goodsModel, Goods.class));
     }
 
-    private void setImageIds(GoodsModel goodsModel) {
-        String images = goodsModel.getImages();
-
-        if (!StringUtils.isEmpty(images)) {
-            List<Long> imageIds = new ArrayList<>();
-            String[] imageStrs = images.split(";");
-            for (String imageStr : imageStrs) {
-                imageIds.add(Long.parseLong(imageStr));
-            }
-
-            goodsModel.setImageIds(imageIds);
-        }
-
-
-    }
 
 }

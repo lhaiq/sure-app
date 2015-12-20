@@ -9,6 +9,7 @@
     <result column="password" property="password" jdbcType="VARCHAR" />
     <result column="longitude" property="longitude" jdbcType="DOUBLE" />
     <result column="latitude" property="latitude" jdbcType="DOUBLE" />
+    <result column="height" property="height" jdbcType="INTEGER" />
     <result column="location_modify_time" property="locationModifyTime" jdbcType="TIMESTAMP" />
     <result column="role" property="role" jdbcType="INTEGER" />
     <result column="balance" property="balance" jdbcType="DOUBLE" />
@@ -16,17 +17,19 @@
     <result column="icon" property="icon" jdbcType="BIGINT" />
     <result column="face_score" property="faceScore" jdbcType="DOUBLE" />
     <result column="credit" property="credit" jdbcType="DOUBLE" />
-    <result column="skills" property="skills" jdbcType="DOUBLE" />
+    <result column="skills" property="skills" jdbcType="VARCHAR" />
     <result column="car" property="car" jdbcType="INTEGER" />
     <result column="city" property="city" jdbcType="INTEGER" />
     <result column="status" property="status" jdbcType="INTEGER" />
     <result column="face_id" property="faceId" jdbcType="VARCHAR" />
     <result column="alipay" property="alipay" jdbcType="VARCHAR" />
+    <result column="client_id" property="clientId" jdbcType="VARCHAR" />
+    <result column="sign" property="sign" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, phone, nickname, gender, password, longitude, latitude, location_modify_time, 
+    id, phone, nickname, gender, password, longitude, latitude, height, location_modify_time, 
     role, balance, age, icon, face_score, credit, skills, car, city, status, face_id, 
-    alipay
+    alipay, client_id, sign
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
@@ -34,21 +37,12 @@
     from user
     where id = #{id,jdbcType=BIGINT}
   </select>
-
   <select id="findUserByPhone" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select
     <include refid="Base_Column_List" />
     from user
     where phone = #{phone,jdbcType=VARCHAR}
   </select>
-
-  <select id="findUserByFaceId" resultMap="BaseResultMap" parameterType="java.lang.String" >
-    select
-    <include refid="Base_Column_List" />
-    from user
-    where face_id = #{faceId,jdbcType=VARCHAR}
-  </select>
-
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
     delete from user
     where id = #{id,jdbcType=BIGINT}
@@ -56,18 +50,20 @@
   <insert id="insert" parameterType="com.hengsu.sure.auth.entity.User" keyProperty="id" useGeneratedKeys="true">
     insert into user (id, phone, nickname, 
       gender, password, longitude, 
-      latitude, location_modify_time, role, 
-      balance, age, icon, face_score, 
-      credit, skills, car, 
-      city, status, face_id, 
-      alipay)
+      latitude, height, location_modify_time, 
+      role, balance, age, 
+      icon, face_score, credit, 
+      skills, car, city, 
+      status, face_id, alipay, 
+      client_id, sign)
     values (#{id,jdbcType=BIGINT}, #{phone,jdbcType=VARCHAR}, #{nickname,jdbcType=VARCHAR}, 
       #{gender,jdbcType=INTEGER}, #{password,jdbcType=VARCHAR}, #{longitude,jdbcType=DOUBLE}, 
-      #{latitude,jdbcType=DOUBLE}, #{locationModifyTime,jdbcType=TIMESTAMP}, #{role,jdbcType=INTEGER},
-      #{balance,jdbcType=DOUBLE}, #{age,jdbcType=INTEGER}, #{icon,jdbcType=BIGINT}, #{faceScore,jdbcType=DOUBLE}, 
-      #{credit,jdbcType=DOUBLE}, #{skills,jdbcType=DOUBLE}, #{car,jdbcType=INTEGER}, 
-      #{city,jdbcType=INTEGER}, #{status,jdbcType=INTEGER}, #{faceId,jdbcType=VARCHAR}, 
-      #{alipay,jdbcType=VARCHAR})
+      #{latitude,jdbcType=DOUBLE}, #{height,jdbcType=INTEGER}, #{locationModifyTime,jdbcType=TIMESTAMP}, 
+      #{role,jdbcType=INTEGER}, #{balance,jdbcType=DOUBLE}, #{age,jdbcType=INTEGER}, 
+      #{icon,jdbcType=BIGINT}, #{faceScore,jdbcType=DOUBLE}, #{credit,jdbcType=DOUBLE}, 
+      #{skills,jdbcType=VARCHAR}, #{car,jdbcType=INTEGER}, #{city,jdbcType=INTEGER}, 
+      #{status,jdbcType=INTEGER}, #{faceId,jdbcType=VARCHAR}, #{alipay,jdbcType=VARCHAR}, 
+      #{clientId,jdbcType=VARCHAR}, #{sign,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.hengsu.sure.auth.entity.User" keyProperty="id" useGeneratedKeys="true" >
     insert into user
@@ -92,6 +88,9 @@
       </if>
       <if test="latitude != null" >
         latitude,
+      </if>
+      <if test="height != null" >
+        height,
       </if>
       <if test="locationModifyTime != null" >
         location_modify_time,
@@ -132,6 +131,12 @@
       <if test="alipay != null" >
         alipay,
       </if>
+      <if test="clientId != null" >
+        client_id,
+      </if>
+      <if test="sign != null" >
+        sign,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -155,6 +160,9 @@
       <if test="latitude != null" >
         #{latitude,jdbcType=DOUBLE},
       </if>
+      <if test="height != null" >
+        #{height,jdbcType=INTEGER},
+      </if>
       <if test="locationModifyTime != null" >
         #{locationModifyTime,jdbcType=TIMESTAMP},
       </if>
@@ -177,7 +185,7 @@
         #{credit,jdbcType=DOUBLE},
       </if>
       <if test="skills != null" >
-        #{skills,jdbcType=DOUBLE},
+        #{skills,jdbcType=VARCHAR},
       </if>
       <if test="car != null" >
         #{car,jdbcType=INTEGER},
@@ -193,6 +201,12 @@
       </if>
       <if test="alipay != null" >
         #{alipay,jdbcType=VARCHAR},
+      </if>
+      <if test="clientId != null" >
+        #{clientId,jdbcType=VARCHAR},
+      </if>
+      <if test="sign != null" >
+        #{sign,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -217,6 +231,9 @@
       <if test="latitude != null" >
         latitude = #{latitude,jdbcType=DOUBLE},
       </if>
+      <if test="height != null" >
+        height = #{height,jdbcType=INTEGER},
+      </if>
       <if test="locationModifyTime != null" >
         location_modify_time = #{locationModifyTime,jdbcType=TIMESTAMP},
       </if>
@@ -239,7 +256,7 @@
         credit = #{credit,jdbcType=DOUBLE},
       </if>
       <if test="skills != null" >
-        skills = #{skills,jdbcType=DOUBLE},
+        skills = #{skills,jdbcType=VARCHAR},
       </if>
       <if test="car != null" >
         car = #{car,jdbcType=INTEGER},
@@ -256,6 +273,12 @@
       <if test="alipay != null" >
         alipay = #{alipay,jdbcType=VARCHAR},
       </if>
+      <if test="clientId != null" >
+        client_id = #{clientId,jdbcType=VARCHAR},
+      </if>
+      <if test="sign != null" >
+        sign = #{sign,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -267,6 +290,7 @@
       password = #{password,jdbcType=VARCHAR},
       longitude = #{longitude,jdbcType=DOUBLE},
       latitude = #{latitude,jdbcType=DOUBLE},
+      height = #{height,jdbcType=INTEGER},
       location_modify_time = #{locationModifyTime,jdbcType=TIMESTAMP},
       role = #{role,jdbcType=INTEGER},
       balance = #{balance,jdbcType=DOUBLE},
@@ -274,12 +298,14 @@
       icon = #{icon,jdbcType=BIGINT},
       face_score = #{faceScore,jdbcType=DOUBLE},
       credit = #{credit,jdbcType=DOUBLE},
-      skills = #{skills,jdbcType=DOUBLE},
+      skills = #{skills,jdbcType=VARCHAR},
       car = #{car,jdbcType=INTEGER},
       city = #{city,jdbcType=INTEGER},
       status = #{status,jdbcType=INTEGER},
       face_id = #{faceId,jdbcType=VARCHAR},
-      alipay = #{alipay,jdbcType=VARCHAR}
+      alipay = #{alipay,jdbcType=VARCHAR},
+      client_id = #{clientId,jdbcType=VARCHAR},
+      sign = #{sign,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
   <select id="selectCount" resultType="java.lang.Integer" parameterType="com.hengsu.sure.auth.entity.User" >
@@ -306,6 +332,9 @@
       <if test="latitude != null" >
         and latitude = #{latitude,jdbcType=DOUBLE}
       </if>
+      <if test="height != null" >
+        and height = #{height,jdbcType=INTEGER}
+      </if>
       <if test="locationModifyTime != null" >
         and location_modify_time = #{locationModifyTime,jdbcType=TIMESTAMP}
       </if>
@@ -328,7 +357,7 @@
         and credit = #{credit,jdbcType=DOUBLE}
       </if>
       <if test="skills != null" >
-        and skills = #{skills,jdbcType=DOUBLE}
+        and skills = #{skills,jdbcType=VARCHAR}
       </if>
       <if test="car != null" >
         and car = #{car,jdbcType=INTEGER}
@@ -344,6 +373,12 @@
       </if>
       <if test="alipay != null" >
         and alipay = #{alipay,jdbcType=VARCHAR}
+      </if>
+      <if test="clientId != null" >
+        and client_id = #{clientId,jdbcType=VARCHAR}
+      </if>
+      <if test="sign != null" >
+        and sign = #{sign,jdbcType=VARCHAR}
       </if>
     </where>
   </select>
@@ -372,6 +407,9 @@
     <if test="param1.latitude != null" >
       and latitude = #{param1.latitude,jdbcType=DOUBLE}
     </if>
+    <if test="param1.height != null" >
+      and height = #{param1.height,jdbcType=INTEGER}
+    </if>
     <if test="param1.locationModifyTime != null" >
       and location_modify_time = #{param1.locationModifyTime,jdbcType=TIMESTAMP}
     </if>
@@ -394,7 +432,7 @@
       and credit = #{param1.credit,jdbcType=DOUBLE}
     </if>
     <if test="param1.skills != null" >
-      and skills = #{param1.skills,jdbcType=DOUBLE}
+      and skills = #{param1.skills,jdbcType=VARCHAR}
     </if>
     <if test="param1.car != null" >
       and car = #{param1.car,jdbcType=INTEGER}
@@ -410,6 +448,12 @@
     </if>
     <if test="param1.alipay != null" >
       and alipay = #{param1.alipay,jdbcType=VARCHAR}
+    </if>
+    <if test="param1.clientId != null" >
+      and client_id = #{param1.clientId,jdbcType=VARCHAR}
+    </if>
+    <if test="param1.sign != null" >
+      and sign = #{param1.sign,jdbcType=VARCHAR}
     </if>
     <if test="param2.sort != null" >
       order by 

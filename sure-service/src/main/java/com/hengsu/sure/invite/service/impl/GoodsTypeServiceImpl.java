@@ -1,6 +1,7 @@
 package com.hengsu.sure.invite.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -9,6 +10,8 @@ import com.hengsu.sure.invite.repository.GoodsTypeRepository;
 import com.hengsu.sure.invite.model.GoodsTypeModel;
 import com.hengsu.sure.invite.service.GoodsTypeService;
 import com.hkntv.pylon.core.beans.mapping.BeanMapper;
+
+import java.util.List;
 
 @Service
 public class GoodsTypeServiceImpl implements GoodsTypeService {
@@ -48,6 +51,11 @@ public class GoodsTypeServiceImpl implements GoodsTypeService {
 	@Override
 	public int selectCount(GoodsTypeModel goodsTypeModel) {
 		return goodsTypeRepo.selectCount(beanMapper.map(goodsTypeModel, GoodsType.class));
+	}
+
+	@Override
+	public List<GoodsTypeModel> selectPage(GoodsTypeModel goodsTypeModel, Pageable pageable) {
+		return null;
 	}
 
 	@Transactional

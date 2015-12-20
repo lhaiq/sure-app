@@ -73,8 +73,17 @@ public class RelationServiceImpl implements RelationService {
 
     @Transactional
     @Override
-    public void addRelation(RelationModel relationModel) {
+    public void addRelationIfNotExisted(RelationModel relationModel) {
+
         int type = relationModel.getType();
+        RelationModel param = new RelationModel();
+        param.setFromUser(relationModel.getFromUser());
+        param.setToUser(relationModel.getToUser());
+        param.setType(type);
+        int count = selectCount(param);
+        if (count != 0) {
+            return;
+        }
 
         if (RelationType.RELATION.getCode() == type) {
             createSelective(relationModel);

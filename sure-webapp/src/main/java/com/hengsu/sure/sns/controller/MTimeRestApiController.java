@@ -1,5 +1,6 @@
 package com.hengsu.sure.sns.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.hengsu.sure.auth.model.UserModel;
 import com.hengsu.sure.auth.service.UserService;
 import com.hengsu.sure.sns.CommentType;
@@ -81,7 +82,7 @@ public class MTimeRestApiController {
         mTimeModel.setUserId(userId);
 
         //设置图片
-        mTimeModel.setImages(StringUtils.collectionToDelimitedString(mTimeVO.getImageIds(), ";"));
+        mTimeModel.setImages(JSON.toJSONString(mTimeVO.getImageIds()));
         mTimeModel.setTime(new Date());
         Integer result = mTimeService.create(mTimeModel);
         ResponseEnvelope<Integer> responseEnv = new ResponseEnvelope<Integer>(result, true);

@@ -20,6 +20,9 @@ public class InvitationModel{
 	private String state;
 	private Date createTime;
 	private Integer status;
+	private Double longitude;
+
+	private Double latitude;
 		
 	public void setId(Long id){
 		this.id = id;
@@ -132,6 +135,21 @@ public class InvitationModel{
 	public Integer getStatus(){
 		return this.status;
 	}
-		
-		
+
+
+	public Double getLatitude() {
+		return latitude;
+	}
+
+	public void setLatitude(Double latitude) {
+		this.latitude = latitude;
+	}
+
+	public Double getLongitude() {
+		return longitude;
+	}
+
+	public void setLongitude(Double longitude) {
+		this.longitude = longitude;
+	}
 }

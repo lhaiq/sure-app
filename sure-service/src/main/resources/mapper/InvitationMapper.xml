@@ -243,6 +243,13 @@
       </if>
     </where>
   </select>
+
+  <select id="getInvitedCount" resultType="java.lang.Integer">
+    select
+    count(*)
+    from invitation
+    where user_id = #{param1,jdbcType=BIGINT} and create_time>#{param2,jdbcType=TIMESTAMP} and create_time &gt;=#{param2,jdbcType=TIMESTAMP}
+  </select>
   <select id="selectPage" resultMap="BaseResultMap" >
     select 
     <include refid="Base_Column_List" />

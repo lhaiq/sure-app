@@ -2,6 +2,7 @@ package com.hengsu.sure.invite.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.hengsu.sure.ReturnCode;
+import com.hengsu.sure.invite.BillNumberBuilder;
 import com.hengsu.sure.invite.model.TradeModel;
 import com.hengsu.sure.invite.vo.TradeVO;
 import org.slf4j.Logger;
@@ -34,9 +35,9 @@ public class IndentRestApiController {
 
     private static final String TRADE_SUCSESS_STATUS = "success";
 
-    private static final String TRADE_FAILURE_STATUS="failure";
+    private static final String TRADE_FAILURE_STATUS = "failure";
 
-    private static final String TRADE_FINISHED="TRADE_FINISHED";
+    private static final String TRADE_FINISHED = "TRADE_FINISHED";
 
     @Autowired
     private BeanMapper beanMapper;
@@ -46,7 +47,20 @@ public class IndentRestApiController {
 
 
     /**
+     * 申请订单号
+     *
+     * @return
+     */
+    @RequestMapping(value = "/invite/indentno", method = RequestMethod.GET)
+    public ResponseEntity<ResponseEnvelope<String>> cancelIndent() {
+        String indentNo = BillNumberBuilder.nextBillNumber();
+        ResponseEnvelope<String> responseEnv = new ResponseEnvelope<>(indentNo, true);
+        return new ResponseEntity<>(responseEnv, HttpStatus.OK);
+    }
+
+    /**
      * 订单列表
+     *
      * @param type
      * @param pageable
      * @return
@@ -59,10 +73,10 @@ public class IndentRestApiController {
         param.setType(type);
 
         Integer count = indentService.selectCount(param);
-        List<IndentModel> indentModels = indentService.selectPage(param,pageable);
-        Page<IndentModel> page = new PageImpl<>(indentModels,pageable,count);
+        List<IndentModel> indentModels = indentService.selectPage(param, pageable);
+        Page<IndentModel> page = new PageImpl<>(indentModels, pageable, count);
 
-        ResponseEnvelope<Page<IndentModel>> responseEnv = new ResponseEnvelope<>(page,true);
+        ResponseEnvelope<Page<IndentModel>> responseEnv = new ResponseEnvelope<>(page, true);
         return new ResponseEntity<>(responseEnv, HttpStatus.OK);
     }
 
@@ -76,7 +90,6 @@ public class IndentRestApiController {
     @RequestMapping(value = "/invite/trade", method = RequestMethod.POST)
     public ResponseEntity<String> receiveTrade(@RequestBody TradeVO tradeVO) {
         logger.info(JSON.toJSONString(tradeVO));
-        //TODO 后面再做
         TradeModel tradeModel = beanMapper.map(tradeVO, TradeModel.class);
         indentService.receiveTrade(tradeModel);
         return new ResponseEntity<>(TRADE_SUCSESS_STATUS, HttpStatus.OK);

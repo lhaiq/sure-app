@@ -26,18 +26,12 @@ public class UserVO{
 	private Double balance;
 	private Double faceScore;
 	private Double credit;
-	private Double skills;
+	private String skills;
+	private Integer height;
+	private String sign;
 
 	private Integer status;
 	private String faceId;
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public Long getId() {
-		return id;
-	}
 
 	public Integer getAge() {
 		return age;
@@ -143,12 +137,28 @@ public class UserVO{
 		this.gender = gender;
 	}
 
+	public Integer getHeight() {
+		return height;
+	}
+
+	public void setHeight(Integer height) {
+		this.height = height;
+	}
+
 	public Long getIcon() {
 		return icon;
 	}
 
 	public void setIcon(Long icon) {
 		this.icon = icon;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public Double getLatitude() {
@@ -183,11 +193,19 @@ public class UserVO{
 		this.role = role;
 	}
 
-	public Double getSkills() {
+	public String getSign() {
+		return sign;
+	}
+
+	public void setSign(String sign) {
+		this.sign = sign;
+	}
+
+	public String getSkills() {
 		return skills;
 	}
 
-	public void setSkills(Double skills) {
+	public void setSkills(String skills) {
 		this.skills = skills;
 	}
 

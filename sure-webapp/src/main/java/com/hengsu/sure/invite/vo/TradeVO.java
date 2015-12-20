@@ -66,11 +66,11 @@ public class TradeVO {
 
     @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
     @MapField("gmtCreate")
-    private String gmt_create;
+    private Date gmt_create;
 
     @MapField("gmtPayment")
     @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
-    private String gmt_payment;
+    private Date gmt_payment;
 
     @MapField("isTotalFeeAdjust")
     private String is_total_fee_adjust;
@@ -120,19 +120,19 @@ public class TradeVO {
         this.discount = discount;
     }
 
-    public String getGmt_create() {
+    public Date getGmt_create() {
         return gmt_create;
     }
 
-    public void setGmt_create(String gmt_create) {
+    public void setGmt_create(Date gmt_create) {
         this.gmt_create = gmt_create;
     }
 
-    public String getGmt_payment() {
+    public Date getGmt_payment() {
         return gmt_payment;
     }
 
-    public void setGmt_payment(String gmt_payment) {
+    public void setGmt_payment(Date gmt_payment) {
         this.gmt_payment = gmt_payment;
     }
 

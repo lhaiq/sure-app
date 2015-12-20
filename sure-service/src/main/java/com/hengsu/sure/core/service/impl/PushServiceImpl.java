@@ -64,8 +64,8 @@ public class PushServiceImpl implements PushService {
         logger.info("push request:{}", JSON.toJSON(targets));
         //使用taskID对目标进行推送
         //TODO 联调再开
-//        IPushResult result = push.pushMessageToList(taskId, targets);
-//        logger.info("push response: {}", result.getResponse().toString());
+        IPushResult result = push.pushMessageToList(taskId, targets);
+        logger.info("push response: {}", result.getResponse().toString());
 
     }
 

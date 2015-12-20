@@ -57,7 +57,6 @@ public class MTimeServiceImpl implements MTimeService {
     public MTimeModel findByPrimaryKey(Long id) {
         MTime mTime = mTimeRepo.selectByPrimaryKey(id);
         MTimeModel mTimeModel = beanMapper.map(mTime, MTimeModel.class);
-        setImageIds(mTimeModel);
         return mTimeModel;
     }
 
@@ -97,9 +96,6 @@ public class MTimeServiceImpl implements MTimeService {
     public List<MTimeModel> listMTimeModels(MTimeModel mTimeModel, Pageable pageable) {
         List<MTime> mTimes = mTimeRepo.selectPage(beanMapper.map(mTimeModel, MTime.class), pageable);
         List<MTimeModel> mTimeModels = beanMapper.mapAsList(mTimes, MTimeModel.class);
-        for (MTimeModel param : mTimeModels) {
-            setImageIds(param);
-        }
         return mTimeModels;
     }
 
@@ -114,21 +110,4 @@ public class MTimeServiceImpl implements MTimeService {
     public int updateByPrimaryKeySelective(MTimeModel mTimeModel) {
         return mTimeRepo.updateByPrimaryKeySelective(beanMapper.map(mTimeModel, MTime.class));
     }
-
-    private void setImageIds(MTimeModel mTimeModel) {
-        String images = mTimeModel.getImages();
-
-        if (!StringUtils.isEmpty(images)) {
-            List<Long> imageIds = new ArrayList<>();
-            String[] imageStrs = images.split(";");
-            for (String imageStr : imageStrs) {
-                imageIds.add(Long.parseLong(imageStr));
-            }
-
-            mTimeModel.setImageIds(imageIds);
-        }
-
-
-    }
-
 }

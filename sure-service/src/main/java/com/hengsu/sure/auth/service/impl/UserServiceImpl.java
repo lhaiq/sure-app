@@ -11,7 +11,7 @@ import com.hengsu.sure.auth.service.UserLBSService;
 import com.hengsu.sure.auth.service.UserService;
 import com.hengsu.sure.core.ErrorCode;
 import com.hengsu.sure.core.model.AuthCodeModel;
-import com.hengsu.sure.core.service.AuthCodeService;
+import com.hengsu.sure.core.service.YunTongXunService;
 import com.hengsu.sure.core.util.RandomUtil;
 import com.hkntv.pylon.core.beans.mapping.BeanMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,7 +56,7 @@ public class UserServiceImpl implements UserService {
 
 
     @Autowired
-    private AuthCodeService authCodeService;
+    private YunTongXunService authCodeService;
 
     @Autowired
     private FaceService faceService;
@@ -177,6 +177,29 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
+    public void modifyPass(Long userId, String oldPass, String newPass) {
+
+        //查询user
+        UserModel userModel = findByPrimaryKey(userId);
+
+        //比较老密码
+        String oldPassMd5 = DigestUtils.md5DigestAsHex(oldPass.getBytes());
+        if (!userModel.getPassword().equals(oldPassMd5)) {
+            ErrorCode.throwBusinessException(ErrorCode.OLD_PASSWORD_ERROR);
+        }
+
+        //更新密码
+        String newPassMd5 = DigestUtils.md5DigestAsHex(newPass.getBytes());
+        UserModel param = new UserModel();
+        param.setId(userId);
+        param.setPassword(newPassMd5);
+        updateByPrimaryKeySelective(param);
+
+
+    }
+
+    @Transactional
+    @Override
     public void registerUser(UserModel userModel) {
 
         //判断User是否存在
@@ -266,6 +289,24 @@ public class UserServiceImpl implements UserService {
         //更新到lbs
         userLBSModel.setTime(updateDate);
         userLBSService.createSelective(userLBSModel);
+    }
+
+    @Override
+    public void addBalance(Long userId, Double money) {
+
+        UserModel userModel =findByPrimaryKey(userId);
+
+        UserModel param = new UserModel();
+        param.setId(userId);
+        param.setBalance(userModel.getBalance()+money);
+        updateByPrimaryKeySelective(param);
+
+
+    }
+
+    @Override
+    public void reduceBalance(Long userId, Double money) {
+
     }
 
     //根据距离查询

@@ -5,7 +5,7 @@ package com.hengsu.sure.invite;
  */
 public enum InvitationStatus {
 
-    UNFINISHED(0, "unfinished"),
+    PUBLISHED(0, "published"),
     FINISHED(1, "finished"),
     VOID(2, "void"),;
 

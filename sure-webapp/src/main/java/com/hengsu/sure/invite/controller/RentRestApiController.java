@@ -1,5 +1,6 @@
 package com.hengsu.sure.invite.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.hengsu.sure.ReturnCode;
 import com.hengsu.sure.core.Constants;
 import org.slf4j.Logger;
@@ -26,61 +27,59 @@ import com.hengsu.sure.invite.vo.RentVO;
 @RequestMapping("/sure")
 public class RentRestApiController {
 
-	private final Logger logger = LoggerFactory.getLogger(RentRestApiController.class);
-	
-	@Autowired
-	private BeanMapper beanMapper;
-	
-	@Autowired
-	private RentService rentService;
-	
-	@RequestMapping(value = "/invite/rent/{id}", method = RequestMethod.GET)
-	public ResponseEntity<ResponseEnvelope<RentVO>> getRentById(@PathVariable Long id){
-		RentModel rentModel = rentService.findByPrimaryKey(id);
-		RentVO rentVO =beanMapper.map(rentModel, RentVO.class);
-		ResponseEnvelope<RentVO> responseEnv = new ResponseEnvelope<RentVO>(rentVO);
-		return new ResponseEntity<>(responseEnv, HttpStatus.OK);
-	}
+    private final Logger logger = LoggerFactory.getLogger(RentRestApiController.class);
 
-	/**
-	 * 发布发现邀约
-	 * @param rentVO
-	 * @param userId
-	 * @return
-	 */
-	@RequestMapping(value = "/invite/rent", method = RequestMethod.POST)
-	public ResponseEntity<ResponseEnvelope<String>> createRent(
-			@RequestBody RentVO rentVO,
-			@Value("#{request.getAttribute('userId')}") Long userId){
-		RentModel rentModel = beanMapper.map(rentVO, RentModel.class);
-		rentModel.setUserId(userId);
+    @Autowired
+    private BeanMapper beanMapper;
 
-		rentModel.setScene(StringUtils.collectionToDelimitedString(rentVO.getScenes(),
-				Constants.DEFAULT_DELI));
-		rentModel.setImages(StringUtils.collectionToDelimitedString(rentVO.getImages(),
-				Constants.DEFAULT_DELI));
-		rentModel.setDate(StringUtils.collectionToDelimitedString(rentVO.getDates(),
-				Constants.DEFAULT_DELI));
+    @Autowired
+    private RentService rentService;
 
-		rentService.publishRent(rentModel);
-		ResponseEnvelope<String> responseEnv = new ResponseEnvelope<>(ReturnCode.OPERATION_SUCCESS,true);
-		return new ResponseEntity<>(responseEnv, HttpStatus.OK);
-	}
+    @RequestMapping(value = "/invite/rent/{id}", method = RequestMethod.GET)
+    public ResponseEntity<ResponseEnvelope<RentVO>> getRentById(@PathVariable Long id) {
+        RentModel rentModel = rentService.findByPrimaryKey(id);
+        RentVO rentVO = beanMapper.map(rentModel, RentVO.class);
+        ResponseEnvelope<RentVO> responseEnv = new ResponseEnvelope<RentVO>(rentVO);
+        return new ResponseEntity<>(responseEnv, HttpStatus.OK);
+    }
 
-	@RequestMapping(value = "/invite/rent/{id}", method = RequestMethod.DELETE)
-	public ResponseEntity<ResponseEnvelope<Integer>> deleteRentByPrimaryKey(@PathVariable Long id){
-		Integer  result = rentService.deleteByPrimaryKey(id);
-		ResponseEnvelope<Integer> responseEnv = new ResponseEnvelope<Integer>(result);
-		return new ResponseEntity<>(responseEnv, HttpStatus.OK);
-	}
-	
-	@RequestMapping(value = "/invite/rent/{id}", method = RequestMethod.PUT)
-	public ResponseEntity<ResponseEnvelope<Integer>> updateRentByPrimaryKeySelective(@PathVariable Long id, @RequestBody RentVO rentVO){
-		RentModel rentModel = beanMapper.map(rentVO, RentModel.class);
-		rentModel.setId(id);
-		Integer  result = rentService.updateByPrimaryKeySelective(rentModel);
-		ResponseEnvelope<Integer> responseEnv = new ResponseEnvelope<Integer>(result);
-		return new ResponseEntity<>(responseEnv, HttpStatus.OK);
-	}
-	
+    /**
+     * 发布发现邀约
+     *
+     * @param rentVO
+     * @param userId
+     * @return
+     */
+    @RequestMapping(value = "/invite/rent", method = RequestMethod.POST)
+    public ResponseEntity<ResponseEnvelope<String>> createRent(
+            @RequestBody RentVO rentVO,
+            @Value("#{request.getAttribute('userId')}") Long userId) {
+        RentModel rentModel = beanMapper.map(rentVO, RentModel.class);
+        rentModel.setUserId(userId);
+
+        rentModel.setScene(JSON.toJSONString(rentVO.getScenes()));
+        rentModel.setImages(JSON.toJSONString(rentVO.getImages()));
+        rentModel.setDate(JSON.toJSONString(rentVO.getDates()));
+
+        rentService.publishRent(rentModel);
+        ResponseEnvelope<String> responseEnv = new ResponseEnvelope<>(ReturnCode.OPERATION_SUCCESS, true);
+        return new ResponseEntity<>(responseEnv, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/invite/rent/{id}", method = RequestMethod.DELETE)
+    public ResponseEntity<ResponseEnvelope<Integer>> deleteRentByPrimaryKey(@PathVariable Long id) {
+        Integer result = rentService.deleteByPrimaryKey(id);
+        ResponseEnvelope<Integer> responseEnv = new ResponseEnvelope<Integer>(result);
+        return new ResponseEntity<>(responseEnv, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/invite/rent/{id}", method = RequestMethod.PUT)
+    public ResponseEntity<ResponseEnvelope<Integer>> updateRentByPrimaryKeySelective(@PathVariable Long id, @RequestBody RentVO rentVO) {
+        RentModel rentModel = beanMapper.map(rentVO, RentModel.class);
+        rentModel.setId(id);
+        Integer result = rentService.updateByPrimaryKeySelective(rentModel);
+        ResponseEnvelope<Integer> responseEnv = new ResponseEnvelope<Integer>(result);
+        return new ResponseEntity<>(responseEnv, HttpStatus.OK);
+    }
+
 }

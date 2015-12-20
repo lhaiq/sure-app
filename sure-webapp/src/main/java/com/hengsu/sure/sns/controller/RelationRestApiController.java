@@ -59,7 +59,7 @@ public class RelationRestApiController {
         relationModel.setFromUser(userId);
         relationModel.setType(RelationType.RELATION.getCode());
         relationModel.setTime(new Date());
-        relationService.addRelation(relationModel);
+        relationService.addRelationIfNotExisted(relationModel);
         ResponseEnvelope<String> responseEnv = new ResponseEnvelope<>(ReturnCode.OPERATION_SUCCESS, true);
         return new ResponseEntity<>(responseEnv, HttpStatus.OK);
     }

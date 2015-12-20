@@ -17,6 +17,8 @@ public class User {
 
     private Double latitude;
 
+    private Integer height;
+
     private Date locationModifyTime;
 
     private Integer role;
@@ -31,7 +33,7 @@ public class User {
 
     private Double credit;
 
-    private Double skills;
+    private String skills;
 
     private Integer car;
 
@@ -42,6 +44,10 @@ public class User {
     private String faceId;
 
     private String alipay;
+
+    private String clientId;
+
+    private String sign;
 
     public Long getId() {
         return id;
@@ -97,6 +103,14 @@ public class User {
 
     public void setLatitude(Double latitude) {
         this.latitude = latitude;
+    }
+
+    public Integer getHeight() {
+        return height;
+    }
+
+    public void setHeight(Integer height) {
+        this.height = height;
     }
 
     public Date getLocationModifyTime() {
@@ -155,11 +169,11 @@ public class User {
         this.credit = credit;
     }
 
-    public Double getSkills() {
+    public String getSkills() {
         return skills;
     }
 
-    public void setSkills(Double skills) {
+    public void setSkills(String skills) {
         this.skills = skills;
     }
 
@@ -201,5 +215,21 @@ public class User {
 
     public void setAlipay(String alipay) {
         this.alipay = alipay;
+    }
+
+    public String getClientId() {
+        return clientId;
+    }
+
+    public void setClientId(String clientId) {
+        this.clientId = clientId;
+    }
+
+    public String getSign() {
+        return sign;
+    }
+
+    public void setSign(String sign) {
+        this.sign = sign;
     }
 }

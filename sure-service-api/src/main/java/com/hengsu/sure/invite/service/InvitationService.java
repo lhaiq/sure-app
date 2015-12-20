@@ -1,6 +1,7 @@
 
 package com.hengsu.sure.invite.service;
 
+import com.hengsu.sure.invite.model.InvitationConfirmModel;
 import com.hengsu.sure.invite.model.InvitationModel;
 import com.hengsu.sure.invite.model.InvitationResultModel;
 
@@ -57,11 +58,8 @@ public interface InvitationService {
 
     /**
      * 确认邀约
-     *
-     * @param id
-     * @param userId
-     * @param receivedUserId
+     * @param invitationConfirmModel
      */
-    public void confirmInvitation(Long id, Long userId, Long receivedUserId);
+    public void confirmInvitation(InvitationConfirmModel invitationConfirmModel);
 
 }

@@ -5,10 +5,11 @@ package com.hengsu.sure.invite;
  */
 public enum IndentStatus {
 
-    SUCCESS(0, "success"),
-    FINISHED(1, "finished"),
-    CANCELING(2, "canceling"),
-    CANCELED(2, "canceled"),
+    CONFIRMED(0, "confirmed"),
+    PAYED(1, "payed"),
+    FINISHED(2, "finished"),
+    CANCELING(3, "canceling"),
+    CANCELED(4, "canceled"),
     ;
 
     private Integer code;

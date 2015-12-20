@@ -31,6 +31,8 @@ public enum ErrorCode {
     DELETE_ONLY_SELF("1014", "只能删除自己"),
     AUTH_CODE_NOT_EXISTED("1015", "该手机号尚未获取验证码"),
     JSON_FORMAT_ERROR("1016", "json格式错误"),
+    OLD_PASSWORD_ERROR("1017", "旧密码错误"),
+
 
     //时光5
     MTIME_DELETE_ERROR("5000", "只能删除自己的时光"),
@@ -48,6 +50,10 @@ public enum ErrorCode {
     CANNOT_RECEIVE_SLEF_INVITATION("6004", "不能接受自己的即时邀约"),
     CANNOT_CANCEL_OTHERS_INDENT("6005", "只能取消自己的订单"),
     CANNOT_CANCEL_STATUS_ERROR("6006", "只能取消未完成的订单"),
+
+    //700订单
+    AMOUNT_ERROR("7000", "金额不够"),
+    TRADE_NOT_SUCCESS("7001", "支付尚未成功"),
     ;
 
     private String code;

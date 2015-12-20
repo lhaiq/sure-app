@@ -33,6 +33,8 @@ public interface UserService {
 
     public void changePass(String phone, String password, String authCode);
 
+    public void modifyPass(Long userId, String oldPass,String newPass);
+
     public void registerUser(UserModel userModel);
 
     public UserModel findUserByPhone(String phone);
@@ -44,6 +46,10 @@ public interface UserService {
     public UserModel faceLogin(String registerFaceId, String loginFaceId);
 
     public void updateLBS(UserLBSModel userLBSModel);
+
+    public void addBalance(Long userId,Double money);
+
+    public void reduceBalance(Long userId,Double money);
 
     public List<UserModel> queryUserByTimeAndLocation(Long sec,
                                                       Double distance,

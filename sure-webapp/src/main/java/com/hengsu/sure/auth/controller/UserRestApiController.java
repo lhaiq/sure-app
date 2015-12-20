@@ -41,7 +41,6 @@ public class UserRestApiController {
     @Autowired
     private BeanMapper beanMapper;
 
-
     @Autowired
     private UserService userService;
 
@@ -186,12 +185,33 @@ public class UserRestApiController {
     }
 
 
+    /**
+     * 忘记密码 修改
+     * @param changePassRequest
+     * @return
+     */
     @IgnoreAuth
     @RequestMapping(value = "/auth/changepass", method = RequestMethod.PUT)
     @ResponseBody
     public ResponseEnvelope<String> changePass(@RequestBody ChangePassRequest changePassRequest) {
         userService.changePass(changePassRequest.getPhone(), changePassRequest.getPassword(),
                 changePassRequest.getCode());
+        ResponseEnvelope<String> responseEnv = new ResponseEnvelope<>(ReturnCode.OPERATION_SUCCESS, true);
+        return responseEnv;
+    }
+
+    /**
+     * 更新密码 登陆后
+     * @param modifyPassRequest
+     * @param userId
+     * @return
+     */
+    @RequestMapping(value = "/auth/modifypass", method = RequestMethod.PUT)
+    @ResponseBody
+    public ResponseEnvelope<String> modifyPass(
+            @RequestBody ModifyPassRequest modifyPassRequest,
+            @Value("#{request.getAttribute('userId')}") Long userId) {
+        userService.modifyPass(userId,modifyPassRequest.getOldPass(),modifyPassRequest.getNewPass());
         ResponseEnvelope<String> responseEnv = new ResponseEnvelope<>(ReturnCode.OPERATION_SUCCESS, true);
         return responseEnv;
     }

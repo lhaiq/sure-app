@@ -2,6 +2,7 @@ package com.hengsu.sure.invite.model;
 
 import com.hkntv.pylon.core.beans.mapping.annotation.MapClass;
 import java.util.Date;
+import java.util.List;
 
 @MapClass("com.hengsu.sure.invite.entity.Goods")
 public class GoodsModel{
@@ -17,6 +18,7 @@ public class GoodsModel{
 	private Double price;
 	private Double money;
 	private Long goodsType;
+	private List<Long> imageIds;
 		
 	public void setId(Long id){
 		this.id = id;
@@ -105,6 +107,13 @@ public class GoodsModel{
 	public Long getGoodsType(){
 		return this.goodsType;
 	}
-		
-		
+
+
+	public void setImageIds(List<Long> imageIds) {
+		this.imageIds = imageIds;
+	}
+
+	public List<Long> getImageIds() {
+		return imageIds;
+	}
 }

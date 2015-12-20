@@ -23,17 +23,24 @@
     <result column="end_time" property="endTime" jdbcType="TIMESTAMP" />
     <result column="price" property="price" jdbcType="DOUBLE" />
     <result column="quantity" property="quantity" jdbcType="INTEGER" />
+    <result column="address" property="address" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, indent_no, customer_id, seller_id, trade_id, money, status, refer_id, type, longitude, 
     latitude, create_time, apply_time, canceled_time, snapshot, cancel_reason, handle_id, 
-    start_time, end_time, price, quantity
+    start_time, end_time, price, quantity, address
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
     <include refid="Base_Column_List" />
     from indent
     where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectByNO" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select
+    <include refid="Base_Column_List" />
+    from indent
+    where indent_no = #{indentNo,jdbcType=VARCHAR}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
     delete from indent
@@ -46,16 +53,16 @@
       longitude, latitude, create_time, 
       apply_time, canceled_time, snapshot, 
       cancel_reason, handle_id, start_time, 
-      end_time, price, quantity
-      )
+      end_time, price, quantity, 
+      address)
     values (#{id,jdbcType=BIGINT}, #{indentNo,jdbcType=VARCHAR}, #{customerId,jdbcType=BIGINT}, 
       #{sellerId,jdbcType=BIGINT}, #{tradeId,jdbcType=BIGINT}, #{money,jdbcType=DOUBLE}, 
       #{status,jdbcType=INTEGER}, #{referId,jdbcType=BIGINT}, #{type,jdbcType=INTEGER}, 
       #{longitude,jdbcType=DOUBLE}, #{latitude,jdbcType=DOUBLE}, #{createTime,jdbcType=TIMESTAMP}, 
       #{applyTime,jdbcType=TIMESTAMP}, #{canceledTime,jdbcType=TIMESTAMP}, #{snapshot,jdbcType=VARCHAR}, 
       #{cancelReason,jdbcType=VARCHAR}, #{handleId,jdbcType=BIGINT}, #{startTime,jdbcType=TIMESTAMP}, 
-      #{endTime,jdbcType=TIMESTAMP}, #{price,jdbcType=DOUBLE}, #{quantity,jdbcType=INTEGER}
-      )
+      #{endTime,jdbcType=TIMESTAMP}, #{price,jdbcType=DOUBLE}, #{quantity,jdbcType=INTEGER}, 
+      #{address,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.hengsu.sure.invite.entity.Indent" >
     insert into indent
@@ -123,6 +130,9 @@
       <if test="quantity != null" >
         quantity,
       </if>
+      <if test="address != null" >
+        address,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -187,6 +197,9 @@
       </if>
       <if test="quantity != null" >
         #{quantity,jdbcType=INTEGER},
+      </if>
+      <if test="address != null" >
+        #{address,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -253,6 +266,9 @@
       <if test="quantity != null" >
         quantity = #{quantity,jdbcType=INTEGER},
       </if>
+      <if test="address != null" >
+        address = #{address,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -277,7 +293,8 @@
       start_time = #{startTime,jdbcType=TIMESTAMP},
       end_time = #{endTime,jdbcType=TIMESTAMP},
       price = #{price,jdbcType=DOUBLE},
-      quantity = #{quantity,jdbcType=INTEGER}
+      quantity = #{quantity,jdbcType=INTEGER},
+      address = #{address,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
   <select id="selectCount" resultType="java.lang.Integer" parameterType="com.hengsu.sure.invite.entity.Indent" >
@@ -345,6 +362,9 @@
       </if>
       <if test="quantity != null" >
         and quantity = #{quantity,jdbcType=INTEGER}
+      </if>
+      <if test="address != null" >
+        and address = #{address,jdbcType=VARCHAR}
       </if>
     </where>
   </select>
@@ -414,6 +434,9 @@
     </if>
     <if test="param1.quantity != null" >
       and quantity = #{param1.quantity,jdbcType=INTEGER}
+    </if>
+    <if test="param1.address != null" >
+      and address = #{param1.address,jdbcType=VARCHAR}
     </if>
     <if test="param2.sort != null" >
       order by 

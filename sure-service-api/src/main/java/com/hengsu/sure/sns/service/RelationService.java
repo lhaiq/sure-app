@@ -6,26 +6,27 @@ import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
-public interface RelationService{
-	
-	public int create(RelationModel relationModel);
-	
-	public int createSelective(RelationModel relationModel);
-	
-	public RelationModel findByPrimaryKey(Long id);
-	
-	public int updateByPrimaryKey(RelationModel relationModel);
-	
-	public int updateByPrimaryKeySelective(RelationModel relationModel);
-	
-	public int deleteByPrimaryKey(Long id);
-	
-	public int selectCount(RelationModel relationModel);
+public interface RelationService {
 
-	public void addRelation(RelationModel relationModel);
+    public int create(RelationModel relationModel);
 
-	public void deleteRelation(Long fromUser,Long toUser,Integer type);
+    public int createSelective(RelationModel relationModel);
 
-	public List<RelationModel> listRelations(RelationModel relationModel,Pageable pageable);
-	
+    public RelationModel findByPrimaryKey(Long id);
+
+    public int updateByPrimaryKey(RelationModel relationModel);
+
+    public int updateByPrimaryKeySelective(RelationModel relationModel);
+
+    public int deleteByPrimaryKey(Long id);
+
+    public int selectCount(RelationModel relationModel);
+
+    public void addRelationIfNotExisted(RelationModel relationModel);
+
+    public void deleteRelation(Long fromUser, Long toUser, Integer type);
+
+    public List<RelationModel> listRelations(RelationModel relationModel, Pageable pageable);
+
+
 }

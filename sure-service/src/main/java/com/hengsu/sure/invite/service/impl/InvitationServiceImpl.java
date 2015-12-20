@@ -1,13 +1,19 @@
 package com.hengsu.sure.invite.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hengsu.sure.auth.UserRole;
 import com.hengsu.sure.auth.model.UserModel;
 import com.hengsu.sure.auth.service.UserService;
 import com.hengsu.sure.core.ErrorCode;
 import com.hengsu.sure.core.service.PushService;
+import com.hengsu.sure.invite.IndentStatus;
+import com.hengsu.sure.invite.IndentType;
 import com.hengsu.sure.invite.InvitationStatus;
+import com.hengsu.sure.invite.model.IndentModel;
+import com.hengsu.sure.invite.model.InvitationConfirmModel;
 import com.hengsu.sure.invite.model.InvitationResultModel;
+import com.hengsu.sure.invite.service.IndentService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +41,6 @@ public class InvitationServiceImpl implements InvitationService {
 
     private static final String INVITATION_REQUEST = "invitation_request";
     private static final String INVITATION_RECEIVE = "invitation_receive";
-    private static final String INVITATION_CONFIRM = "invitation_confirm";
 
 
     @Autowired
@@ -49,6 +54,9 @@ public class InvitationServiceImpl implements InvitationService {
 
     @Autowired
     private PushService pushService;
+
+    @Autowired
+    private IndentService indentService;
 
     @Value("${push.retry.count}")
     private Integer retryCount;
@@ -158,7 +166,7 @@ public class InvitationServiceImpl implements InvitationService {
 
         //将邀约信息保存
         invitationModel.setCreateTime(new Date());
-        invitationModel.setStatus(InvitationStatus.UNFINISHED.getCode());
+        invitationModel.setStatus(InvitationStatus.PUBLISHED.getCode());
         createSelective(invitationModel);
 
         //返回邀约Id
@@ -187,7 +195,7 @@ public class InvitationServiceImpl implements InvitationService {
 
         //判断该邀约是否已经完成
         InvitationModel invitationModel = findByPrimaryKey(id);
-        if (invitationModel.getStatus() != InvitationStatus.UNFINISHED.getCode()) {
+        if (invitationModel.getStatus() != InvitationStatus.PUBLISHED.getCode()) {
             ErrorCode.throwBusinessException(ErrorCode.INVITATION_FINISHED);
         }
         UserModel userModel = userService.findByPrimaryKey(invitationModel.getUserId());
@@ -208,11 +216,11 @@ public class InvitationServiceImpl implements InvitationService {
 
     @Transactional
     @Override
-    public void confirmInvitation(Long id, Long userId, Long receivedUserId) {
+    public void confirmInvitation(InvitationConfirmModel confirmModel) {
 
         //判断该邀约是否为自己发布
-        InvitationModel invitationModel = findByPrimaryKey(id);
-        if (invitationModel.getUserId() != userId) {
+        InvitationModel invitationModel = findByPrimaryKey(confirmModel.getId());
+        if (invitationModel.getUserId() != confirmModel.getUserId()) {
             ErrorCode.throwBusinessException(ErrorCode.INVITATION_PUBLISHER_NOT_MATCH);
         }
 
@@ -221,12 +229,22 @@ public class InvitationServiceImpl implements InvitationService {
         newInvitationModel.setStatus(InvitationStatus.FINISHED.getCode());
         updateByPrimaryKeySelective(newInvitationModel);
 
-        //通知接受着
-        JSONObject message = new JSONObject();
-        message.put("pushId", INVITATION_CONFIRM);
-        message.put("invitation", invitationModel);
-        pushService.pushMessage(message.toJSONString(),
-                userService.findByPrimaryKey(receivedUserId));
+        //创建订单
+        IndentModel indentModel = new IndentModel();
+        indentModel.setCustomerId(confirmModel.getUserId());
+        indentModel.setSellerId(confirmModel.getReceivedUserId());
+        indentModel.setQuantity(1);
+        indentModel.setPrice(confirmModel.getMoney());
+        indentModel.setMoney(confirmModel.getMoney());
+        indentModel.setIndentNo(confirmModel.getIndentNo());
+        indentModel.setReferId(confirmModel.getId());
+        indentModel.setType(IndentType.INVITATION.getCode());
+        indentModel.setStatus(IndentStatus.CONFIRMED.getCode());
+        indentModel.setCreateTime(new Date());
+        indentModel.setSnapshot(JSON.toJSONString(invitationModel));
+        //TODO 完成开始时间
+//        indentModel.setStartTime();
+        indentService.createSelective(indentModel);
 
     }
 

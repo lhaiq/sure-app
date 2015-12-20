@@ -45,6 +45,8 @@ public class Indent {
 
     private Integer quantity;
 
+    private String address;
+
     public Long getId() {
         return id;
     }
@@ -211,5 +213,13 @@ public class Indent {
 
     public void setQuantity(Integer quantity) {
         this.quantity = quantity;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getAddress() {
+        return address;
     }
 }
