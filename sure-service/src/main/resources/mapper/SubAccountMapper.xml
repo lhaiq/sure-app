@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hengsu.sure.auth.repository.SubAccountRepository" >
+  <resultMap id="BaseResultMap" type="com.hengsu.sure.auth.entity.SubAccount" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="sub_account_sid" property="subAccountSid" jdbcType="VARCHAR" />
+    <result column="sub_token" property="subToken" jdbcType="VARCHAR" />
+    <result column="date_created" property="dateCreated" jdbcType="VARCHAR" />
+    <result column="voip_account" property="voipAccount" jdbcType="VARCHAR" />
+    <result column="voip_pwd" property="voipPwd" jdbcType="VARCHAR" />
+    <result column="user_id" property="userId" jdbcType="BIGINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, sub_account_sid, sub_token, date_created, voip_account, voip_pwd, user_id
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from sub_account
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from sub_account
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.hengsu.sure.auth.entity.SubAccount" >
+    insert into sub_account (id, sub_account_sid, sub_token, 
+      date_created, voip_account, voip_pwd, 
+      user_id)
+    values (#{id,jdbcType=BIGINT}, #{subAccountSid,jdbcType=VARCHAR}, #{subToken,jdbcType=VARCHAR}, 
+      #{dateCreated,jdbcType=VARCHAR}, #{voipAccount,jdbcType=VARCHAR}, #{voipPwd,jdbcType=VARCHAR}, 
+      #{userId,jdbcType=BIGINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hengsu.sure.auth.entity.SubAccount" >
+    insert into sub_account
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="subAccountSid != null" >
+        sub_account_sid,
+      </if>
+      <if test="subToken != null" >
+        sub_token,
+      </if>
+      <if test="dateCreated != null" >
+        date_created,
+      </if>
+      <if test="voipAccount != null" >
+        voip_account,
+      </if>
+      <if test="voipPwd != null" >
+        voip_pwd,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="subAccountSid != null" >
+        #{subAccountSid,jdbcType=VARCHAR},
+      </if>
+      <if test="subToken != null" >
+        #{subToken,jdbcType=VARCHAR},
+      </if>
+      <if test="dateCreated != null" >
+        #{dateCreated,jdbcType=VARCHAR},
+      </if>
+      <if test="voipAccount != null" >
+        #{voipAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="voipPwd != null" >
+        #{voipPwd,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hengsu.sure.auth.entity.SubAccount" >
+    update sub_account
+    <set >
+      <if test="subAccountSid != null" >
+        sub_account_sid = #{subAccountSid,jdbcType=VARCHAR},
+      </if>
+      <if test="subToken != null" >
+        sub_token = #{subToken,jdbcType=VARCHAR},
+      </if>
+      <if test="dateCreated != null" >
+        date_created = #{dateCreated,jdbcType=VARCHAR},
+      </if>
+      <if test="voipAccount != null" >
+        voip_account = #{voipAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="voipPwd != null" >
+        voip_pwd = #{voipPwd,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=BIGINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hengsu.sure.auth.entity.SubAccount" >
+    update sub_account
+    set sub_account_sid = #{subAccountSid,jdbcType=VARCHAR},
+      sub_token = #{subToken,jdbcType=VARCHAR},
+      date_created = #{dateCreated,jdbcType=VARCHAR},
+      voip_account = #{voipAccount,jdbcType=VARCHAR},
+      voip_pwd = #{voipPwd,jdbcType=VARCHAR},
+      user_id = #{userId,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectCount" resultType="java.lang.Integer" parameterType="com.hengsu.sure.auth.entity.SubAccount" >
+    select count(*) from sub_account
+    <where >
+      <if test="id != null" >
+        and id = #{id,jdbcType=BIGINT}
+      </if>
+      <if test="subAccountSid != null" >
+        and sub_account_sid = #{subAccountSid,jdbcType=VARCHAR}
+      </if>
+      <if test="subToken != null" >
+        and sub_token = #{subToken,jdbcType=VARCHAR}
+      </if>
+      <if test="dateCreated != null" >
+        and date_created = #{dateCreated,jdbcType=VARCHAR}
+      </if>
+      <if test="voipAccount != null" >
+        and voip_account = #{voipAccount,jdbcType=VARCHAR}
+      </if>
+      <if test="voipPwd != null" >
+        and voip_pwd = #{voipPwd,jdbcType=VARCHAR}
+      </if>
+      <if test="userId != null" >
+        and user_id = #{userId,jdbcType=BIGINT}
+      </if>
+    </where>
+  </select>
+  <select id="selectPage" resultMap="BaseResultMap" >
+    select 
+    <include refid="Base_Column_List" />
+    from sub_account where 1 = 1 
+    <if test="param1.id != null" >
+      and id = #{param1.id,jdbcType=BIGINT}
+    </if>
+    <if test="param1.subAccountSid != null" >
+      and sub_account_sid = #{param1.subAccountSid,jdbcType=VARCHAR}
+    </if>
+    <if test="param1.subToken != null" >
+      and sub_token = #{param1.subToken,jdbcType=VARCHAR}
+    </if>
+    <if test="param1.dateCreated != null" >
+      and date_created = #{param1.dateCreated,jdbcType=VARCHAR}
+    </if>
+    <if test="param1.voipAccount != null" >
+      and voip_account = #{param1.voipAccount,jdbcType=VARCHAR}
+    </if>
+    <if test="param1.voipPwd != null" >
+      and voip_pwd = #{param1.voipPwd,jdbcType=VARCHAR}
+    </if>
+    <if test="param1.userId != null" >
+      and user_id = #{param1.userId,jdbcType=BIGINT}
+    </if>
+    <if test="param2.sort != null" >
+      order by 
+      <foreach collection="param2.sort" item="order" separator="," >
+        ${order.property} ${order.direction}
+      </foreach>
+    </if>
+    <if test="param2.offset >= 0 and param2.pageSize > 0" >
+      limit ${param2.offset}, ${param2.pageSize}
+    </if>
+  </select>
+</mapper>

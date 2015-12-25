@@ -1,6 +1,6 @@
 package com.hengsu.sure.core.service;
 
-import com.hengsu.sure.core.model.SubAccountModel;
+import com.hengsu.sure.auth.model.SubAccountModel;
 
 import java.util.List;
 

@@ -41,8 +41,7 @@ public class RandomUtil {
     }
 
     public static String generateAuthToken(){
-//        return UUID.randomUUID().toString();
-        return "abcd";
+        return UUID.randomUUID().toString();
     }
 
     public static String generateOSSKey(){

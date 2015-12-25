@@ -119,6 +119,7 @@ project("sure-service") {
         compile(project(":sure-service-api"))
         compile(libraries.groovy_all)
         compile(libraries.c3p0)
+        compile(libraries.pylon_web)
         compile(libraries.immortal_logback)
         compile(libraries.commons_codec)
         testCompile(libraries.pylon_test)
@@ -130,7 +131,7 @@ project("sure-webapp") {
     description = "sure web application"
     dependencies {
         compile(project(":sure-service"))
-        compile(libraries.pylon_web)
+
         compile(libraries.jackson_databind)
         compile(libraries.hibernate_validator)
         compile(libraries.logback_classic)

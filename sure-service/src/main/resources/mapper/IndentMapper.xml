@@ -21,6 +21,7 @@
     <result column="handle_id" property="handleId" jdbcType="BIGINT" />
     <result column="start_time" property="startTime" jdbcType="TIMESTAMP" />
     <result column="end_time" property="endTime" jdbcType="TIMESTAMP" />
+    <result column="finish_time" property="finishTime" jdbcType="TIMESTAMP" />
     <result column="price" property="price" jdbcType="DOUBLE" />
     <result column="quantity" property="quantity" jdbcType="INTEGER" />
     <result column="address" property="address" jdbcType="VARCHAR" />
@@ -28,7 +29,7 @@
   <sql id="Base_Column_List" >
     id, indent_no, customer_id, seller_id, trade_id, money, status, refer_id, type, longitude, 
     latitude, create_time, apply_time, canceled_time, snapshot, cancel_reason, handle_id, 
-    start_time, end_time, price, quantity, address
+    start_time, end_time, finish_time, price, quantity, address
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
@@ -46,25 +47,25 @@
     delete from indent
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.hengsu.sure.invite.entity.Indent" >
+  <insert id="insert" parameterType="com.hengsu.sure.invite.entity.Indent" keyProperty="id" useGeneratedKeys="true">
     insert into indent (id, indent_no, customer_id, 
       seller_id, trade_id, money, 
       status, refer_id, type, 
       longitude, latitude, create_time, 
       apply_time, canceled_time, snapshot, 
       cancel_reason, handle_id, start_time, 
-      end_time, price, quantity, 
-      address)
+      end_time, finish_time, price, 
+      quantity, address)
     values (#{id,jdbcType=BIGINT}, #{indentNo,jdbcType=VARCHAR}, #{customerId,jdbcType=BIGINT}, 
       #{sellerId,jdbcType=BIGINT}, #{tradeId,jdbcType=BIGINT}, #{money,jdbcType=DOUBLE}, 
       #{status,jdbcType=INTEGER}, #{referId,jdbcType=BIGINT}, #{type,jdbcType=INTEGER}, 
       #{longitude,jdbcType=DOUBLE}, #{latitude,jdbcType=DOUBLE}, #{createTime,jdbcType=TIMESTAMP}, 
       #{applyTime,jdbcType=TIMESTAMP}, #{canceledTime,jdbcType=TIMESTAMP}, #{snapshot,jdbcType=VARCHAR}, 
       #{cancelReason,jdbcType=VARCHAR}, #{handleId,jdbcType=BIGINT}, #{startTime,jdbcType=TIMESTAMP}, 
-      #{endTime,jdbcType=TIMESTAMP}, #{price,jdbcType=DOUBLE}, #{quantity,jdbcType=INTEGER}, 
-      #{address,jdbcType=VARCHAR})
+      #{endTime,jdbcType=TIMESTAMP}, #{finishTime,jdbcType=TIMESTAMP}, #{price,jdbcType=DOUBLE}, 
+      #{quantity,jdbcType=INTEGER}, #{address,jdbcType=VARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.hengsu.sure.invite.entity.Indent" >
+  <insert id="insertSelective" parameterType="com.hengsu.sure.invite.entity.Indent" keyProperty="id" useGeneratedKeys="true">
     insert into indent
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -123,6 +124,9 @@
       </if>
       <if test="endTime != null" >
         end_time,
+      </if>
+      <if test="finishTime != null" >
+        finish_time,
       </if>
       <if test="price != null" >
         price,
@@ -192,6 +196,9 @@
       <if test="endTime != null" >
         #{endTime,jdbcType=TIMESTAMP},
       </if>
+      <if test="finishTime != null" >
+        #{finishTime,jdbcType=TIMESTAMP},
+      </if>
       <if test="price != null" >
         #{price,jdbcType=DOUBLE},
       </if>
@@ -260,6 +267,9 @@
       <if test="endTime != null" >
         end_time = #{endTime,jdbcType=TIMESTAMP},
       </if>
+      <if test="finishTime != null" >
+        finish_time = #{finishTime,jdbcType=TIMESTAMP},
+      </if>
       <if test="price != null" >
         price = #{price,jdbcType=DOUBLE},
       </if>
@@ -292,6 +302,7 @@
       handle_id = #{handleId,jdbcType=BIGINT},
       start_time = #{startTime,jdbcType=TIMESTAMP},
       end_time = #{endTime,jdbcType=TIMESTAMP},
+      finish_time = #{finishTime,jdbcType=TIMESTAMP},
       price = #{price,jdbcType=DOUBLE},
       quantity = #{quantity,jdbcType=INTEGER},
       address = #{address,jdbcType=VARCHAR}
@@ -356,6 +367,9 @@
       </if>
       <if test="endTime != null" >
         and end_time = #{endTime,jdbcType=TIMESTAMP}
+      </if>
+      <if test="finishTime != null" >
+        and finish_time = #{finishTime,jdbcType=TIMESTAMP}
       </if>
       <if test="price != null" >
         and price = #{price,jdbcType=DOUBLE}
@@ -428,6 +442,9 @@
     </if>
     <if test="param1.endTime != null" >
       and end_time = #{param1.endTime,jdbcType=TIMESTAMP}
+    </if>
+    <if test="param1.finishTime != null" >
+      and finish_time = #{param1.finishTime,jdbcType=TIMESTAMP}
     </if>
     <if test="param1.price != null" >
       and price = #{param1.price,jdbcType=DOUBLE}

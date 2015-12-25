@@ -11,6 +11,8 @@ public class InvitationModel{
 	private Integer city;
 	private String scene;
 	private Integer gender;
+	private Double latitude;
+	private Double longitude;
 	private String age;
 	private String date;
 	private Double money;
@@ -20,9 +22,6 @@ public class InvitationModel{
 	private String state;
 	private Date createTime;
 	private Integer status;
-	private Double longitude;
-
-	private Double latitude;
 		
 	public void setId(Long id){
 		this.id = id;
@@ -62,6 +61,22 @@ public class InvitationModel{
 	
 	public Integer getGender(){
 		return this.gender;
+	}
+		
+	public void setLatitude(Double latitude){
+		this.latitude = latitude;
+	}
+	
+	public Double getLatitude(){
+		return this.latitude;
+	}
+		
+	public void setLongitude(Double longitude){
+		this.longitude = longitude;
+	}
+	
+	public Double getLongitude(){
+		return this.longitude;
 	}
 		
 	public void setAge(String age){
@@ -135,21 +150,6 @@ public class InvitationModel{
 	public Integer getStatus(){
 		return this.status;
 	}
-
-
-	public Double getLatitude() {
-		return latitude;
-	}
-
-	public void setLatitude(Double latitude) {
-		this.latitude = latitude;
-	}
-
-	public Double getLongitude() {
-		return longitude;
-	}
-
-	public void setLongitude(Double longitude) {
-		this.longitude = longitude;
-	}
+		
+		
 }

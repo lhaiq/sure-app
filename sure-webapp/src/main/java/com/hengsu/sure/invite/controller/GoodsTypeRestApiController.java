@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,13 +34,11 @@ public class GoodsTypeRestApiController {
     private GoodsTypeService goodsTypeService;
 
     @RequestMapping(value = "/invite/goodsType", method = RequestMethod.GET)
-    public ResponseEntity<ResponseEnvelope<Page<GoodsTypeModel>>> listGoodsType(Pageable pageable) {
+    public ResponseEntity<ResponseEnvelope<List<GoodsTypeModel>>> listGoodsType() {
 
         GoodsTypeModel param = new GoodsTypeModel();
-        List<GoodsTypeModel> goodsTypeModels = goodsTypeService.selectPage(param, pageable);
-        Integer count = goodsTypeService.selectCount(param);
-        Page<GoodsTypeModel> page = new PageImpl<>(goodsTypeModels, pageable, count);
-        ResponseEnvelope<Page<GoodsTypeModel>> responseEnv = new ResponseEnvelope<>(page, true);
+        List<GoodsTypeModel> goodsTypeModels = goodsTypeService.selectPage(param, new PageRequest(0, Integer.MAX_VALUE));
+        ResponseEnvelope<List<GoodsTypeModel>> responseEnv = new ResponseEnvelope<>(goodsTypeModels, true);
         return new ResponseEntity<>(responseEnv, HttpStatus.OK);
     }
 

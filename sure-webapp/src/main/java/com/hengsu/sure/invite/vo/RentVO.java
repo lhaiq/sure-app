@@ -25,7 +25,6 @@ public class RentVO{
 	private List<String> dates;
 	private String time;
 	private Integer car;
-	private String address;
 
 	@NotNull
 	private Double price;
@@ -39,14 +38,6 @@ public class RentVO{
 	private Integer status;
 
 	private List<String> images;
-
-	public String getAddress() {
-		return address;
-	}
-
-	public void setAddress(String address) {
-		this.address = address;
-	}
 
 	public Integer getCar() {
 		return car;

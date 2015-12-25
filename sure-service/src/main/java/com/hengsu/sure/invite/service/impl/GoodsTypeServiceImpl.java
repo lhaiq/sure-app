@@ -55,7 +55,9 @@ public class GoodsTypeServiceImpl implements GoodsTypeService {
 
 	@Override
 	public List<GoodsTypeModel> selectPage(GoodsTypeModel goodsTypeModel, Pageable pageable) {
-		return null;
+		List<GoodsType> goodsTypes = goodsTypeRepo.
+				selectPage(beanMapper.map(goodsTypeModel, GoodsType.class), pageable);
+		return beanMapper.mapAsList(goodsTypes,GoodsTypeModel.class);
 	}
 
 	@Transactional

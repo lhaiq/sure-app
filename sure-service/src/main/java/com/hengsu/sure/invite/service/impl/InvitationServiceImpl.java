@@ -72,6 +72,7 @@ public class InvitationServiceImpl implements InvitationService {
     public int createSelective(InvitationModel invitationModel) {
         Invitation invitation = beanMapper.map(invitationModel, Invitation.class);
         int retVal = invitationRepo.insertSelective(invitation);
+        invitationModel.setId(invitation.getId());
         return retVal;
     }
 
@@ -167,6 +168,7 @@ public class InvitationServiceImpl implements InvitationService {
         //将邀约信息保存
         invitationModel.setCreateTime(new Date());
         invitationModel.setStatus(InvitationStatus.PUBLISHED.getCode());
+        invitationModel.setMoney(invitationModel.getPrice());
         createSelective(invitationModel);
 
         //返回邀约Id

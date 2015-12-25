@@ -7,6 +7,8 @@
     <result column="city" property="city" jdbcType="INTEGER" />
     <result column="scene" property="scene" jdbcType="VARCHAR" />
     <result column="gender" property="gender" jdbcType="INTEGER" />
+    <result column="latitude" property="latitude" jdbcType="DOUBLE" />
+    <result column="longitude" property="longitude" jdbcType="DOUBLE" />
     <result column="age" property="age" jdbcType="VARCHAR" />
     <result column="date" property="date" jdbcType="VARCHAR" />
     <result column="money" property="money" jdbcType="DOUBLE" />
@@ -18,8 +20,8 @@
     <result column="status" property="status" jdbcType="INTEGER" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, user_id, city, scene, gender, age, date, money, time, car, price, state, create_time, 
-    status
+    id, user_id, city, scene, gender, latitude, longitude, age, date, money, time, car, 
+    price, state, create_time, status
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
@@ -27,23 +29,26 @@
     from invitation
     where id = #{id,jdbcType=BIGINT}
   </select>
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
     delete from invitation
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.hengsu.sure.invite.entity.Invitation" >
+  <insert id="insert" parameterType="com.hengsu.sure.invite.entity.Invitation" keyProperty="id" useGeneratedKeys="true">
     insert into invitation (id, user_id, city, 
-      scene, gender, age, 
-      date, money, time, car, 
-      price, state, create_time, 
-      status)
+      scene, gender, latitude, 
+      longitude, age, date, 
+      money, time, car, price, 
+      state, create_time, status
+      )
     values (#{id,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{city,jdbcType=INTEGER}, 
-      #{scene,jdbcType=VARCHAR}, #{gender,jdbcType=INTEGER}, #{age,jdbcType=VARCHAR}, 
-      #{date,jdbcType=VARCHAR}, #{money,jdbcType=DOUBLE}, #{time,jdbcType=VARCHAR}, #{car,jdbcType=INTEGER}, 
-      #{price,jdbcType=DOUBLE}, #{state,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{status,jdbcType=INTEGER})
+      #{scene,jdbcType=VARCHAR}, #{gender,jdbcType=INTEGER}, #{latitude,jdbcType=DOUBLE}, 
+      #{longitude,jdbcType=DOUBLE}, #{age,jdbcType=VARCHAR}, #{date,jdbcType=VARCHAR}, 
+      #{money,jdbcType=DOUBLE}, #{time,jdbcType=VARCHAR}, #{car,jdbcType=INTEGER}, #{price,jdbcType=DOUBLE}, 
+      #{state,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{status,jdbcType=INTEGER}
+      )
   </insert>
-  <insert id="insertSelective" parameterType="com.hengsu.sure.invite.entity.Invitation" >
+  <insert id="insertSelective" parameterType="com.hengsu.sure.invite.entity.Invitation" keyProperty="id" useGeneratedKeys="true">
     insert into invitation
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -60,6 +65,12 @@
       </if>
       <if test="gender != null" >
         gender,
+      </if>
+      <if test="latitude != null" >
+        latitude,
+      </if>
+      <if test="longitude != null" >
+        longitude,
       </if>
       <if test="age != null" >
         age,
@@ -105,6 +116,12 @@
       <if test="gender != null" >
         #{gender,jdbcType=INTEGER},
       </if>
+      <if test="latitude != null" >
+        #{latitude,jdbcType=DOUBLE},
+      </if>
+      <if test="longitude != null" >
+        #{longitude,jdbcType=DOUBLE},
+      </if>
       <if test="age != null" >
         #{age,jdbcType=VARCHAR},
       </if>
@@ -149,6 +166,12 @@
       <if test="gender != null" >
         gender = #{gender,jdbcType=INTEGER},
       </if>
+      <if test="latitude != null" >
+        latitude = #{latitude,jdbcType=DOUBLE},
+      </if>
+      <if test="longitude != null" >
+        longitude = #{longitude,jdbcType=DOUBLE},
+      </if>
       <if test="age != null" >
         age = #{age,jdbcType=VARCHAR},
       </if>
@@ -185,6 +208,8 @@
       city = #{city,jdbcType=INTEGER},
       scene = #{scene,jdbcType=VARCHAR},
       gender = #{gender,jdbcType=INTEGER},
+      latitude = #{latitude,jdbcType=DOUBLE},
+      longitude = #{longitude,jdbcType=DOUBLE},
       age = #{age,jdbcType=VARCHAR},
       date = #{date,jdbcType=VARCHAR},
       money = #{money,jdbcType=DOUBLE},
@@ -213,6 +238,12 @@
       </if>
       <if test="gender != null" >
         and gender = #{gender,jdbcType=INTEGER}
+      </if>
+      <if test="latitude != null" >
+        and latitude = #{latitude,jdbcType=DOUBLE}
+      </if>
+      <if test="longitude != null" >
+        and longitude = #{longitude,jdbcType=DOUBLE}
       </if>
       <if test="age != null" >
         and age = #{age,jdbcType=VARCHAR}
@@ -268,6 +299,12 @@
     </if>
     <if test="param1.gender != null" >
       and gender = #{param1.gender,jdbcType=INTEGER}
+    </if>
+    <if test="param1.latitude != null" >
+      and latitude = #{param1.latitude,jdbcType=DOUBLE}
+    </if>
+    <if test="param1.longitude != null" >
+      and longitude = #{param1.longitude,jdbcType=DOUBLE}
     </if>
     <if test="param1.age != null" >
       and age = #{param1.age,jdbcType=VARCHAR}

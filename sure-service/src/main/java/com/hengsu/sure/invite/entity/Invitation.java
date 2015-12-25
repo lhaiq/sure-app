@@ -13,6 +13,10 @@ public class Invitation {
 
     private Integer gender;
 
+    private Double latitude;
+
+    private Double longitude;
+
     private String age;
 
     private String date;
@@ -69,6 +73,22 @@ public class Invitation {
 
     public void setGender(Integer gender) {
         this.gender = gender;
+    }
+
+    public Double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
+    }
+
+    public Double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
     }
 
     public String getAge() {

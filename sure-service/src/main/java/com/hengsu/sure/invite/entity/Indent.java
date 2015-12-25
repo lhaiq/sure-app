@@ -41,6 +41,8 @@ public class Indent {
 
     private Date endTime;
 
+    private Date finishTime;
+
     private Double price;
 
     private Integer quantity;
@@ -199,6 +201,14 @@ public class Indent {
         this.endTime = endTime;
     }
 
+    public Date getFinishTime() {
+        return finishTime;
+    }
+
+    public void setFinishTime(Date finishTime) {
+        this.finishTime = finishTime;
+    }
+
     public Double getPrice() {
         return price;
     }
@@ -215,11 +225,11 @@ public class Indent {
         this.quantity = quantity;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
     public String getAddress() {
         return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 }

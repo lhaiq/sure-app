@@ -187,6 +187,7 @@ public class UserRestApiController {
 
     /**
      * 忘记密码 修改
+     *
      * @param changePassRequest
      * @return
      */
@@ -202,6 +203,7 @@ public class UserRestApiController {
 
     /**
      * 更新密码 登陆后
+     *
      * @param modifyPassRequest
      * @param userId
      * @return
@@ -211,7 +213,7 @@ public class UserRestApiController {
     public ResponseEnvelope<String> modifyPass(
             @RequestBody ModifyPassRequest modifyPassRequest,
             @Value("#{request.getAttribute('userId')}") Long userId) {
-        userService.modifyPass(userId,modifyPassRequest.getOldPass(),modifyPassRequest.getNewPass());
+        userService.modifyPass(userId, modifyPassRequest.getOldPass(), modifyPassRequest.getNewPass());
         ResponseEnvelope<String> responseEnv = new ResponseEnvelope<>(ReturnCode.OPERATION_SUCCESS, true);
         return responseEnv;
     }
@@ -276,4 +278,21 @@ public class UserRestApiController {
         userVO.setFriendCount(Long.valueOf(relationService.selectCount(friendParam)));
     }
 
+    /**
+     * 查找用户
+     *
+     * @param id
+     * @return
+     */
+    @RequestMapping(value = "/auth/user/{id}", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEnvelope<UserModel> getUserById(@PathVariable Long id) {
+        UserModel userModel = userService.findByPrimaryKeyNoPass(id);
+        userModel.setAlipay(null);
+        userModel.setFaceId(null);
+        userModel.setClientId(null);
+        userModel.setPhone(null);
+        ResponseEnvelope<UserModel> responseEnv = new ResponseEnvelope<>(userModel, true);
+        return responseEnv;
+    }
 }
