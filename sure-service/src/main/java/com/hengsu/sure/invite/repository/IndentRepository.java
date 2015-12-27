@@ -2,6 +2,7 @@ package com.hengsu.sure.invite.repository;
 
 import com.hengsu.sure.invite.entity.Indent;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.domain.Pageable;
@@ -27,4 +28,6 @@ public interface IndentRepository {
     int selectCount(@Param("indent") Indent indent);
 
     List<Indent> selectPage(@Param("indent") Indent indent, @Param("pageable") Pageable pageable);
+
+    List<Indent> selectFinishing(@Param("status")Integer status,@Param("now")Date now);
 }

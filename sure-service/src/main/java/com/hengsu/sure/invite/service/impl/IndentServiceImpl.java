@@ -4,15 +4,21 @@ import com.alibaba.fastjson.JSONObject;
 import com.hengsu.sure.auth.service.UserService;
 import com.hengsu.sure.core.ErrorCode;
 import com.hengsu.sure.core.service.PushService;
+import com.hengsu.sure.invite.CashStatus;
+import com.hengsu.sure.invite.CashType;
 import com.hengsu.sure.invite.IndentStatus;
 import com.hengsu.sure.invite.IndentType;
+import com.hengsu.sure.invite.model.CancelIndentModel;
+import com.hengsu.sure.invite.model.CashModel;
 import com.hengsu.sure.invite.model.TradeModel;
+import com.hengsu.sure.invite.service.CashService;
 import com.hengsu.sure.invite.service.TradeService;
 import com.hengsu.sure.sns.RelationType;
 import com.hengsu.sure.sns.model.RelationModel;
 import com.hengsu.sure.sns.service.RelationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -50,6 +56,9 @@ public class IndentServiceImpl implements IndentService {
 
     @Autowired
     private RelationService relationService;
+
+    @Autowired
+    private CashService cashService;
 
     @Transactional
     @Override
@@ -152,7 +161,7 @@ public class IndentServiceImpl implements IndentService {
         }
 
         //判断订单是否可以取消
-        if (IndentStatus.PAYED.getCode() != indentModel.getStatus()) {
+        if (IndentStatus.PREPARE_CANCEL.getCode() != indentModel.getStatus()) {
             ErrorCode.throwBusinessException(ErrorCode.CANNOT_CANCEL_STATUS_ERROR);
         }
 
@@ -163,6 +172,38 @@ public class IndentServiceImpl implements IndentService {
         param.setApplyTime(new Date());
         updateByPrimaryKeySelective(param);
 
+        //退款
+        CancelIndentModel cancelIndentModel = getCancelIndentModel(id);
+        CashModel cashModel = new CashModel();
+        cashModel.setUserId(userId);
+        cashModel.setCreateTime(new Date());
+        cashModel.setExpireHour(cancelIndentModel.getExpireHour());
+        cashModel.setIndentId(id);
+        cashModel.setMoney(cancelIndentModel.getMoney());
+        cashModel.setPoundage(cancelIndentModel.getPoundage());
+        cashModel.setRate(cancelIndentModel.getRate());
+        cashModel.setStatus(CashStatus.APPLYING.getCode());
+        cashModel.setType(CashType.REFUND.getCode());
+
+        cashService.createSelective(cashModel);
+
+    }
+
+    @Override
+    public CancelIndentModel prepareCancelIdent(Long id,Long userId) {
+
+        //判断是否为自己的订单
+        IndentModel indentModel = findByPrimaryKey(id);
+        if (userId != indentModel.getCustomerId()) {
+            ErrorCode.throwBusinessException(ErrorCode.CANNOT_CANCEL_OTHERS_INDENT);
+        }
+
+        //判断订单是否可以取消
+        if (IndentStatus.PREPARE_CANCEL.getCode() != indentModel.getStatus()) {
+            ErrorCode.throwBusinessException(ErrorCode.CANNOT_CANCEL_STATUS_ERROR);
+        }
+
+        return getCancelIndentModel(id);
     }
 
     @Override
@@ -181,6 +222,23 @@ public class IndentServiceImpl implements IndentService {
     @Override
     public int updateByPrimaryKeySelective(IndentModel indentModel) {
         return indentRepo.updateByPrimaryKeySelective(beanMapper.map(indentModel, Indent.class));
+    }
+
+    @Scheduled(fixedDelay = 5000)
+    public void scheduleFinishIndent() {
+        List<Indent> indents = indentRepo.selectFinishing(IndentStatus.PAYED.getCode(), new Date());
+        for (Indent indent : indents) {
+            IndentModel param = new IndentModel();
+            param.setId(indent.getId());
+            param.setStatus(IndentStatus.FINISHED.getCode());
+            updateByPrimaryKeySelective(param);
+        }
+
+    }
+
+    public CancelIndentModel getCancelIndentModel(Long id){
+        //TODO
+        return null;
     }
 
 }

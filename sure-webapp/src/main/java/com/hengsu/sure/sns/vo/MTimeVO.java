@@ -3,6 +3,7 @@ package com.hengsu.sure.sns.vo;
 import com.hkntv.pylon.core.beans.mapping.annotation.MapClass;
 import org.hibernate.validator.constraints.NotEmpty;
 
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.List;
 
@@ -14,7 +15,7 @@ public class MTimeVO {
     private Double latitude;
     @NotEmpty
     private String content;
-    @NotEmpty
+    @NotNull
     private Integer cityId;
     private List<Long> imageIds;
 

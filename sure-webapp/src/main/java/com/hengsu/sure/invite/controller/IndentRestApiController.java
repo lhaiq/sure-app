@@ -3,28 +3,29 @@ package com.hengsu.sure.invite.controller;
 import com.alibaba.fastjson.JSON;
 import com.hengsu.sure.ReturnCode;
 import com.hengsu.sure.invite.BillNumberBuilder;
+import com.hengsu.sure.invite.model.CancelIndentModel;
+import com.hengsu.sure.invite.model.IndentCommentModel;
+import com.hengsu.sure.invite.model.IndentModel;
 import com.hengsu.sure.invite.model.TradeModel;
+import com.hengsu.sure.invite.service.IndentCommentService;
+import com.hengsu.sure.invite.service.IndentService;
+import com.hengsu.sure.invite.vo.IndentCommentVO;
 import com.hengsu.sure.invite.vo.TradeVO;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
 import com.hkntv.pylon.core.beans.mapping.BeanMapper;
 import com.hkntv.pylon.web.rest.ResponseEnvelope;
 import com.hkntv.pylon.web.rest.annotation.RestApiController;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
-import com.hengsu.sure.invite.service.IndentService;
-import com.hengsu.sure.invite.model.IndentModel;
-import com.hengsu.sure.invite.vo.IndentVO;
-
+import java.util.Date;
 import java.util.List;
 
 @RestApiController
@@ -44,6 +45,9 @@ public class IndentRestApiController {
 
     @Autowired
     private IndentService indentService;
+
+    @Autowired
+    private IndentCommentService indentCommentService;
 
 
     /**
@@ -96,6 +100,22 @@ public class IndentRestApiController {
     }
 
     /**
+     * 准备取消订单
+     *
+     * @param id
+     * @param userId
+     * @return
+     */
+    @RequestMapping(value = "/invite/indent/prepareCancel/{id}", method = RequestMethod.GET)
+    public ResponseEntity<ResponseEnvelope<CancelIndentModel>> prepareCancelIndent(
+            @PathVariable Long id,
+            @Value("#{request.getAttribute('userId')}") Long userId) {
+        CancelIndentModel cancelIndentModel = indentService.prepareCancelIdent(id, userId);
+        ResponseEnvelope<CancelIndentModel> responseEnv = new ResponseEnvelope<>(cancelIndentModel, true);
+        return new ResponseEntity<>(responseEnv, HttpStatus.OK);
+    }
+
+    /**
      * 取消订单
      *
      * @param id
@@ -107,6 +127,28 @@ public class IndentRestApiController {
             @PathVariable Long id,
             @Value("#{request.getAttribute('userId')}") Long userId) {
         indentService.cancelIndent(id, userId);
+        ResponseEnvelope<String> responseEnv = new ResponseEnvelope<>(ReturnCode.OPERATION_SUCCESS, true);
+        return new ResponseEntity<>(responseEnv, HttpStatus.OK);
+    }
+
+    /**
+     * 评论订单
+     *
+     * @param id
+     * @param indentCommentVO
+     * @param userId
+     * @return
+     */
+    @RequestMapping(value = "/invite/indent/comment/{id}", method = RequestMethod.POST)
+    public ResponseEntity<ResponseEnvelope<String>> commentIndent(
+            @PathVariable Long id,
+            @RequestBody IndentCommentVO indentCommentVO,
+            @Value("#{request.getAttribute('userId')}") Long userId) {
+        IndentCommentModel indentCommentModel = beanMapper.map(indentCommentVO, IndentCommentModel.class);
+        indentCommentModel.setIndentId(id);
+        indentCommentModel.setUserId(userId);
+        indentCommentModel.setCreateTime(new Date());
+        indentCommentService.createSelective(indentCommentModel);
         ResponseEnvelope<String> responseEnv = new ResponseEnvelope<>(ReturnCode.OPERATION_SUCCESS, true);
         return new ResponseEntity<>(responseEnv, HttpStatus.OK);
     }

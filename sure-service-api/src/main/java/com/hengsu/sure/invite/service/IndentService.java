@@ -1,6 +1,7 @@
 
 package com.hengsu.sure.invite.service;
 
+import com.hengsu.sure.invite.model.CancelIndentModel;
 import com.hengsu.sure.invite.model.IndentModel;
 import com.hengsu.sure.invite.model.TradeModel;
 import org.springframework.data.domain.Pageable;
@@ -29,6 +30,8 @@ public interface IndentService {
     public void receiveTrade(TradeModel tradeModel);
 
     public void cancelIndent(Long id, Long userId);
+
+    public CancelIndentModel prepareCancelIdent(Long id,Long userId);
 
     public List<IndentModel> selectPage(IndentModel indentModel, Pageable pageable);
 
