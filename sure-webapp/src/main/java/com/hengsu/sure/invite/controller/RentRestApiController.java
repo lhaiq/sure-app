@@ -3,9 +3,15 @@ package com.hengsu.sure.invite.controller;
 import com.alibaba.fastjson.JSON;
 import com.hengsu.sure.ReturnCode;
 import com.hengsu.sure.core.Constants;
+import com.hengsu.sure.invite.model.QueryRentModel;
+import com.hengsu.sure.invite.model.QueryRentParamModel;
+import com.hengsu.sure.invite.model.RentConfirmModel;
+import com.hengsu.sure.invite.vo.QueryRentVO;
+import com.hengsu.sure.invite.vo.RentConfirmVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +29,8 @@ import com.hengsu.sure.invite.service.RentService;
 import com.hengsu.sure.invite.model.RentModel;
 import com.hengsu.sure.invite.vo.RentVO;
 
+import java.util.List;
+
 @RestApiController
 @RequestMapping("/sure")
 public class RentRestApiController {
@@ -35,13 +43,34 @@ public class RentRestApiController {
     @Autowired
     private RentService rentService;
 
+    /**
+     * 单个发现邀约
+     * @param id
+     * @return
+     */
     @RequestMapping(value = "/invite/rent/{id}", method = RequestMethod.GET)
-    public ResponseEntity<ResponseEnvelope<RentVO>> getRentById(@PathVariable Long id) {
+     public ResponseEntity<ResponseEnvelope<RentVO>> getRentById(@PathVariable Long id) {
         RentModel rentModel = rentService.findByPrimaryKey(id);
         RentVO rentVO = beanMapper.map(rentModel, RentVO.class);
         ResponseEnvelope<RentVO> responseEnv = new ResponseEnvelope<RentVO>(rentVO);
         return new ResponseEntity<>(responseEnv, HttpStatus.OK);
     }
+
+    /**
+     * 筛选发现邀约
+     * @param queryRentVO
+     * @param pageable
+     * @return
+     */
+//    @RequestMapping(value = "/invite/rent", method = RequestMethod.GET)
+//    public ResponseEntity<ResponseEnvelope<RentVO>> queryRent(@RequestBody QueryRentVO queryRentVO,
+//                                                              Pageable pageable) {
+//        QueryRentParamModel queryRentParamModel = beanMapper.map(queryRentVO,QueryRentParamModel.class);
+//        List<QueryRentModel> queryRentModels = rentService.queryRent(queryRentParamModel,pageable);
+//        RentVO rentVO = beanMapper.map(rentModel, RentVO.class);
+//        ResponseEnvelope<RentVO> responseEnv = new ResponseEnvelope<RentVO>(rentVO);
+//        return new ResponseEntity<>(responseEnv, HttpStatus.OK);
+//    }
 
     /**
      * 发布发现邀约
@@ -66,20 +95,27 @@ public class RentRestApiController {
         return new ResponseEntity<>(responseEnv, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/invite/rent/{id}", method = RequestMethod.DELETE)
-    public ResponseEntity<ResponseEnvelope<Integer>> deleteRentByPrimaryKey(@PathVariable Long id) {
-        Integer result = rentService.deleteByPrimaryKey(id);
-        ResponseEnvelope<Integer> responseEnv = new ResponseEnvelope<Integer>(result);
+    /**
+     * 确认邀约
+     * @param id
+     * @param rentConfirmVO
+     * @param userId
+     * @return
+     */
+    @RequestMapping(value = "/invite/rent/confirm/{id}", method = RequestMethod.POST)
+    public ResponseEntity<ResponseEnvelope<String>> confirmRent(
+            @PathVariable Long id,
+            @RequestBody RentConfirmVO rentConfirmVO,
+            @Value("#{request.getAttribute('userId')}") Long userId) {
+
+        RentConfirmModel rentConfirmModel = beanMapper.map(rentConfirmVO, RentConfirmModel.class);
+        rentConfirmModel.setUserId(userId);
+        rentConfirmModel.setId(id);
+
+        rentService.confirmRent(rentConfirmModel);
+        ResponseEnvelope<String> responseEnv = new ResponseEnvelope<>(ReturnCode.OPERATION_SUCCESS, true);
         return new ResponseEntity<>(responseEnv, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/invite/rent/{id}", method = RequestMethod.PUT)
-    public ResponseEntity<ResponseEnvelope<Integer>> updateRentByPrimaryKeySelective(@PathVariable Long id, @RequestBody RentVO rentVO) {
-        RentModel rentModel = beanMapper.map(rentVO, RentModel.class);
-        rentModel.setId(id);
-        Integer result = rentService.updateByPrimaryKeySelective(rentModel);
-        ResponseEnvelope<Integer> responseEnv = new ResponseEnvelope<Integer>(result);
-        return new ResponseEntity<>(responseEnv, HttpStatus.OK);
-    }
 
 }

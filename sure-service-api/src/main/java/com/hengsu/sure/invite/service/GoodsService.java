@@ -1,6 +1,7 @@
 
 package com.hengsu.sure.invite.service;
 
+import com.hengsu.sure.invite.model.GoodsConfirmModel;
 import com.hengsu.sure.invite.model.GoodsModel;
 import org.springframework.data.domain.Pageable;
 
@@ -24,5 +25,7 @@ public interface GoodsService{
 	public int selectCount(GoodsModel goodsModel);
 
 	public List<GoodsModel> selectPage(GoodsModel goodsModel,Pageable pageable);
+
+	public void confirmGoodsIndent(GoodsConfirmModel goodsConfirmModel);
 	
 }

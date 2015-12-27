@@ -19,8 +19,6 @@ public enum ErrorCode {
     LOGIN_FACE_ERROR("1008", "与注册人脸不匹配"),
 
 
-
-
     PHONE_NOT_REGISTER("1009", "该手机号尚未注册"),
 
     JSON_FORMATTED("1010", "JSON格式错误"),
@@ -51,10 +49,12 @@ public enum ErrorCode {
     CANNOT_CANCEL_OTHERS_INDENT("6005", "只能取消自己的订单"),
     CANNOT_CANCEL_STATUS_ERROR("6006", "只能取消未完成的订单"),
 
-    //700订单
-    AMOUNT_ERROR("7000", "金额不够"),
-    TRADE_NOT_SUCCESS("7001", "支付尚未成功"),
-    ;
+    //700
+    RENT_NOT_EXISTED("7000", "邀约不存在"),
+
+    //900订单
+    AMOUNT_ERROR("9000", "金额不够"),
+    TRADE_NOT_SUCCESS("9001", "支付尚未成功"),;
 
     private String code;
     private String errorMsg;

@@ -228,6 +228,7 @@ public class InvitationServiceImpl implements InvitationService {
 
         //更新状态
         InvitationModel newInvitationModel = new InvitationModel();
+        newInvitationModel.setId(confirmModel.getId());
         newInvitationModel.setStatus(InvitationStatus.FINISHED.getCode());
         updateByPrimaryKeySelective(newInvitationModel);
 

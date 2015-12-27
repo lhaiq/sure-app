@@ -1,6 +1,12 @@
 package com.hengsu.sure.invite.service.impl;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.hengsu.sure.core.Constants;
+import com.hengsu.sure.invite.IndentType;
+import com.hengsu.sure.invite.model.GoodsConfirmModel;
+import com.hengsu.sure.invite.model.IndentModel;
+import com.hengsu.sure.invite.service.IndentService;
 import com.hengsu.sure.sns.model.MTimeModel;
 import com.hkntv.pylon.data.common.annotation.ReadWrite;
 import com.hkntv.pylon.data.common.util.ReadWriteType;
@@ -17,6 +23,7 @@ import com.hkntv.pylon.core.beans.mapping.BeanMapper;
 import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -27,6 +34,9 @@ public class GoodsServiceImpl implements GoodsService {
 
     @Autowired
     private GoodsRepository goodsRepo;
+
+    @Autowired
+    private IndentService indentService;
 
     @Transactional
     @Override
@@ -65,10 +75,36 @@ public class GoodsServiceImpl implements GoodsService {
         Goods goods = beanMapper.map(goodsModel, Goods.class);
         List<Goods> goodses = goodsRepo.selectPage(goods, pageable);
         List<GoodsModel> goodsModels = beanMapper.mapAsList(goodses, GoodsModel.class);
-//        for (GoodsModel goodsModel1 : goodsModels) {
-//            setImageIds(goodsModel1);
-//        }
+
         return goodsModels;
+    }
+
+    @Transactional
+    @Override
+    public void confirmGoodsIndent(GoodsConfirmModel goodsConfirmModel) {
+
+        GoodsModel goodsModel = findByPrimaryKey(goodsConfirmModel.getId());
+
+        IndentModel indentModel = new IndentModel();
+        indentModel.setCustomerId(goodsConfirmModel.getBuyerId());
+        indentModel.setIndentNo(goodsConfirmModel.getIndentNo());
+        indentModel.setQuantity(goodsConfirmModel.getQuantity());
+        indentModel.setPrice(goodsConfirmModel.getPrice());
+        indentModel.setMoney(goodsConfirmModel.getMoney());
+        indentModel.setCreateTime(new Date());
+        indentModel.setType(IndentType.GOODS.getCode());
+        indentModel.setReferId(goodsConfirmModel.getId());
+
+        //Address
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("address", goodsConfirmModel.getAddress());
+        jsonObject.put("invoice", goodsConfirmModel.getInvoice());
+        jsonObject.put("receiveUserName", goodsConfirmModel.getReceiveUserName());
+        jsonObject.put("receiveUserPhone", goodsConfirmModel.getReceiveUserPhone());
+        indentModel.setAddress(jsonObject.toJSONString());
+        indentModel.setSnapshot(JSON.toJSONString(goodsModel));
+
+        indentService.createSelective(indentModel);
     }
 
     @Transactional

@@ -6,8 +6,7 @@ package com.hengsu.sure.invite;
 public enum RentStatus {
 
     PUBLISH(0, "publish"),
-    SELECTED(1, "selected"),
-    FINISHED(2, "finished"),;
+    FINISHED(1, "finished"),;
 
     private Integer code;
     private String desc;

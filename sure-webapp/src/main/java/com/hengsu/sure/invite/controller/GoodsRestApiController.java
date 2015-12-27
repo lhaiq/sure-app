@@ -1,21 +1,22 @@
 package com.hengsu.sure.invite.controller;
 
+import com.hengsu.sure.ReturnCode;
+import com.hengsu.sure.invite.model.GoodsConfirmModel;
 import com.hengsu.sure.invite.model.GoodsModel;
 import com.hengsu.sure.invite.service.GoodsService;
+import com.hengsu.sure.invite.vo.GoodsConfirmVO;
 import com.hengsu.sure.invite.vo.GoodsVO;
 import com.hkntv.pylon.core.beans.mapping.BeanMapper;
 import com.hkntv.pylon.web.rest.ResponseEnvelope;
 import com.hkntv.pylon.web.rest.annotation.RestApiController;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -31,6 +32,7 @@ public class GoodsRestApiController {
 
     /**
      * 轻奢详情
+     *
      * @param id
      * @return
      */
@@ -38,13 +40,33 @@ public class GoodsRestApiController {
     public ResponseEntity<ResponseEnvelope<GoodsVO>> getGoodsById(@PathVariable Long id) {
         GoodsModel goodsModel = goodsService.findByPrimaryKey(id);
         GoodsVO goodsVO = beanMapper.map(goodsModel, GoodsVO.class);
-        ResponseEnvelope<GoodsVO> responseEnv = new ResponseEnvelope<>(goodsVO,true);
+        ResponseEnvelope<GoodsVO> responseEnv = new ResponseEnvelope<>(goodsVO, true);
+        return new ResponseEntity<>(responseEnv, HttpStatus.OK);
+    }
+
+    /**
+     * 确认轻奢详情
+     *
+     * @param id
+     * @return
+     */
+    @RequestMapping(value = "/invite/goods/{id}", method = RequestMethod.POST)
+    public ResponseEntity<ResponseEnvelope<String>> confirmGoodsIndent(
+            @PathVariable Long id,
+            @RequestBody GoodsConfirmVO goodsConfirmVO,
+            @Value("#{request.getAttribute('userId')}") Long userId) {
+        GoodsConfirmModel goodsConfirmModel = beanMapper.map(goodsConfirmVO, GoodsConfirmModel.class);
+        goodsConfirmModel.setBuyerId(userId);
+        goodsConfirmModel.setId(id);
+        goodsService.confirmGoodsIndent(goodsConfirmModel);
+        ResponseEnvelope<String> responseEnv = new ResponseEnvelope<>(ReturnCode.OPERATION_SUCCESS, true);
         return new ResponseEntity<>(responseEnv, HttpStatus.OK);
     }
 
 
     /**
      * 轻奢列表
+     *
      * @param cityId
      * @param pageable
      * @return
@@ -60,7 +82,7 @@ public class GoodsRestApiController {
         List<GoodsModel> goodsModes = goodsService.selectPage(param, pageable);
         Integer count = goodsService.selectCount(param);
         Page<GoodsModel> pageContent = new PageImpl(goodsModes, pageable, count);
-        ResponseEnvelope<Page<GoodsModel>> responseEnv = new ResponseEnvelope<>(pageContent,true);
+        ResponseEnvelope<Page<GoodsModel>> responseEnv = new ResponseEnvelope<>(pageContent, true);
         return new ResponseEntity<>(responseEnv, HttpStatus.OK);
     }
 
