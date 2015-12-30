@@ -2,8 +2,11 @@ package com.hengsu.sure.auth.controller;
 
 import com.hengsu.sure.ReturnCode;
 import com.hengsu.sure.auth.annotation.IgnoreAuth;
+import com.hengsu.sure.auth.entity.SubAccount;
+import com.hengsu.sure.auth.model.SubAccountModel;
 import com.hengsu.sure.auth.model.UserLBSModel;
 import com.hengsu.sure.auth.request.*;
+import com.hengsu.sure.auth.service.SubAccountService;
 import com.hengsu.sure.auth.service.UserService;
 import com.hengsu.sure.auth.vo.LoginSuccessVO;
 import com.hengsu.sure.auth.vo.UserLBSVO;
@@ -50,6 +53,9 @@ public class UserRestApiController {
 
     @Autowired
     private RelationService relationService;
+
+    @Autowired
+    private SubAccountService subAccountService;
 
     /**
      * 注册获取验证码
@@ -238,6 +244,21 @@ public class UserRestApiController {
     }
 
     /**
+     * 获取云通讯账户
+     *
+     * @param userId
+     * @return
+     */
+    @RequestMapping(value = "/auth/cloudpen", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<ResponseEnvelope<SubAccountModel>> getCloudOpenAccount(
+            @Value("#{request.getAttribute('userId')}") Long userId) {
+        SubAccountModel result = subAccountService.findOrCreateSubAccount(userId);
+        ResponseEnvelope<SubAccountModel> responseEnv = new ResponseEnvelope<>(result, true);
+        return new ResponseEntity<>(responseEnv, HttpStatus.OK);
+    }
+
+    /**
      * 更新位置信息
      *
      * @param userVO
@@ -289,9 +310,6 @@ public class UserRestApiController {
     public ResponseEnvelope<UserModel> getUserById(@PathVariable Long id) {
         UserModel userModel = userService.findByPrimaryKeyNoPass(id);
         userModel.setAlipay(null);
-        userModel.setFaceId(null);
-        userModel.setClientId(null);
-        userModel.setPhone(null);
         ResponseEnvelope<UserModel> responseEnv = new ResponseEnvelope<>(userModel, true);
         return responseEnv;
     }

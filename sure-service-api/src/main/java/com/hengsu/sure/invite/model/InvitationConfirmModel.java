@@ -10,6 +10,8 @@ public class InvitationConfirmModel {
     private Long receivedUserId;
     private String indentNo;
     private Double money;
+    private Double price;
+    private Integer quantity;
 
     public String getIndentNo() {
         return indentNo;
@@ -49,5 +51,21 @@ public class InvitationConfirmModel {
 
     public void setUserId(Long userId) {
         this.userId = userId;
+    }
+
+    public Double getPrice() {
+        return price;
+    }
+
+    public void setPrice(Double price) {
+        this.price = price;
+    }
+
+    public Integer getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
     }
 }

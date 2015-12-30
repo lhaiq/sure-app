@@ -10,13 +10,7 @@ public interface SubAccountService{
 	public int createSelective(SubAccountModel subAccountModel);
 	
 	public SubAccountModel findByPrimaryKey(Long id);
-	
-	public int updateByPrimaryKey(SubAccountModel subAccountModel);
-	
-	public int updateByPrimaryKeySelective(SubAccountModel subAccountModel);
-	
-	public int deleteByPrimaryKey(Long id);
-	
-	public int selectCount(SubAccountModel subAccountModel);
+
+	public SubAccountModel findOrCreateSubAccount(Long userId);
 	
 }

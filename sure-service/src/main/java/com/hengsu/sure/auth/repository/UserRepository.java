@@ -3,6 +3,7 @@ package com.hengsu.sure.auth.repository;
 import com.hengsu.sure.auth.entity.User;
 
 import java.util.List;
+import java.util.Map;
 
 import com.hengsu.sure.auth.model.UserModel;
 import org.springframework.data.domain.Pageable;
@@ -19,6 +20,8 @@ public interface UserRepository {
 
     User selectByPrimaryKey(@Param("id") Long id);
 
+    Double selectBalanceById(@Param("id") Long id);
+
     int updateByPrimaryKeySelective(@Param("user") User user);
 
     int updateByPrimaryKey(@Param("user") User user);
@@ -26,6 +29,8 @@ public interface UserRepository {
     int selectCount(@Param("user") User user);
 
     List<User> selectPage(@Param("user") User user, @Param("pageable") Pageable pageable);
+
+    List<User> queryNearUser(@Param("param") Map<String, Object> param, @Param("pageable") Pageable pageable);
 
     User findUserByPhone(String phone);
 

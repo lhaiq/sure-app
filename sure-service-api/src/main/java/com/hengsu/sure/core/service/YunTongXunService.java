@@ -11,7 +11,7 @@ public interface YunTongXunService {
 
     public void sendAuthCode(List<String> phones, String templateId, String[] data);
 
-    public SubAccountModel createSubAccount(String name,String accountSid);
+    public SubAccountModel createSubAccount(String phone);
 
 
 }

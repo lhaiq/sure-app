@@ -48,7 +48,6 @@ public class StatementRestApiController {
             Pageable pageable) {
         StatementModel param = new StatementModel();
         param.setUserId(userId);
-
         Integer count = statementService.selectCount(param);
         List<StatementModel> statementModels = statementService.selectPage(param, pageable);
         Page<StatementModel> page = new PageImpl<>(statementModels, pageable, count);

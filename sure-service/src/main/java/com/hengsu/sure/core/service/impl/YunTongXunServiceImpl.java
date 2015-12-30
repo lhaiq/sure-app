@@ -1,13 +1,18 @@
 package com.hengsu.sure.core.service.impl;
 
+import com.cloopen.rest.sdk.CCPRestSDK;
 import com.cloopen.rest.sdk.CCPRestSmsSDK;
 import com.hengsu.sure.auth.model.SubAccountModel;
 import com.hengsu.sure.core.service.YunTongXunService;
 
+import com.hkntv.pylon.core.exception.BusinessException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by haiquanli on 15/11/19.
@@ -18,14 +23,11 @@ public class YunTongXunServiceImpl implements YunTongXunService {
 
     private static final String MSM_DEFAULT_RETURN_CODE = "000000";
 
-    private String yunTongXunUrl;
-
-    private String createAccountPath=yunTongXunUrl+"/{SoftVersion}/Accounts/{accountSid}/SubAccounts";
-
     @Autowired
     private CCPRestSmsSDK smsClient;
 
-//    private
+    @Autowired
+    private CCPRestSDK restClient;
 
 
     @Override
@@ -41,9 +43,23 @@ public class YunTongXunServiceImpl implements YunTongXunService {
     }
 
     @Override
-    public SubAccountModel createSubAccount(String name, String accountSid) {
+    public SubAccountModel createSubAccount(String phone) {
 
         //TODO
+        Map<String, Object> result = restClient.createSubAccount("子账户名称");
+        Object statusCode = result.get("statusCode");
+
+        if (!MSM_DEFAULT_RETURN_CODE.equals(statusCode)) {
+            throw new BusinessException(result.get("statusMsg").toString(), statusCode.toString());
+        } else {
+            HashMap<String, Object> data = (HashMap<String, Object>) result.get("data");
+            Set<String> keySet = data.keySet();
+            for (String key : keySet) {
+                Object object = data.get(key);
+                System.out.println(key + " = " + object);
+            }
+        }
+
         return null;
     }
 }

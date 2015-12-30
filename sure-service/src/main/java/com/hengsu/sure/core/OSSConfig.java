@@ -24,6 +24,4 @@ public class OSSConfig {
         return client;
     }
 
-
-
 }

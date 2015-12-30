@@ -147,5 +147,14 @@
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="Gradle: CCP_REST_SDK_JAVA_v2.7r">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../lib/CCP_REST_SDK_JAVA_v2.7r.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
   </component>
 </module>

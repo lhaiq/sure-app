@@ -15,6 +15,10 @@ public class InvitationConfirmVO {
     private String indentNo;
     @NotNull
     private Double money;
+    @NotNull
+    private Double price;
+    @NotNull
+    private Integer quantity;
 
     public String getIndentNo() {
         return indentNo;
@@ -38,5 +42,21 @@ public class InvitationConfirmVO {
 
     public void setReceivedUserId(Long receivedUserId) {
         this.receivedUserId = receivedUserId;
+    }
+
+    public void setPrice(Double price) {
+        this.price = price;
+    }
+
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
+    }
+
+    public Double getPrice() {
+        return price;
+    }
+
+    public Integer getQuantity() {
+        return quantity;
     }
 }

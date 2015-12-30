@@ -1,19 +1,25 @@
 package com.hengsu.sure.sns.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.google.gson.Gson;
 import com.hengsu.sure.auth.model.UserModel;
 import com.hengsu.sure.auth.service.UserService;
 import com.hengsu.sure.sns.CommentType;
+import com.hengsu.sure.sns.RelationType;
 import com.hengsu.sure.sns.model.CommentModel;
 import com.hengsu.sure.sns.model.MTimeModel;
+import com.hengsu.sure.sns.model.RelationModel;
 import com.hengsu.sure.sns.service.CommentService;
 import com.hengsu.sure.sns.service.MTimeService;
+import com.hengsu.sure.sns.service.RelationService;
 import com.hengsu.sure.sns.vo.ListMTimesVO;
 import com.hengsu.sure.sns.vo.MTimeVO;
 import com.hengsu.sure.sns.vo.SNSUserVO;
 import com.hkntv.pylon.core.beans.mapping.BeanMapper;
 import com.hkntv.pylon.web.rest.ResponseEnvelope;
 import com.hkntv.pylon.web.rest.annotation.RestApiController;
+import com.wordnik.swagger.annotations.ApiOperation;
+import com.wordnik.swagger.annotations.ApiParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +54,9 @@ public class MTimeRestApiController {
     @Autowired
     private CommentService commentService;
 
+    @Autowired
+    private RelationService relationService;
+
 
     /**
      * 获取单个时光
@@ -62,8 +71,15 @@ public class MTimeRestApiController {
             @Value("#{request.getAttribute('userId')}") Long userId) {
         MTimeModel mTimeModel = mTimeService.findByPrimaryKey(id);
         ListMTimesVO listMTimesVO = beanMapper.map(mTimeModel, ListMTimesVO.class);
+        listMTimesVO.setImageIds(JSON.parseArray(mTimeModel.getImages(), Long.class));
         setSNSUser(listMTimesVO, mTimeModel.getUserId());
         setCommentAndStatueCount(listMTimesVO);
+        //检查本人是否点赞
+        listMTimesVO.setIsStatus(checkIsStatus(userId,mTimeModel.getId()));
+
+        //检查本人是否关注
+        listMTimesVO.setIsAttention(checkIsStatus(userId,mTimeModel.getUserId()));
+
         ResponseEnvelope<ListMTimesVO> responseEnv = new ResponseEnvelope<>(listMTimesVO, true);
         return new ResponseEntity<>(responseEnv, HttpStatus.OK);
     }
@@ -113,6 +129,7 @@ public class MTimeRestApiController {
     @RequestMapping(value = "/sns/mtime", method = RequestMethod.GET)
     public ResponseEntity<ResponseEnvelope<Page<ListMTimesVO>>> listMTime(
             @RequestParam(required = true) Integer cityId,
+            @Value("#{request.getAttribute('userId')}") Long userId,
             @RequestParam Integer page,
             @RequestParam Integer size) {
 
@@ -126,12 +143,18 @@ public class MTimeRestApiController {
         List<ListMTimesVO> listMTimesVOs = new ArrayList<>();
         for (MTimeModel mTimeModel : mTimeModels) {
             ListMTimesVO listMTimesVO = beanMapper.map(mTimeModel, ListMTimesVO.class);
-
+            listMTimesVO.setImageIds(JSON.parseArray(mTimeModel.getImages(), Long.class));
             //SNS User
             setSNSUser(listMTimesVO, mTimeModel.getUserId());
 
             //点赞评论数
             setCommentAndStatueCount(listMTimesVO);
+
+            //检查本人是否点赞
+            listMTimesVO.setIsStatus(checkIsStatus(userId,mTimeModel.getId()));
+
+            //检查本人是否关注
+            listMTimesVO.setIsAttention(checkIsStatus(userId,mTimeModel.getUserId()));
 
             listMTimesVOs.add(listMTimesVO);
         }
@@ -164,6 +187,34 @@ public class MTimeRestApiController {
         UserModel userModel = userService.findByPrimaryKey(userId);
         SNSUserVO snsUserVO = beanMapper.map(userModel, SNSUserVO.class);
         listMTimesVO.setUser(snsUserVO);
+    }
+
+    private boolean checkIsStatus(Long userId,Long mid){
+        CommentModel param = new CommentModel();
+        param.setmId(mid);
+        param.setUserid(userId);
+        param.setType(CommentType.STATUSES.getCode());
+        int count = commentService.selectCount(param);
+        if(count>0){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
+    public boolean checkIsAttention(Long fromUserId,Long toUserId){
+        RelationModel param = new RelationModel();
+        param.setFromUser(fromUserId);
+        param.setToUser(toUserId);
+        param.setType(RelationType.RELATION.getCode());
+        int count = relationService.selectCount(param);
+        if(count>0){
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 
 

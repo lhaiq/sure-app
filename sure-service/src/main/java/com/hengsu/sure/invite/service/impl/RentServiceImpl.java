@@ -91,8 +91,8 @@ public class RentServiceImpl implements RentService {
         indentModel.setCustomerId(rentConfirmModel.getBuyerId());
         indentModel.setSellerId(rentConfirmModel.getUserId());
         indentModel.setIndentNo(rentConfirmModel.getIndentNo());
-        indentModel.setQuantity(1);
-        indentModel.setPrice(rentConfirmModel.getMoney());
+        indentModel.setQuantity(rentConfirmModel.getQuantity());
+        indentModel.setPrice(rentConfirmModel.getPrice());
         indentModel.setMoney(rentConfirmModel.getMoney());
         indentModel.setCreateTime(new Date());
         indentModel.setType(IndentType.RENT.getCode());

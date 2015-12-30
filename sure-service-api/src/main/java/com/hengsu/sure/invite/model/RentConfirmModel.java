@@ -10,6 +10,8 @@ public class RentConfirmModel {
     private Long buyerId;
     private String indentNo;
     private Double money;
+    private Double price;
+    private Integer quantity;
 
     public Long getBuyerId() {
         return buyerId;
@@ -49,5 +51,21 @@ public class RentConfirmModel {
 
     public void setUserId(Long userId) {
         this.userId = userId;
+    }
+
+    public void setPrice(Double price) {
+        this.price = price;
+    }
+
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
+    }
+
+    public Double getPrice() {
+        return price;
+    }
+
+    public Integer getQuantity() {
+        return quantity;
     }
 }

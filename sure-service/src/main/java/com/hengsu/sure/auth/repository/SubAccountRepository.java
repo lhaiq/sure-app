@@ -1,7 +1,9 @@
 package com.hengsu.sure.auth.repository;
 
 import com.hengsu.sure.auth.entity.SubAccount;
+
 import java.util.List;
+
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -15,6 +17,8 @@ public interface SubAccountRepository {
     int insertSelective(@Param("subaccount") SubAccount subaccount);
 
     SubAccount selectByPrimaryKey(@Param("id") Long id);
+
+    SubAccount selectByUserId(@Param("userId") Long userId);
 
     int updateByPrimaryKeySelective(@Param("subaccount") SubAccount subaccount);
 

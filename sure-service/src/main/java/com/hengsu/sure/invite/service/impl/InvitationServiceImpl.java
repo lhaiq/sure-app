@@ -236,8 +236,8 @@ public class InvitationServiceImpl implements InvitationService {
         IndentModel indentModel = new IndentModel();
         indentModel.setCustomerId(confirmModel.getUserId());
         indentModel.setSellerId(confirmModel.getReceivedUserId());
-        indentModel.setQuantity(1);
-        indentModel.setPrice(confirmModel.getMoney());
+        indentModel.setQuantity(confirmModel.getQuantity());
+        indentModel.setPrice(confirmModel.getPrice());
         indentModel.setMoney(confirmModel.getMoney());
         indentModel.setIndentNo(confirmModel.getIndentNo());
         indentModel.setReferId(confirmModel.getId());

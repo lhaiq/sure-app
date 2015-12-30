@@ -45,12 +45,12 @@ public class GoodsRestApiController {
     }
 
     /**
-     * 确认轻奢详情
+     * 确认轻奢订单
      *
      * @param id
      * @return
      */
-    @RequestMapping(value = "/invite/goods/{id}", method = RequestMethod.POST)
+    @RequestMapping(value = "/invite/goods/confirm/{id}", method = RequestMethod.POST)
     public ResponseEntity<ResponseEnvelope<String>> confirmGoodsIndent(
             @PathVariable Long id,
             @RequestBody GoodsConfirmVO goodsConfirmVO,

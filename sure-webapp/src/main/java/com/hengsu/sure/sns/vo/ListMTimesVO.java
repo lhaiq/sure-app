@@ -18,6 +18,8 @@ public class ListMTimesVO {
     private Long statusesCount;
     private List<Long> imageIds;
     private SNSUserVO user;
+    private boolean isStatus;
+    private boolean isAttention;
 
     public void setId(Long id) {
         this.id = id;
@@ -35,12 +37,12 @@ public class ListMTimesVO {
         this.content = content;
     }
 
-    public List<Long> getImageIds() {
-        return imageIds;
-    }
-
     public void setImageIds(List<Long> imageIds) {
         this.imageIds = imageIds;
+    }
+
+    public List<Long> getImageIds() {
+        return imageIds;
     }
 
     public Double getLatitude() {
@@ -97,5 +99,21 @@ public class ListMTimesVO {
 
     public Integer getCityId() {
         return cityId;
+    }
+
+    public boolean isAttention() {
+        return isAttention;
+    }
+
+    public void setIsAttention(boolean isAttention) {
+        this.isAttention = isAttention;
+    }
+
+    public boolean isStatus() {
+        return isStatus;
+    }
+
+    public void setIsStatus(boolean isStatus) {
+        this.isStatus = isStatus;
     }
 }

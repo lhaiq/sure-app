@@ -2,7 +2,9 @@ package com.hengsu.sure.invite.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.hengsu.sure.ReturnCode;
+import com.hengsu.sure.core.ErrorCode;
 import com.hengsu.sure.invite.BillNumberBuilder;
+import com.hengsu.sure.invite.IndentType;
 import com.hengsu.sure.invite.model.CancelIndentModel;
 import com.hengsu.sure.invite.model.IndentCommentModel;
 import com.hengsu.sure.invite.model.IndentModel;
@@ -63,18 +65,65 @@ public class IndentRestApiController {
     }
 
     /**
-     * 订单列表
+     * 单个订单
+     *
+     * @param id
+     * @return
+     */
+    @RequestMapping(value = "/invite/indent/{id}", method = RequestMethod.GET)
+    public ResponseEntity<ResponseEnvelope<IndentModel>> getIndent(
+            @PathVariable Long id) {
+
+        IndentModel indentModel = indentService.findByPrimaryKey(id);
+        ResponseEnvelope<IndentModel> responseEnv = new ResponseEnvelope<>(indentModel, true);
+        return new ResponseEntity<>(responseEnv, HttpStatus.OK);
+    }
+
+    /**
+     * 买家订单
      *
      * @param type
+     * @param userId
      * @param pageable
      * @return
      */
-    @RequestMapping(value = "/invite/indent", method = RequestMethod.GET)
-    public ResponseEntity<ResponseEnvelope<Page<IndentModel>>> queryIndents(
+    @RequestMapping(value = "/invite/indent/buyers", method = RequestMethod.GET)
+    public ResponseEntity<ResponseEnvelope<Page<IndentModel>>> queryBuyerIndents(
             @RequestParam Integer type,
+            @Value("#{request.getAttribute('userId')}") Long userId,
             Pageable pageable) {
         IndentModel param = new IndentModel();
         param.setType(type);
+        param.setCustomerId(userId);
+
+        Integer count = indentService.selectCount(param);
+        List<IndentModel> indentModels = indentService.selectPage(param, pageable);
+        Page<IndentModel> page = new PageImpl<>(indentModels, pageable, count);
+
+        ResponseEnvelope<Page<IndentModel>> responseEnv = new ResponseEnvelope<>(page, true);
+        return new ResponseEntity<>(responseEnv, HttpStatus.OK);
+    }
+
+    /**
+     * 卖家订单
+     *
+     * @param type
+     * @param userId
+     * @param pageable
+     * @return
+     */
+    @RequestMapping(value = "/invite/indent/sellers", method = RequestMethod.GET)
+    public ResponseEntity<ResponseEnvelope<Page<IndentModel>>> querySellerIndents(
+            @RequestParam Integer type,
+            @Value("#{request.getAttribute('userId')}") Long userId,
+            Pageable pageable) {
+
+        if ((IndentType.RENT.getCode() != type) && (IndentType.INVITATION.getCode() != type)) {
+            ErrorCode.throwBusinessException(ErrorCode.INDENT_TYPE_INVALID);
+        }
+        IndentModel param = new IndentModel();
+        param.setType(type);
+        param.setSellerId(userId);
 
         Integer count = indentService.selectCount(param);
         List<IndentModel> indentModels = indentService.selectPage(param, pageable);
@@ -122,7 +171,7 @@ public class IndentRestApiController {
      * @param userId
      * @return
      */
-    @RequestMapping(value = "/invite/indent/cancel/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/invite/indent/cancel/{id}", method = RequestMethod.DELETE)
     public ResponseEntity<ResponseEnvelope<String>> cancelIndent(
             @PathVariable Long id,
             @Value("#{request.getAttribute('userId')}") Long userId) {

@@ -11,9 +11,9 @@
         <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
     </resultMap>
     <resultMap id="commentScore" type="com.hengsu.sure.invite.entity.IndentCommentScore">
-        <result column="user_id" property="userId" javaType="BIGINT"/>
-        <result column="face_score" property="faceScore" javaType="DOUBLE"/>
-        <result column="credit" property="credit" javaType="DOUBLE"/>
+        <result column="user_id" property="userId" jdbcType="BIGINT"/>
+        <result column="face_score" property="faceScore" jdbcType="DOUBLE"/>
+        <result column="credit" property="credit" jdbcType="DOUBLE"/>
     </resultMap>
     <sql id="Base_Column_List">
     id, face_score, credit, content, indent_id, user_id, create_time
@@ -36,11 +36,11 @@
     delete from indent_comment
     where id = #{id,jdbcType=BIGINT}
   </delete>
-    <insert id="insert" parameterType="com.hengsu.sure.indent.entity.IndentComment">
+    <insert id="insert" parameterType="com.hengsu.sure.invite.entity.IndentComment">
     insert into indent_comment (id, face_score, credit, 
       content, indent_id, user_id, 
       create_time)
-    values (#{id,jdbcType=BIGINT}, #{faceScore,jdbcType=DOUBLE}, #{credit,jdbcType=DOUBLE}, 
+    values (#{id,jdbcType=BIGINT}, #{faceScore,jdbcType=DOUBLE}, #{credit,jdbcType=DOUBLE},
       #{content,jdbcType=VARCHAR}, #{indentId,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, 
       #{createTime,jdbcType=TIMESTAMP})
   </insert>

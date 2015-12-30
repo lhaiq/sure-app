@@ -54,7 +54,11 @@ public enum ErrorCode {
 
     //900订单
     AMOUNT_ERROR("9000", "金额不够"),
-    TRADE_NOT_SUCCESS("9001", "支付尚未成功"),;
+    TRADE_NOT_SUCCESS("9001", "支付尚未成功"),
+    BALANCE_NOT_ENOUGH("9002", "余额不够"),
+    INDENT_TYPE_INVALID("9003", "类型非法"),
+
+    ;
 
     private String code;
     private String errorMsg;

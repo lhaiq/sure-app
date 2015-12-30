@@ -1,6 +1,7 @@
 package com.hengsu.sure.auth.service.impl;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.hengsu.sure.auth.UserRole;
 import com.hengsu.sure.auth.entity.User;
 import com.hengsu.sure.auth.model.UserLBSModel;
@@ -291,22 +292,37 @@ public class UserServiceImpl implements UserService {
         userLBSService.createSelective(userLBSModel);
     }
 
+    @Transactional
     @Override
     public void addBalance(Long userId, Double money) {
 
-        UserModel userModel =findByPrimaryKey(userId);
+        UserModel userModel = findByPrimaryKey(userId);
 
         UserModel param = new UserModel();
         param.setId(userId);
-        param.setBalance(userModel.getBalance()+money);
+        param.setBalance(userModel.getBalance() + money);
         updateByPrimaryKeySelective(param);
-
-
     }
 
+    @Transactional
     @Override
     public void reduceBalance(Long userId, Double money) {
 
+        //检查余额是否足够
+        Double balance = userRepo.selectBalanceById(userId);
+
+        //余额不足抛异常
+        if (balance < money) {
+            ErrorCode.throwBusinessException(ErrorCode.BALANCE_NOT_ENOUGH);
+        }
+
+        //余额足够减去
+        balance = balance - money;
+
+        UserModel param = new UserModel();
+        param.setId(userId);
+        param.setBalance(balance);
+        updateByPrimaryKeySelective(param);
     }
 
     //根据距离查询
@@ -327,7 +343,14 @@ public class UserServiceImpl implements UserService {
         double maxLng = longitude + ingR;
         double minLng = longitude - ingR;
         Date date = new Date(System.currentTimeMillis() / 1000 - sec);
+        Map<String, Object> param = new HashMap<>();
+        param.put("maxLat", maxLat);
+        param.put("minLat", minLat);
+        param.put("maxLng", maxLng);
+        param.put("minLng", minLng);
+        param.put("locationModifyTime", date);
         //TODO
+//        List<User> users = userRepo.queryNearUser(param,new PageRequest(0, 15));
         List<User> users = userRepo.selectPage(new User(), new PageRequest(0, 10));
         return beanMapper.mapAsList(users, UserModel.class);
     }

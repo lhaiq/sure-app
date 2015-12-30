@@ -13,8 +13,14 @@
   <sql id="Base_Column_List" >
     id, sub_account_sid, sub_token, date_created, voip_account, voip_pwd, user_id
   </sql>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+  <select id="selectByUserId" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
+    <include refid="Base_Column_List" />
+    from sub_account
+    where user_id = #{userId,jdbcType=BIGINT}
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select
     <include refid="Base_Column_List" />
     from sub_account
     where id = #{id,jdbcType=BIGINT}

@@ -37,7 +37,7 @@ public class RentVO{
 	private Date createTime;
 	private Integer status;
 
-	private List<String> images;
+	private List<Long> imageIds;
 
 	public Integer getCar() {
 		return car;
@@ -87,12 +87,12 @@ public class RentVO{
 		this.id = id;
 	}
 
-	public List<String> getImages() {
-		return images;
+	public void setImageIds(List<Long> imageIds) {
+		this.imageIds = imageIds;
 	}
 
-	public void setImages(List<String> images) {
-		this.images = images;
+	public List<Long> getImageIds() {
+		return imageIds;
 	}
 
 	public Double getPrice() {

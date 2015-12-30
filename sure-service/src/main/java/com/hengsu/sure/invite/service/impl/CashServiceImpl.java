@@ -3,15 +3,17 @@ package com.hengsu.sure.invite.service.impl;
 import com.hengsu.sure.auth.service.UserService;
 import com.hengsu.sure.invite.CashStatus;
 import com.hengsu.sure.invite.CashType;
+import com.hengsu.sure.invite.StatementType;
+import com.hengsu.sure.invite.entity.Cash;
+import com.hengsu.sure.invite.model.CashModel;
+import com.hengsu.sure.invite.model.StatementModel;
+import com.hengsu.sure.invite.repository.CashRepository;
+import com.hengsu.sure.invite.service.CashService;
+import com.hengsu.sure.invite.service.StatementService;
+import com.hkntv.pylon.core.beans.mapping.BeanMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import com.hengsu.sure.invite.entity.Cash;
-import com.hengsu.sure.invite.repository.CashRepository;
-import com.hengsu.sure.invite.model.CashModel;
-import com.hengsu.sure.invite.service.CashService;
-import com.hkntv.pylon.core.beans.mapping.BeanMapper;
 
 import java.util.Date;
 
@@ -26,6 +28,9 @@ public class CashServiceImpl implements CashService {
 
 	@Autowired
 	private UserService userService;
+
+	@Autowired
+	private StatementService statementService;
 
 	@Transactional
 	@Override
@@ -62,7 +67,8 @@ public class CashServiceImpl implements CashService {
 	@Override
 	public void applyCash(CashModel cashModel) {
 
-		//检查余额是否足够
+		//减少余额
+		userService.reduceBalance(cashModel.getUserId(),cashModel.getMoney());
 
 		//创建
 		CashModel createCrash = new CashModel();
@@ -73,11 +79,14 @@ public class CashServiceImpl implements CashService {
 		createCrash.setUserId(cashModel.getUserId());
 		createSelective(createCrash);
 
-		//TODO 减少余额
-
-
 		//创建流水
-
+		StatementModel statementModel = new StatementModel();
+		statementModel.setType(StatementType.CASH.getCode());
+		statementModel.setMoney(cashModel.getMoney());
+		statementModel.setUserId(cashModel.getUserId());
+		statementModel.setName("提现");
+		statementModel.setTime(new Date());
+		statementService.createSelective(statementModel);
 	}
 
 	@Transactional

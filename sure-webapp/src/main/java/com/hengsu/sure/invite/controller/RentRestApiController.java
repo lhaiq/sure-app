@@ -52,7 +52,10 @@ public class RentRestApiController {
      public ResponseEntity<ResponseEnvelope<RentVO>> getRentById(@PathVariable Long id) {
         RentModel rentModel = rentService.findByPrimaryKey(id);
         RentVO rentVO = beanMapper.map(rentModel, RentVO.class);
-        ResponseEnvelope<RentVO> responseEnv = new ResponseEnvelope<RentVO>(rentVO);
+        rentVO.setImageIds(JSON.parseArray(rentModel.getImages(), Long.class));
+        rentVO.setScenes(JSON.parseArray(rentModel.getScene(),String.class));
+        rentVO.setDates(JSON.parseArray(rentModel.getDate(),String.class));
+        ResponseEnvelope<RentVO> responseEnv = new ResponseEnvelope<>(rentVO,true);
         return new ResponseEntity<>(responseEnv, HttpStatus.OK);
     }
 
@@ -87,7 +90,7 @@ public class RentRestApiController {
         rentModel.setUserId(userId);
 
         rentModel.setScene(JSON.toJSONString(rentVO.getScenes()));
-        rentModel.setImages(JSON.toJSONString(rentVO.getImages()));
+        rentModel.setImages(JSON.toJSONString(rentVO.getImageIds()));
         rentModel.setDate(JSON.toJSONString(rentVO.getDates()));
 
         rentService.publishRent(rentModel);

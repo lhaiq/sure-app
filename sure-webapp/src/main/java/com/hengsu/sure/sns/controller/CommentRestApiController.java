@@ -61,7 +61,7 @@ public class CommentRestApiController {
         commentModel.setType(CommentType.COMMENT.getCode());
         commentModel.setTime(new Date());
         Integer result = commentService.createSelective(commentModel);
-        ResponseEnvelope<Integer> responseEnv = new ResponseEnvelope<Integer>(result);
+        ResponseEnvelope<Integer> responseEnv = new ResponseEnvelope<Integer>(result,true);
         return new ResponseEntity<>(responseEnv, HttpStatus.OK);
     }
 
@@ -80,7 +80,7 @@ public class CommentRestApiController {
         commentModel.setTime(new Date());
         commentModel.setType(CommentType.STATUSES.getCode());
         Integer result = commentService.createSelective(commentModel);
-        ResponseEnvelope<Integer> responseEnv = new ResponseEnvelope<Integer>(result);
+        ResponseEnvelope<Integer> responseEnv = new ResponseEnvelope<Integer>(result,true);
         return new ResponseEntity<>(responseEnv, HttpStatus.OK);
     }
 

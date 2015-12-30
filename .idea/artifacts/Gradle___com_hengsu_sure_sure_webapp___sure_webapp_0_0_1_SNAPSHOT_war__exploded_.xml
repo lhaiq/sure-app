@@ -94,6 +94,7 @@
           <element id="library" level="module" name="Gradle: gexin-rp-sdk-template-4.0.0.2" module-name="sure-service-api" />
           <element id="library" level="module" name="Gradle: jackson-all-1.8.5" module-name="sure-service-api" />
           <element id="library" level="module" name="Gradle: protobuf-java-2.5.0" module-name="sure-service-api" />
+          <element id="library" level="module" name="Gradle: CCP_REST_SDK_JAVA_v2.7r" module-name="sure-service-api" />
           <element id="library" level="project" name="Gradle: org.codehaus.groovy:groovy-all:2.0.7" />
           <element id="library" level="project" name="Gradle: com.hkntv.immortal:immortal-logback:1.1.0-SNAPSHOT" />
           <element id="library" level="project" name="Gradle: com.hkntv.immortal:immortal-client:1.1.0-SNAPSHOT" />

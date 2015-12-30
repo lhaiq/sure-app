@@ -1,5 +1,6 @@
 package com.hengsu.sure.invite.controller;
 
+import com.hengsu.sure.ReturnCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -31,10 +32,10 @@ public class CashRestApiController {
 	private CashService cashService;
 
 	@RequestMapping(value = "/invite/cash", method = RequestMethod.POST)
-	public ResponseEntity<ResponseEnvelope<Integer>> createCash(@RequestBody CashVO cashVO){
+	public ResponseEntity<ResponseEnvelope<String>> createCash(@RequestBody CashVO cashVO){
 		CashModel cashModel = beanMapper.map(cashVO, CashModel.class);
-		Integer  result = cashService.create(cashModel);
-		ResponseEnvelope<Integer> responseEnv = new ResponseEnvelope<Integer>(result);
+		cashService.create(cashModel);
+		ResponseEnvelope<String> responseEnv = new ResponseEnvelope<>(ReturnCode.OPERATION_SUCCESS,true);
 		return new ResponseEntity<>(responseEnv, HttpStatus.OK);
 	}
 	
