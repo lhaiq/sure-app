@@ -18,13 +18,10 @@ public class RentVO{
 	@NotEmpty
 	private List<String> scenes;
 
-	@NotNull
-	private Integer gender;
-
 	@NotEmpty
 	private List<String> dates;
+	@NotEmpty
 	private String time;
-	private Integer car;
 
 	@NotNull
 	private Double price;
@@ -39,13 +36,6 @@ public class RentVO{
 
 	private List<Long> imageIds;
 
-	public Integer getCar() {
-		return car;
-	}
-
-	public void setCar(Integer car) {
-		this.car = car;
-	}
 
 	public Integer getCity() {
 		return city;
@@ -69,14 +59,6 @@ public class RentVO{
 
 	public void setDates(List<String> dates) {
 		this.dates = dates;
-	}
-
-	public Integer getGender() {
-		return gender;
-	}
-
-	public void setGender(Integer gender) {
-		this.gender = gender;
 	}
 
 	public Long getId() {

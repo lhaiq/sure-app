@@ -1,6 +1,13 @@
 package com.hengsu.sure.auth.service.impl;
 
+import com.facepp.http.HttpRequests;
+import com.facepp.http.PostParameters;
 import com.hengsu.sure.auth.service.FaceService;
+import com.hengsu.sure.core.ErrorCode;
+import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -9,11 +16,35 @@ import org.springframework.stereotype.Service;
 @Service
 public class FaceServiceImpl implements FaceService {
 
-    private static final String RECOGNITION_COMPARE="https://apicn.faceplusplus.com/v2/recognition/compare?api_secret=YOUR_API_SECRET&api_key=YOUR_API_KEY&face_id2=b864da69abc1bcf50e5e1a0ea8228077&face_id1=f31f90f78c11d5ba26f67e1302a3014d";
+    private final Logger logger = LoggerFactory.getLogger(FaceServiceImpl.class);
+
+    @Autowired
+    private HttpRequests httpRequests;
 
     @Override
-    public boolean isSimilar(String registerFaceId, String loginFaceId) {
-        //TODO 后面再做
-        return true;
+    public boolean isSimilar(String phone, String loginFaceId) {
+        try {
+            JSONObject result = httpRequests.recognitionVerify(
+                    new PostParameters().setPersonName("sure_" + phone).setFaceId(loginFaceId));
+            logger.info("verify account: phone-{},login face id-{}, result={}", phone, loginFaceId, result);
+            return result.getBoolean("is_same_person");
+        } catch (Exception e) {
+            ErrorCode.throwBusinessException(ErrorCode.VERIFY_PERSON_ERROR);
+        }
+        return false;
+    }
+
+    public void createPerson(String phone, String faceId) {
+        phone = "sure_" + phone;
+        try {
+            JSONObject createResult = httpRequests.personCreate(new PostParameters().setPersonName(phone));
+            logger.info("create person:{}, result:{}", phone, createResult);
+            JSONObject addFaceResult = httpRequests.personAddFace(new PostParameters().setFaceId(faceId));
+            logger.info("add face id:{} , result: {}", faceId, addFaceResult);
+            JSONObject trainResult = httpRequests.trainVerify(new PostParameters().setPersonName(phone));
+            logger.info("train person: {},result :{}", phone, trainResult);
+        } catch (Exception e) {
+            ErrorCode.throwBusinessException(ErrorCode.CREATE_PERSON_ERROR);
+        }
     }
 }

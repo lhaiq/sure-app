@@ -213,6 +213,9 @@ public class UserServiceImpl implements UserService {
         String phone = userModel.getPhone();
         userModel.setNickname(phone.substring(phone.length() - 6));
 
+        //创建人脸
+        faceService.createPerson(userModel.getPhone(),userModel.getFaceId());
+
         //MD5加密
         String password = DigestUtils.md5DigestAsHex(userModel.getPassword().getBytes());
         userModel.setPassword(password);
@@ -226,11 +229,6 @@ public class UserServiceImpl implements UserService {
         return beanMapper.map(user, UserModel.class);
     }
 
-    @Override
-    public UserModel findUserByFaceId(String faceId) {
-        User user = userRepo.findUserByFaceId(faceId);
-        return beanMapper.map(user, UserModel.class);
-    }
 
     @Override
     public UserModel accountLogin(String phone, String password) {
@@ -254,9 +252,9 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public UserModel faceLogin(String registerFaceId, String loginFaceId) {
+    public UserModel faceLogin(String phone, String loginFaceId) {
 
-        UserModel userModel = findUserByFaceId(registerFaceId);
+        UserModel userModel = findUserByPhone(phone);
 
         //判断用户是否存在
         if (null == userModel) {
@@ -264,7 +262,7 @@ public class UserServiceImpl implements UserService {
         }
 
         //判断为否通过人脸识别
-        boolean isSimilar = faceService.isSimilar(registerFaceId, loginFaceId);
+        boolean isSimilar = faceService.isSimilar(phone, loginFaceId);
         if (!isSimilar) {
             ErrorCode.throwBusinessException(ErrorCode.LOGIN_FACE_ERROR);
         }

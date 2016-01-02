@@ -46,7 +46,7 @@ public class YunTongXunServiceImpl implements YunTongXunService {
     public SubAccountModel createSubAccount(String phone) {
 
         //TODO
-        Map<String, Object> result = restClient.createSubAccount("子账户名称");
+        Map<String, Object> result = restClient.createSubAccount("sure_"+phone);
         Object statusCode = result.get("statusCode");
 
         if (!MSM_DEFAULT_RETURN_CODE.equals(statusCode)) {

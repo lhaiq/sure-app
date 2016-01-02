@@ -16,7 +16,7 @@ def config = new ConfigSlurper().parse(props)
 
 def env =  System.properties['spring.profiles.active'] ?: 'production'
 def appenderList = []
-def level = ERROR
+def level = INFO
 def LOG_DIR = '/apps/logs/'+config.appname+'/logs'
 
 if (env == 'production') {

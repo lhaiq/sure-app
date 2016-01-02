@@ -5,14 +5,14 @@ import com.alibaba.fastjson.JSONObject;
 import com.hengsu.sure.auth.UserRole;
 import com.hengsu.sure.auth.model.UserModel;
 import com.hengsu.sure.auth.service.UserService;
+import com.hengsu.sure.core.Constants;
 import com.hengsu.sure.core.ErrorCode;
+import com.hengsu.sure.core.service.ConfService;
 import com.hengsu.sure.core.service.PushService;
 import com.hengsu.sure.invite.IndentStatus;
 import com.hengsu.sure.invite.IndentType;
 import com.hengsu.sure.invite.InvitationStatus;
-import com.hengsu.sure.invite.model.IndentModel;
-import com.hengsu.sure.invite.model.InvitationConfirmModel;
-import com.hengsu.sure.invite.model.InvitationResultModel;
+import com.hengsu.sure.invite.model.*;
 import com.hengsu.sure.invite.service.IndentService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.time.DateUtils;
@@ -23,13 +23,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.hengsu.sure.invite.entity.Invitation;
 import com.hengsu.sure.invite.repository.InvitationRepository;
-import com.hengsu.sure.invite.model.InvitationModel;
 import com.hengsu.sure.invite.service.InvitationService;
 import com.hkntv.pylon.core.beans.mapping.BeanMapper;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Service
 public class InvitationServiceImpl implements InvitationService {
@@ -41,6 +40,8 @@ public class InvitationServiceImpl implements InvitationService {
 
     private static final String INVITATION_REQUEST = "invitation_request";
     private static final String INVITATION_RECEIVE = "invitation_receive";
+
+    private static final SimpleDateFormat simpleFormat = new SimpleDateFormat("yyyy-MM-dd");
 
 
     @Autowired
@@ -57,6 +58,9 @@ public class InvitationServiceImpl implements InvitationService {
 
     @Autowired
     private IndentService indentService;
+
+    @Autowired
+    private ConfService confService;
 
     @Value("${push.retry.count}")
     private Integer retryCount;
@@ -164,7 +168,6 @@ public class InvitationServiceImpl implements InvitationService {
             return invitationResultModel;
         }
 
-
         //将邀约信息保存
         invitationModel.setCreateTime(new Date());
         invitationModel.setStatus(InvitationStatus.PUBLISHED.getCode());
@@ -245,16 +248,56 @@ public class InvitationServiceImpl implements InvitationService {
         indentModel.setStatus(IndentStatus.CONFIRMED.getCode());
         indentModel.setCreateTime(new Date());
         indentModel.setSnapshot(JSON.toJSONString(invitationModel));
-        //TODO 完成开始时间
-//        indentModel.setStartTime();
+        setStartAndEndTime(indentModel, invitationModel.getDate(), JSON.parseArray(invitationModel.getTime(), String.class));
         indentService.createSelective(indentModel);
 
+    }
+
+    @Override
+    public List<InvitationPriceModel> queryPrice() {
+
+        InvitationPriceModel in1 = new InvitationPriceModel();
+        in1.setTime("09-12");
+        in1.setPrice(confService.getDouble(Constants.INVITATION_PRICE_09TO12));
+
+        InvitationPriceModel in2 = new InvitationPriceModel();
+        in2.setTime("09-18");
+        in2.setPrice(confService.getDouble(Constants.INVITATION_PRICE_09TO18));
+
+        InvitationPriceModel in3 = new InvitationPriceModel();
+        in3.setTime("14-18");
+        in3.setPrice(confService.getDouble(Constants.INVITATION_PRICE_14TO18));
+
+        InvitationPriceModel in4 = new InvitationPriceModel();
+        in4.setTime("18-21");
+        in4.setPrice(confService.getDouble(Constants.INVITATION_PRICE_18TO21));
+
+        return Arrays.asList(in1,in2,in3,in4);
     }
 
     private Integer getInvitedCount(Long userId) {
         Date startDate = DateUtils.truncate(new Date(), Calendar.DATE);
         Date endDate = DateUtils.addDays(startDate, 1);
         return invitationRepo.getInvitedCount(userId, startDate, endDate);
+    }
+
+    private void setStartAndEndTime(IndentModel indentModel, String dateStr, List<String> times) {
+        List<String> timeSlots = new ArrayList<>();
+        for (String time : times) {
+            timeSlots.addAll(Arrays.asList(time.split("-")));
+        }
+        Collections.sort(timeSlots);
+        try {
+            Date date = simpleFormat.parse(dateStr);
+            Date startTime = DateUtils.addHours(date, Integer.parseInt(timeSlots.get(0)));
+            Date endTime = DateUtils.addHours(date, Integer.parseInt(timeSlots.get(timeSlots.size() - 1)));
+            indentModel.setStartTime(startTime);
+            indentModel.setEndTime(endTime);
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
     }
 
 

@@ -1,193 +1,188 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.hengsu.sure.invite.repository.RentRepository" >
-  <resultMap id="BaseResultMap" type="com.hengsu.sure.invite.entity.Rent" >
-    <id column="id" property="id" jdbcType="BIGINT" />
-    <result column="user_id" property="userId" jdbcType="BIGINT" />
-    <result column="city" property="city" jdbcType="INTEGER" />
-    <result column="scene" property="scene" jdbcType="VARCHAR" />
-    <result column="gender" property="gender" jdbcType="INTEGER" />
-    <result column="date" property="date" jdbcType="VARCHAR" />
-    <result column="time" property="time" jdbcType="VARCHAR" />
-    <result column="car" property="car" jdbcType="INTEGER" />
-    <result column="price" property="price" jdbcType="DOUBLE" />
-    <result column="money" property="money" jdbcType="DOUBLE" />
-    <result column="state" property="state" jdbcType="VARCHAR" />
-    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
-    <result column="status" property="status" jdbcType="INTEGER" />
-    <result column="images" property="images" jdbcType="VARCHAR" />
-  </resultMap>
-  <sql id="Base_Column_List" >
-    id, user_id, city, scene, gender, date, time, car, price, money, state, create_time, 
+<mapper namespace="com.hengsu.sure.invite.repository.RentRepository">
+    <resultMap id="BaseResultMap" type="com.hengsu.sure.invite.entity.Rent">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="user_id" property="userId" jdbcType="BIGINT"/>
+        <result column="city" property="city" jdbcType="INTEGER"/>
+        <result column="scene" property="scene" jdbcType="VARCHAR"/>
+        <result column="date" property="date" jdbcType="VARCHAR"/>
+        <result column="time" property="time" jdbcType="VARCHAR"/>
+        <result column="price" property="price" jdbcType="DOUBLE"/>
+        <result column="money" property="money" jdbcType="DOUBLE"/>
+        <result column="state" property="state" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="status" property="status" jdbcType="INTEGER"/>
+        <result column="images" property="images" jdbcType="VARCHAR"/>
+    </resultMap>
+    <resultMap id="UserResultMap" type="com.hengsu.sure.invite.model.QueryRentModel">
+        <result column="userId" property="userId" jdbcType="BIGINT"/>
+        <result column="nickname" property="nickname" jdbcType="VARCHAR"/>
+        <result column="gender" property="gender" jdbcType="INTEGER"/>
+        <result column="height" property="height" jdbcType="INTEGER"/>
+        <result column="age" property="age" jdbcType="INTEGER"/>
+        <result column="icon" property="icon" jdbcType="BIGINT"/>
+        <result column="face_score" property="faceScore" jdbcType="DOUBLE"/>
+        <result column="credit" property="credit" jdbcType="DOUBLE"/>
+        <result column="rent_id" property="rentId" jdbcType="BIGINT"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, user_id, city, scene,  date, time,  price, money, state, create_time,
     status, images
   </sql>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
-    select 
-    <include refid="Base_Column_List" />
-    from rent
-    where id = #{id,jdbcType=BIGINT}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        from rent
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from rent
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.hengsu.sure.invite.entity.Rent" >
+    <insert id="insert" parameterType="com.hengsu.sure.invite.entity.Rent">
     insert into rent (id, user_id, city, 
-      scene, gender, date, 
-      time, car, price, money, 
+      scene,  date,
+      time,  price, money,
       state, create_time, status, 
       images)
     values (#{id,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{city,jdbcType=INTEGER}, 
-      #{scene,jdbcType=VARCHAR}, #{gender,jdbcType=INTEGER}, #{date,jdbcType=VARCHAR}, 
-      #{time,jdbcType=VARCHAR}, #{car,jdbcType=INTEGER}, #{price,jdbcType=DOUBLE}, #{money,jdbcType=DOUBLE}, 
+      #{scene,jdbcType=VARCHAR},  #{date,jdbcType=VARCHAR},
+      #{time,jdbcType=VARCHAR},  #{price,jdbcType=DOUBLE}, #{money,jdbcType=DOUBLE},
       #{state,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{status,jdbcType=INTEGER}, 
       #{images,jdbcType=VARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.hengsu.sure.invite.entity.Rent" >
-    insert into rent
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        id,
-      </if>
-      <if test="userId != null" >
-        user_id,
-      </if>
-      <if test="city != null" >
-        city,
-      </if>
-      <if test="scene != null" >
-        scene,
-      </if>
-      <if test="gender != null" >
-        gender,
-      </if>
-      <if test="date != null" >
-        date,
-      </if>
-      <if test="time != null" >
-        time,
-      </if>
-      <if test="car != null" >
-        car,
-      </if>
-      <if test="price != null" >
-        price,
-      </if>
-      <if test="money != null" >
-        money,
-      </if>
-      <if test="state != null" >
-        state,
-      </if>
-      <if test="createTime != null" >
-        create_time,
-      </if>
-      <if test="status != null" >
-        status,
-      </if>
-      <if test="images != null" >
-        images,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        #{id,jdbcType=BIGINT},
-      </if>
-      <if test="userId != null" >
-        #{userId,jdbcType=BIGINT},
-      </if>
-      <if test="city != null" >
-        #{city,jdbcType=INTEGER},
-      </if>
-      <if test="scene != null" >
-        #{scene,jdbcType=VARCHAR},
-      </if>
-      <if test="gender != null" >
-        #{gender,jdbcType=INTEGER},
-      </if>
-      <if test="date != null" >
-        #{date,jdbcType=VARCHAR},
-      </if>
-      <if test="time != null" >
-        #{time,jdbcType=VARCHAR},
-      </if>
-      <if test="car != null" >
-        #{car,jdbcType=INTEGER},
-      </if>
-      <if test="price != null" >
-        #{price,jdbcType=DOUBLE},
-      </if>
-      <if test="money != null" >
-        #{money,jdbcType=DOUBLE},
-      </if>
-      <if test="state != null" >
-        #{state,jdbcType=VARCHAR},
-      </if>
-      <if test="createTime != null" >
-        #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="status != null" >
-        #{status,jdbcType=INTEGER},
-      </if>
-      <if test="images != null" >
-        #{images,jdbcType=VARCHAR},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.hengsu.sure.invite.entity.Rent" >
-    update rent
-    <set >
-      <if test="userId != null" >
-        user_id = #{userId,jdbcType=BIGINT},
-      </if>
-      <if test="city != null" >
-        city = #{city,jdbcType=INTEGER},
-      </if>
-      <if test="scene != null" >
-        scene = #{scene,jdbcType=VARCHAR},
-      </if>
-      <if test="gender != null" >
-        gender = #{gender,jdbcType=INTEGER},
-      </if>
-      <if test="date != null" >
-        date = #{date,jdbcType=VARCHAR},
-      </if>
-      <if test="time != null" >
-        time = #{time,jdbcType=VARCHAR},
-      </if>
-      <if test="car != null" >
-        car = #{car,jdbcType=INTEGER},
-      </if>
-      <if test="price != null" >
-        price = #{price,jdbcType=DOUBLE},
-      </if>
-      <if test="money != null" >
-        money = #{money,jdbcType=DOUBLE},
-      </if>
-      <if test="state != null" >
-        state = #{state,jdbcType=VARCHAR},
-      </if>
-      <if test="createTime != null" >
-        create_time = #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="status != null" >
-        status = #{status,jdbcType=INTEGER},
-      </if>
-      <if test="images != null" >
-        images = #{images,jdbcType=VARCHAR},
-      </if>
-    </set>
-    where id = #{id,jdbcType=BIGINT}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.hengsu.sure.invite.entity.Rent" >
+    <insert id="insertSelective" parameterType="com.hengsu.sure.invite.entity.Rent">
+        insert into rent
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="userId != null">
+                user_id,
+            </if>
+            <if test="city != null">
+                city,
+            </if>
+            <if test="scene != null">
+                scene,
+            </if>
+
+            <if test="date != null">
+                date,
+            </if>
+            <if test="time != null">
+                time,
+            </if>
+
+            <if test="price != null">
+                price,
+            </if>
+            <if test="money != null">
+                money,
+            </if>
+            <if test="state != null">
+                state,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="images != null">
+                images,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="userId != null">
+                #{userId,jdbcType=BIGINT},
+            </if>
+            <if test="city != null">
+                #{city,jdbcType=INTEGER},
+            </if>
+            <if test="scene != null">
+                #{scene,jdbcType=VARCHAR},
+            </if>
+
+            <if test="date != null">
+                #{date,jdbcType=VARCHAR},
+            </if>
+            <if test="time != null">
+                #{time,jdbcType=VARCHAR},
+            </if>
+
+            <if test="price != null">
+                #{price,jdbcType=DOUBLE},
+            </if>
+            <if test="money != null">
+                #{money,jdbcType=DOUBLE},
+            </if>
+            <if test="state != null">
+                #{state,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=INTEGER},
+            </if>
+            <if test="images != null">
+                #{images,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.hengsu.sure.invite.entity.Rent">
+        update rent
+        <set>
+            <if test="userId != null">
+                user_id = #{userId,jdbcType=BIGINT},
+            </if>
+            <if test="city != null">
+                city = #{city,jdbcType=INTEGER},
+            </if>
+            <if test="scene != null">
+                scene = #{scene,jdbcType=VARCHAR},
+            </if>
+
+            <if test="date != null">
+                date = #{date,jdbcType=VARCHAR},
+            </if>
+            <if test="time != null">
+                time = #{time,jdbcType=VARCHAR},
+            </if>
+
+            <if test="price != null">
+                price = #{price,jdbcType=DOUBLE},
+            </if>
+            <if test="money != null">
+                money = #{money,jdbcType=DOUBLE},
+            </if>
+            <if test="state != null">
+                state = #{state,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="status != null">
+                status = #{status,jdbcType=INTEGER},
+            </if>
+            <if test="images != null">
+                images = #{images,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.hengsu.sure.invite.entity.Rent">
     update rent
     set user_id = #{userId,jdbcType=BIGINT},
       city = #{city,jdbcType=INTEGER},
       scene = #{scene,jdbcType=VARCHAR},
-      gender = #{gender,jdbcType=INTEGER},
       date = #{date,jdbcType=VARCHAR},
       time = #{time,jdbcType=VARCHAR},
-      car = #{car,jdbcType=INTEGER},
       price = #{price,jdbcType=DOUBLE},
       money = #{money,jdbcType=DOUBLE},
       state = #{state,jdbcType=VARCHAR},
@@ -196,107 +191,149 @@
       images = #{images,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <select id="selectCount" resultType="java.lang.Integer" parameterType="com.hengsu.sure.invite.entity.Rent" >
-    select count(*) from rent
-    <where >
-      <if test="id != null" >
-        and id = #{id,jdbcType=BIGINT}
-      </if>
-      <if test="userId != null" >
-        and user_id = #{userId,jdbcType=BIGINT}
-      </if>
-      <if test="city != null" >
-        and city = #{city,jdbcType=INTEGER}
-      </if>
-      <if test="scene != null" >
-        and scene = #{scene,jdbcType=VARCHAR}
-      </if>
-      <if test="gender != null" >
-        and gender = #{gender,jdbcType=INTEGER}
-      </if>
-      <if test="date != null" >
-        and date = #{date,jdbcType=VARCHAR}
-      </if>
-      <if test="time != null" >
-        and time = #{time,jdbcType=VARCHAR}
-      </if>
-      <if test="car != null" >
-        and car = #{car,jdbcType=INTEGER}
-      </if>
-      <if test="price != null" >
-        and price = #{price,jdbcType=DOUBLE}
-      </if>
-      <if test="money != null" >
-        and money = #{money,jdbcType=DOUBLE}
-      </if>
-      <if test="state != null" >
-        and state = #{state,jdbcType=VARCHAR}
-      </if>
-      <if test="createTime != null" >
-        and create_time = #{createTime,jdbcType=TIMESTAMP}
-      </if>
-      <if test="status != null" >
-        and status = #{status,jdbcType=INTEGER}
-      </if>
-      <if test="images != null" >
-        and images = #{images,jdbcType=VARCHAR}
-      </if>
-    </where>
-  </select>
-  <select id="selectPage" resultMap="BaseResultMap" >
-    select 
-    <include refid="Base_Column_List" />
-    from rent where 1 = 1 
-    <if test="param1.id != null" >
-      and id = #{param1.id,jdbcType=BIGINT}
-    </if>
-    <if test="param1.userId != null" >
-      and user_id = #{param1.userId,jdbcType=BIGINT}
-    </if>
-    <if test="param1.city != null" >
-      and city = #{param1.city,jdbcType=INTEGER}
-    </if>
-    <if test="param1.scene != null" >
-      and scene = #{param1.scene,jdbcType=VARCHAR}
-    </if>
-    <if test="param1.gender != null" >
-      and gender = #{param1.gender,jdbcType=INTEGER}
-    </if>
-    <if test="param1.date != null" >
-      and date = #{param1.date,jdbcType=VARCHAR}
-    </if>
-    <if test="param1.time != null" >
-      and time = #{param1.time,jdbcType=VARCHAR}
-    </if>
-    <if test="param1.car != null" >
-      and car = #{param1.car,jdbcType=INTEGER}
-    </if>
-    <if test="param1.price != null" >
-      and price = #{param1.price,jdbcType=DOUBLE}
-    </if>
-    <if test="param1.money != null" >
-      and money = #{param1.money,jdbcType=DOUBLE}
-    </if>
-    <if test="param1.state != null" >
-      and state = #{param1.state,jdbcType=VARCHAR}
-    </if>
-    <if test="param1.createTime != null" >
-      and create_time = #{param1.createTime,jdbcType=TIMESTAMP}
-    </if>
-    <if test="param1.status != null" >
-      and status = #{param1.status,jdbcType=INTEGER}
-    </if>
-    <if test="param1.images != null" >
-      and images = #{param1.images,jdbcType=VARCHAR}
-    </if>
-    <if test="param2.sort != null" >
-      order by 
-      <foreach collection="param2.sort" item="order" separator="," >
-        ${order.property} ${order.direction}
-      </foreach>
-    </if>
-    <if test="param2.offset >= 0 and param2.pageSize > 0" >
-      limit ${param2.offset}, ${param2.pageSize}
-    </if>
-  </select>
+    <select id="selectCount" resultType="java.lang.Integer" parameterType="com.hengsu.sure.invite.entity.Rent">
+        select count(*) from rent
+        <where>
+            <if test="id != null">
+                and id = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="userId != null">
+                and user_id = #{userId,jdbcType=BIGINT}
+            </if>
+            <if test="city != null">
+                and city = #{city,jdbcType=INTEGER}
+            </if>
+            <if test="scene != null">
+                and scene = #{scene,jdbcType=VARCHAR}
+            </if>
+
+            <if test="date != null">
+                and date = #{date,jdbcType=VARCHAR}
+            </if>
+            <if test="time != null">
+                and time = #{time,jdbcType=VARCHAR}
+            </if>
+
+            <if test="price != null">
+                and price = #{price,jdbcType=DOUBLE}
+            </if>
+            <if test="money != null">
+                and money = #{money,jdbcType=DOUBLE}
+            </if>
+            <if test="state != null">
+                and state = #{state,jdbcType=VARCHAR}
+            </if>
+            <if test="createTime != null">
+                and create_time = #{createTime,jdbcType=TIMESTAMP}
+            </if>
+            <if test="status != null">
+                and status = #{status,jdbcType=INTEGER}
+            </if>
+            <if test="images != null">
+                and images = #{images,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </select>
+    <select id="selectPage" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from rent where 1 = 1
+        <if test="param1.id != null">
+            and id = #{param1.id,jdbcType=BIGINT}
+        </if>
+        <if test="param1.userId != null">
+            and user_id = #{param1.userId,jdbcType=BIGINT}
+        </if>
+        <if test="param1.city != null">
+            and city = #{param1.city,jdbcType=INTEGER}
+        </if>
+        <if test="param1.scene != null">
+            and scene = #{param1.scene,jdbcType=VARCHAR}
+        </if>
+
+        <if test="param1.date != null">
+            and date = #{param1.date,jdbcType=VARCHAR}
+        </if>
+        <if test="param1.time != null">
+            and time = #{param1.time,jdbcType=VARCHAR}
+        </if>
+
+        <if test="param1.price != null">
+            and price = #{param1.price,jdbcType=DOUBLE}
+        </if>
+        <if test="param1.money != null">
+            and money = #{param1.money,jdbcType=DOUBLE}
+        </if>
+        <if test="param1.state != null">
+            and state = #{param1.state,jdbcType=VARCHAR}
+        </if>
+        <if test="param1.createTime != null">
+            and create_time = #{param1.createTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="param1.status != null">
+            and status = #{param1.status,jdbcType=INTEGER}
+        </if>
+        <if test="param1.images != null">
+            and images = #{param1.images,jdbcType=VARCHAR}
+        </if>
+        <if test="param2.sort != null">
+            order by
+            <foreach collection="param2.sort" item="order" separator=",">
+                ${order.property} ${order.direction}
+            </foreach>
+        </if>
+        <if test="param2.offset >= 0 and param2.pageSize > 0">
+            limit ${param2.offset}, ${param2.pageSize}
+        </if>
+    </select>
+
+    <select id="queryRent" resultMap="UserResultMap">
+        SELECT u.id as userId,u.nickname,u.gender,u.height,
+        u.age,u.icon,u.face_score,u.credit,r.id as rent_id
+        FROM sure.rent r ,sure.user u
+        where r.user_id = u.id
+        and u.gender=#{param1.gender,jdbcType=INTEGER}
+        and u.car=#{param1.car,jdbcType=INTEGER}
+        and u.age &lt;=#{param1.maxAge,jdbcType=INTEGER}
+        and u.age &gt;=#{param1.minAge,jdbcType=INTEGER}
+        and r.city=#{param1.cityId,jdbcType=INTEGER}
+        and r.time=#{param1.time,jdbcType=VARCHAR}
+        <foreach collection="param1.scenes" item="scene">
+            and r.scene like '%${scene}%'
+        </foreach>
+        <foreach collection="param1.dates" item="date">
+            and r.date like '%${date}%'
+        </foreach>
+
+        <if test="param2.sort != null">
+            order by
+            <foreach collection="param2.sort" item="order" separator=",">
+                ${order.property} ${order.direction}
+            </foreach>
+        </if>
+        <if test="param2.offset >= 0 and param2.pageSize > 0">
+            limit ${param2.offset}, ${param2.pageSize}
+        </if>
+    </select>
+
+    <select id="queryRentCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+        SELECT count(1)
+        FROM sure.rent r ,sure.user u
+        where r.user_id = u.id
+        and u.gender=#{param1.gender,jdbcType=INTEGER}
+        and u.city=#{param1.cityId,jdbcType=INTEGER}
+        and u.car=#{param1.car,jdbcType=INTEGER}
+        and u.age &lt;=#{param1.maxAge,jdbcType=INTEGER}
+        and u.age &gt;=#{param1.minAge,jdbcType=INTEGER}
+        and r.time=#{param1.time,jdbcType=VARCHAR}
+
+        <foreach collection="scenes" item="scene">
+            and r.scene like '%${scene}%'
+        </foreach>
+
+        <foreach collection="dates" item="date">
+            and r.date like '%${date}%'
+        </foreach>
+
+    </select>
 </mapper>

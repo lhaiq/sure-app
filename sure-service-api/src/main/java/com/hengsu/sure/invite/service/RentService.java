@@ -32,4 +32,6 @@ public interface RentService {
 
     public List<QueryRentModel> queryRent(QueryRentParamModel queryRentParamModel, Pageable pageable);
 
+    public int queryRentCount(QueryRentParamModel queryRentParamModel);
+
 }

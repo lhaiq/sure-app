@@ -3,9 +3,11 @@ package com.hengsu.sure.invite.service;
 
 import com.hengsu.sure.invite.model.InvitationConfirmModel;
 import com.hengsu.sure.invite.model.InvitationModel;
+import com.hengsu.sure.invite.model.InvitationPriceModel;
 import com.hengsu.sure.invite.model.InvitationResultModel;
 
 import java.util.Date;
+import java.util.List;
 
 public interface InvitationService {
 
@@ -61,5 +63,7 @@ public interface InvitationService {
      * @param invitationConfirmModel
      */
     public void confirmInvitation(InvitationConfirmModel invitationConfirmModel);
+
+    public List<InvitationPriceModel> queryPrice();
 
 }

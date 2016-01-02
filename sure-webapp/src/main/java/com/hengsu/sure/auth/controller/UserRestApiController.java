@@ -9,6 +9,7 @@ import com.hengsu.sure.auth.request.*;
 import com.hengsu.sure.auth.service.SubAccountService;
 import com.hengsu.sure.auth.service.UserService;
 import com.hengsu.sure.auth.vo.LoginSuccessVO;
+import com.hengsu.sure.auth.vo.ModifyUserVO;
 import com.hengsu.sure.auth.vo.UserLBSVO;
 import com.hengsu.sure.core.Context;
 import com.hengsu.sure.core.util.RandomUtil;
@@ -160,7 +161,7 @@ public class UserRestApiController {
     @RequestMapping(value = "/auth/facelogin", method = RequestMethod.POST)
     @ResponseBody
     public ResponseEnvelope<LoginSuccessVO> faceLogin(@Valid @RequestBody FaceLoginRequest faceLoginRequest) {
-        UserModel userModel = userService.faceLogin(faceLoginRequest.getRegisterFaceId(), faceLoginRequest.getLoginFaceId());
+        UserModel userModel = userService.faceLogin(faceLoginRequest.getPhone(), faceLoginRequest.getLoginFaceId());
 
         //登录成功后生成auth token，并保存到内存
         LoginSuccessVO loginSuccessVO = new LoginSuccessVO();
@@ -224,19 +225,18 @@ public class UserRestApiController {
         return responseEnv;
     }
 
-
     /**
      * 修改user 信息
      *
-     * @param userVO
+     * @param modifyUserVO
      * @return
      */
     @RequestMapping(value = "/auth/user", method = RequestMethod.PUT)
     @ResponseBody
     public ResponseEntity<ResponseEnvelope<Integer>> updateUserByPrimaryKeySelective(
-            @RequestBody UserVO userVO,
+            @RequestBody ModifyUserVO modifyUserVO,
             @Value("#{request.getAttribute('userId')}") Long userId) {
-        UserModel userModel = beanMapper.map(userVO, UserModel.class);
+        UserModel userModel = beanMapper.map(modifyUserVO, UserModel.class);
         userModel.setId(userId);
         Integer result = userService.updateByPrimaryKeySelective(userModel);
         ResponseEnvelope<Integer> responseEnv = new ResponseEnvelope<Integer>(result, true);

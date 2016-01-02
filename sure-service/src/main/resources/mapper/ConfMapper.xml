@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hengsu.sure.core.repository.ConfRepository">
+	<resultMap id="BaseResultMap" type="com.hengsu.sure.core.entity.Conf">
+		<id column="conf_key" property="confKey" jdbcType="VARCHAR" />
+		<result column="conf_value" property="confValue" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		conf_key, conf_value
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from conf c
+		where c.conf_key = #{confKey,jdbcType=VARCHAR}
+	</select>
+	<select id="selectByKeyPrefix" resultMap="BaseResultMap"
+			parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from conf
+		where conf_key like #{confKeyPrefix,jdbcType=VARCHAR}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from conf
+		where conf_key = #{confKey,jdbcType=VARCHAR}
+	</delete>
+	<insert id="insert" parameterType="com.hengsu.sure.core.entity.Conf">
+		insert into conf (conf_key, conf_value)
+		values (#{confKey,jdbcType=VARCHAR}, #{confValue,jdbcType=VARCHAR})
+	</insert>
+	<update id="updateByPrimaryKey" parameterType="com.hengsu.sure.core.entity.Conf">
+		update conf
+		set conf_value = #{confValue,jdbcType=VARCHAR}
+		where conf_key = #{confKey,jdbcType=VARCHAR}
+	</update>
+</mapper>

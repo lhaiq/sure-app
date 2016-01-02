@@ -19,6 +19,7 @@ public enum ErrorCode {
     LOGIN_FACE_ERROR("1008", "与注册人脸不匹配"),
 
 
+
     PHONE_NOT_REGISTER("1009", "该手机号尚未注册"),
 
     JSON_FORMATTED("1010", "JSON格式错误"),
@@ -30,6 +31,8 @@ public enum ErrorCode {
     AUTH_CODE_NOT_EXISTED("1015", "该手机号尚未获取验证码"),
     JSON_FORMAT_ERROR("1016", "json格式错误"),
     OLD_PASSWORD_ERROR("1017", "旧密码错误"),
+    CREATE_PERSON_ERROR("1018", "提取人脸信息失败"),
+    VERIFY_PERSON_ERROR("1019", "人脸登陆失败"),
 
 
     //时光5
@@ -48,7 +51,7 @@ public enum ErrorCode {
     CANNOT_RECEIVE_SLEF_INVITATION("6004", "不能接受自己的即时邀约"),
     CANNOT_CANCEL_OTHERS_INDENT("6005", "只能取消自己的订单"),
     CANNOT_CANCEL_STATUS_ERROR("6006", "只能取消未完成的订单"),
-
+    RENT_ROLE_ERROR("6007", "只有买家才能发布即时邀约"),
     //700
     RENT_NOT_EXISTED("7000", "邀约不存在"),
 

@@ -39,11 +39,10 @@ public interface UserService {
 
     public UserModel findUserByPhone(String phone);
 
-    public UserModel findUserByFaceId(String faceId);
 
     public UserModel accountLogin(String phone, String password);
 
-    public UserModel faceLogin(String registerFaceId, String loginFaceId);
+    public UserModel faceLogin(String phone, String loginFaceId);
 
     public void updateLBS(UserLBSModel userLBSModel);
 

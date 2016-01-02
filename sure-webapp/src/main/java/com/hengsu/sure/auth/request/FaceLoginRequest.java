@@ -8,7 +8,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 public class FaceLoginRequest {
 
     @NotEmpty
-    private String registerFaceId;
+    private String phone;
     @NotEmpty
     private String loginFaceId;
 
@@ -20,11 +20,11 @@ public class FaceLoginRequest {
         this.loginFaceId = loginFaceId;
     }
 
-    public String getRegisterFaceId() {
-        return registerFaceId;
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
-    public void setRegisterFaceId(String registerFaceId) {
-        this.registerFaceId = registerFaceId;
+    public String getPhone() {
+        return phone;
     }
 }

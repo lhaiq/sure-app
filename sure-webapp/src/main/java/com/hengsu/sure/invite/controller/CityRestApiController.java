@@ -35,7 +35,7 @@ public class CityRestApiController {
     public ResponseEntity<ResponseEnvelope<CityVO>> getCityById(@PathVariable Long id) {
         CityModel cityModel = cityService.findByPrimaryKey(id);
         CityVO cityVO = beanMapper.map(cityModel, CityVO.class);
-        ResponseEnvelope<CityVO> responseEnv = new ResponseEnvelope<CityVO>(cityVO,true);
+        ResponseEnvelope<CityVO> responseEnv = new ResponseEnvelope<CityVO>(cityVO, true);
         return new ResponseEntity<>(responseEnv, HttpStatus.OK);
     }
 
@@ -52,6 +52,14 @@ public class CityRestApiController {
         CityModel param = new CityModel();
         param.setParentId(provinceId);
         List<CityModel> cityModels = cityService.selectPage(param);
+        ResponseEnvelope<List<CityModel>> responseEnv = new ResponseEnvelope<>(cityModels, true);
+        return new ResponseEntity<>(responseEnv, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/invite/citys", method = RequestMethod.GET)
+    public ResponseEntity<ResponseEnvelope<List<CityModel>>> getCitys() {
+
+        List<CityModel> cityModels = cityService.selectPage(new CityModel());
         ResponseEnvelope<List<CityModel>> responseEnv = new ResponseEnvelope<>(cityModels, true);
         return new ResponseEntity<>(responseEnv, HttpStatus.OK);
     }

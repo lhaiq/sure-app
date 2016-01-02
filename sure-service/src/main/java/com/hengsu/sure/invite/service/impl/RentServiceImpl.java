@@ -1,12 +1,17 @@
 package com.hengsu.sure.invite.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.hengsu.sure.auth.UserRole;
+import com.hengsu.sure.auth.model.UserModel;
+import com.hengsu.sure.auth.service.UserService;
 import com.hengsu.sure.core.ErrorCode;
 import com.hengsu.sure.invite.IndentType;
 import com.hengsu.sure.invite.RentStatus;
 import com.hengsu.sure.invite.model.*;
 import com.hengsu.sure.invite.service.IndentService;
+import org.apache.commons.lang.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,11 +21,14 @@ import com.hengsu.sure.invite.repository.RentRepository;
 import com.hengsu.sure.invite.service.RentService;
 import com.hkntv.pylon.core.beans.mapping.BeanMapper;
 
-import java.util.Date;
-import java.util.List;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Service
 public class RentServiceImpl implements RentService {
+
+    private static final SimpleDateFormat simpleFormat = new SimpleDateFormat("yyyy-MM-dd");
 
     @Autowired
     private BeanMapper beanMapper;
@@ -30,6 +38,9 @@ public class RentServiceImpl implements RentService {
 
     @Autowired
     private IndentService indentService;
+
+    @Autowired
+    private UserService userService;
 
     @Transactional
     @Override
@@ -66,9 +77,17 @@ public class RentServiceImpl implements RentService {
     @Override
     public void publishRent(RentModel rentModel) {
 
+        //角色是否为卖家
+        Long userId = rentModel.getUserId();
+        UserModel userModel = userService.findByPrimaryKeyNoPass(userId);
+        if (UserRole.SELLER.getCode() != userModel.getRole()) {
+            ErrorCode.throwBusinessException(ErrorCode.RENT_ROLE_ERROR);
+        }
+
         //设置时间
         rentModel.setCreateTime(new Date());
         rentModel.setStatus(RentStatus.PUBLISH.getCode());
+
         createSelective(rentModel);
     }
 
@@ -77,7 +96,7 @@ public class RentServiceImpl implements RentService {
     public void confirmRent(RentConfirmModel rentConfirmModel) {
 
         RentModel rentModel = findByPrimaryKey(rentConfirmModel.getId());
-        if(null==rentModel){
+        if (null == rentModel) {
             ErrorCode.throwBusinessException(ErrorCode.RENT_NOT_EXISTED);
         }
 
@@ -99,7 +118,8 @@ public class RentServiceImpl implements RentService {
         indentModel.setReferId(rentConfirmModel.getId());
         indentModel.setSnapshot(JSON.toJSONString(rentModel));
 
-        //TODO 开始时间 结束时间
+        List<String> dates = JSON.parseArray(rentModel.getDate(),String.class);
+        setStartAndEndTime(indentModel,dates,rentModel.getTime());
         indentService.createSelective(indentModel);
 
     }
@@ -107,7 +127,32 @@ public class RentServiceImpl implements RentService {
     @Override
     public List<QueryRentModel> queryRent(QueryRentParamModel queryRentParamModel,
                                           Pageable pageable) {
-        return null;
+
+        Map<String, Object> param = new HashMap<>();
+        param.put("cityId", queryRentParamModel.getCityId());
+        param.put("gender", queryRentParamModel.getGender());
+        param.put("car", queryRentParamModel.getCar());
+        param.put("maxAge", queryRentParamModel.getMaxAge());
+        param.put("minAge", queryRentParamModel.getMinAge());
+        param.put("time", queryRentParamModel.getTime());
+        param.put("scenes", queryRentParamModel.getScenes());
+        param.put("dates", queryRentParamModel.getDates());
+        List<QueryRentModel> rents = rentRepo.queryRent(param, pageable);
+        return rents;
+    }
+
+    @Override
+    public int queryRentCount(QueryRentParamModel queryRentParamModel) {
+        Map<String, Object> param = new HashMap<>();
+        param.put("cityId", queryRentParamModel.getCityId());
+        param.put("gender", queryRentParamModel.getGender());
+        param.put("car", queryRentParamModel.getCar());
+        param.put("maxAge", queryRentParamModel.getMaxAge());
+        param.put("minAge", queryRentParamModel.getMinAge());
+        param.put("time", queryRentParamModel.getTime());
+        param.put("scenes", queryRentParamModel.getScenes());
+        param.put("dates", queryRentParamModel.getDates());
+        return rentRepo.queryRentCount(param);
     }
 
     @Transactional
@@ -122,4 +167,19 @@ public class RentServiceImpl implements RentService {
         return rentRepo.updateByPrimaryKeySelective(beanMapper.map(rentModel, Rent.class));
     }
 
+    private void setStartAndEndTime(IndentModel indentModel,List<String> dates,String time){
+        Collections.sort(dates);
+        String [] timeSlots=time.split("-");
+        try {
+            Date startDate=simpleFormat.parse(dates.get(0));
+            Date endDate=simpleFormat.parse(dates.get(dates.size()-1));
+            Date startTime = DateUtils.addDays(startDate, Integer.parseInt(timeSlots[0]));
+            Date endTime = DateUtils.addDays(endDate,Integer.parseInt(timeSlots[1]));
+            indentModel.setStartTime(startTime);
+            indentModel.setEndTime(endTime);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+    }
 }

@@ -10,7 +10,7 @@ public enum IndentStatus {
     FINISHED(2, "finished"),
     CANCELING(3, "canceling"),
     CANCELED(4, "canceled"),
-    PREPARE_CANCEL(5, "prepare_cancel"),;
+    ;
 
     private Integer code;
     private String desc;

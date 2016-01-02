@@ -1,5 +1,7 @@
 package com.hengsu.sure.invite.vo;
 
+import org.hibernate.validator.constraints.NotEmpty;
+
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
@@ -10,11 +12,20 @@ public class QueryRentVO {
 
     @NotNull
     private Long cityId;
+    @NotNull
     private Integer gender;
+    @NotEmpty
     private List<String> scenes;
+    @NotEmpty
     private List<String> dates;
+    @NotEmpty
     private String time;
+    @NotNull
     private Integer car;
+    @NotNull
+    private Integer minAge;
+    @NotNull
+    private Integer maxAge;
 
     public Integer getCar() {
         return car;
@@ -62,5 +73,21 @@ public class QueryRentVO {
 
     public void setTime(String time) {
         this.time = time;
+    }
+
+    public Integer getMaxAge() {
+        return maxAge;
+    }
+
+    public void setMaxAge(Integer maxAge) {
+        this.maxAge = maxAge;
+    }
+
+    public Integer getMinAge() {
+        return minAge;
+    }
+
+    public void setMinAge(Integer minAge) {
+        this.minAge = minAge;
     }
 }

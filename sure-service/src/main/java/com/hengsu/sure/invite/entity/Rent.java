@@ -11,13 +11,9 @@ public class Rent {
 
     private String scene;
 
-    private Integer gender;
-
     private String date;
 
     private String time;
-
-    private Integer car;
 
     private Double price;
 
@@ -63,13 +59,7 @@ public class Rent {
         this.scene = scene;
     }
 
-    public Integer getGender() {
-        return gender;
-    }
 
-    public void setGender(Integer gender) {
-        this.gender = gender;
-    }
 
     public String getDate() {
         return date;
@@ -87,13 +77,6 @@ public class Rent {
         this.time = time;
     }
 
-    public Integer getCar() {
-        return car;
-    }
-
-    public void setCar(Integer car) {
-        this.car = car;
-    }
 
     public Double getPrice() {
         return price;

@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.hengsu.sure.ReturnCode;
 import com.hengsu.sure.invite.model.InvitationConfirmModel;
 import com.hengsu.sure.invite.model.InvitationModel;
+import com.hengsu.sure.invite.model.InvitationPriceModel;
 import com.hengsu.sure.invite.model.InvitationResultModel;
 import com.hengsu.sure.invite.service.InvitationService;
 import com.hengsu.sure.invite.vo.InvitationConfirmVO;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestApiController
 @RequestMapping("/sure")
@@ -72,6 +74,18 @@ public class InvitationRestApiController {
     }
 
     /**
+     * 查询各时间段价格
+     *
+     * @return
+     */
+    @RequestMapping(value = "/invite/invitation/price", method = RequestMethod.GET)
+    public ResponseEntity<ResponseEnvelope<List<InvitationPriceModel>>> getPrice() {
+        List<InvitationPriceModel> invitationPrices = invitationService.queryPrice();
+        ResponseEnvelope<List<InvitationPriceModel>> responseEnv = new ResponseEnvelope<>(invitationPrices, true);
+        return new ResponseEntity<>(responseEnv, HttpStatus.OK);
+    }
+
+    /**
      * 确认邀约
      *
      * @param id
@@ -82,14 +96,13 @@ public class InvitationRestApiController {
             @PathVariable Long id,
             @RequestBody InvitationConfirmVO confirmVO,
             @Value("#{request.getAttribute('userId')}") Long userId) {
-        InvitationConfirmModel confirmModel = beanMapper.map(confirmVO,InvitationConfirmModel.class);
+        InvitationConfirmModel confirmModel = beanMapper.map(confirmVO, InvitationConfirmModel.class);
         confirmModel.setId(id);
         confirmModel.setUserId(userId);
         invitationService.confirmInvitation(confirmModel);
         ResponseEnvelope<String> responseEnv = new ResponseEnvelope<>(ReturnCode.OPERATION_SUCCESS, true);
         return new ResponseEntity<>(responseEnv, HttpStatus.OK);
     }
-
 
 
 }

@@ -13,6 +13,8 @@ public class QueryRentParamModel {
     private List<String> dates;
     private String time;
     private Integer car;
+    private Integer minAge;
+    private Integer maxAge;
 
     public Integer getCar() {
         return car;
@@ -60,5 +62,21 @@ public class QueryRentParamModel {
 
     public void setTime(String time) {
         this.time = time;
+    }
+
+    public Integer getMaxAge() {
+        return maxAge;
+    }
+
+    public void setMaxAge(Integer maxAge) {
+        this.maxAge = maxAge;
+    }
+
+    public Integer getMinAge() {
+        return minAge;
+    }
+
+    public void setMinAge(Integer minAge) {
+        this.minAge = minAge;
     }
 }
