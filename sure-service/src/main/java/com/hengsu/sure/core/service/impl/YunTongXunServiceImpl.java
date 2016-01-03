@@ -45,21 +45,23 @@ public class YunTongXunServiceImpl implements YunTongXunService {
     @Override
     public SubAccountModel createSubAccount(String phone) {
 
-        //TODO
-        Map<String, Object> result = restClient.createSubAccount("sure_"+phone);
+        Map<String, Object> result = restClient.createSubAccount("sure_" + phone + "_" +
+                System.currentTimeMillis());
         Object statusCode = result.get("statusCode");
 
         if (!MSM_DEFAULT_RETURN_CODE.equals(statusCode)) {
             throw new BusinessException(result.get("statusMsg").toString(), statusCode.toString());
         } else {
             HashMap<String, Object> data = (HashMap<String, Object>) result.get("data");
-            Set<String> keySet = data.keySet();
-            for (String key : keySet) {
-                Object object = data.get(key);
-                System.out.println(key + " = " + object);
-            }
+            Map<String, Object> subAccount = (Map) ((List) data.get("SubAccount")).get(0);
+            SubAccountModel subAccountModel = new SubAccountModel();
+            subAccountModel.setSubAccountSid(subAccount.get("subAccountSid").toString());
+            subAccountModel.setDateCreated(subAccount.get("dateCreated").toString());
+            subAccountModel.setSubToken(subAccount.get("subToken").toString());
+            subAccountModel.setVoipAccount(subAccount.get("voipAccount").toString());
+            subAccountModel.setVoipPwd(subAccount.get("voipPwd").toString());
+            return subAccountModel;
         }
 
-        return null;
     }
 }

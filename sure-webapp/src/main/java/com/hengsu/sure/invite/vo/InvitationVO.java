@@ -25,6 +25,8 @@ public class InvitationVO {
     private List<String> timeSolts;
     @NotNull
     private Integer car;
+    @NotNull
+    private Double money;
 
     @NotNull
     private Double latitude;
@@ -147,5 +149,13 @@ public class InvitationVO {
 
     public void setLongitude(Double longitude) {
         this.longitude = longitude;
+    }
+
+    public void setMoney(Double money) {
+        this.money = money;
+    }
+
+    public Double getMoney() {
+        return money;
     }
 }

@@ -8,6 +8,8 @@ import com.hengsu.sure.invite.model.IndentCommentModel;
 import com.hengsu.sure.invite.repository.IndentCommentRepository;
 import com.hengsu.sure.invite.service.IndentCommentService;
 import com.hkntv.pylon.core.beans.mapping.BeanMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -18,6 +20,9 @@ import java.util.List;
 
 @Service
 public class IndentCommentServiceImpl implements IndentCommentService {
+
+    private final Logger logger = LoggerFactory.getLogger(IndentCommentServiceImpl.class);
+
 
     @Autowired
     private BeanMapper beanMapper;
@@ -74,8 +79,9 @@ public class IndentCommentServiceImpl implements IndentCommentService {
     /**
      * calculate method 求平均数
      */
-    @Scheduled(cron = "0 0 01 * * ? *")
+//    @Scheduled(cron = "0 0 01 * * ?")
     public void calculateScore() {
+        logger.info("calculate score ....");
         List<IndentCommentScore> indentCommentScores = indentCommentRepo.selectScore();
         for (IndentCommentScore indentCommentScore : indentCommentScores) {
             UserModel param = new UserModel();

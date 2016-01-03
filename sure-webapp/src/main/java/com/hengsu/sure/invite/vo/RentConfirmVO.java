@@ -12,21 +12,12 @@ public class RentConfirmVO {
     @NotEmpty
     private String indentNo;
     @NotNull
-    private Long buyerId;
-    @NotNull
     private Double price;
     @NotNull
     private Integer quantity;
     @NotNull
     private Double money;
 
-    public Long getBuyerId() {
-        return buyerId;
-    }
-
-    public void setBuyerId(Long buyerId) {
-        this.buyerId = buyerId;
-    }
 
     public String getIndentNo() {
         return indentNo;

@@ -13,6 +13,7 @@ import com.hengsu.sure.sns.model.RelationModel;
 import com.hengsu.sure.sns.service.RelationService;
 import com.hkntv.pylon.core.beans.mapping.BeanMapper;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -80,11 +81,13 @@ public class RelationServiceImpl implements RelationService {
         param.setFromUser(relationModel.getFromUser());
         param.setToUser(relationModel.getToUser());
         param.setType(type);
+
         int count = selectCount(param);
         if (count != 0) {
             return;
         }
 
+        relationModel.setTime(new Date());
         if (RelationType.RELATION.getCode() == type) {
             createSelective(relationModel);
         } else {

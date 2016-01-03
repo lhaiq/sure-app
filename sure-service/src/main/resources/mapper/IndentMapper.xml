@@ -37,11 +37,18 @@
     from indent
     where id = #{id,jdbcType=BIGINT}
   </select>
-  <select id="selectByNO" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+  <select id="selectByNO" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select
     <include refid="Base_Column_List" />
     from indent
     where indent_no = #{indentNo,jdbcType=VARCHAR}
+  </select>
+  <select id="selectFinishing" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from indent
+    where status=#{param1,jdbcType=INTEGER}
+    and end_time &lt;=#{param2,jdbcType=TIMESTAMP}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
     delete from indent

@@ -7,7 +7,7 @@ import java.util.List;
  */
 public class QueryRentParamModel {
 
-    private Long cityId;
+    private Integer city;
     private Integer gender;
     private List<String> scenes;
     private List<String> dates;
@@ -15,6 +15,7 @@ public class QueryRentParamModel {
     private Integer car;
     private Integer minAge;
     private Integer maxAge;
+
 
     public Integer getCar() {
         return car;
@@ -24,12 +25,12 @@ public class QueryRentParamModel {
         this.car = car;
     }
 
-    public Long getCityId() {
-        return cityId;
+    public void setCity(Integer city) {
+        this.city = city;
     }
 
-    public void setCityId(Long cityId) {
-        this.cityId = cityId;
+    public Integer getCity() {
+        return city;
     }
 
     public List<String> getDates() {

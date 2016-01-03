@@ -11,6 +11,7 @@ import java.util.List;
 public class RentVO{
 	
 	private Long id;
+	private Long userId;
 
 	@NotNull
 	private Integer city;
@@ -28,6 +29,9 @@ public class RentVO{
 
 	@NotNull
 	private Double money;
+
+	@NotNull
+	private Integer quantity;
 
 	@NotEmpty
 	private String state;
@@ -123,5 +127,21 @@ public class RentVO{
 
 	public Double getMoney() {
 		return money;
+	}
+
+	public void setQuantity(Integer quantity) {
+		this.quantity = quantity;
+	}
+
+	public Integer getQuantity() {
+		return quantity;
+	}
+
+	public void setUserId(Long userId) {
+		this.userId = userId;
+	}
+
+	public Long getUserId() {
+		return userId;
 	}
 }

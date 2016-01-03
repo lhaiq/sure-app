@@ -51,9 +51,15 @@ public enum ErrorCode {
     CANNOT_RECEIVE_SLEF_INVITATION("6004", "不能接受自己的即时邀约"),
     CANNOT_CANCEL_OTHERS_INDENT("6005", "只能取消自己的订单"),
     CANNOT_CANCEL_STATUS_ERROR("6006", "只能取消未完成的订单"),
-    RENT_ROLE_ERROR("6007", "只有买家才能发布即时邀约"),
+    RENT_ROLE_ERROR("6007", "只有卖家才能发布即时邀约"),
+    INVITATION_STATUS_ERROR("6008", "该即时邀约已生成订单"),
+    CANNOT_COMMENT_INDENT("6009", "只有买家才可以评论订单"),
+    CANNOT_COMMENT_INDENT_AS_STATUS("6010", "只有完成订单才可以评论"),
+    HAVE_COMMENTED("6011", "该订单已经评论"),
     //700
     RENT_NOT_EXISTED("7000", "邀约不存在"),
+    CANNOT_BUY_SLEF("7001", "不能邀约自己"),
+    RENT_STATUS_ERROR("7002", "该邀约已经被预定"),
 
     //900订单
     AMOUNT_ERROR("9000", "金额不够"),

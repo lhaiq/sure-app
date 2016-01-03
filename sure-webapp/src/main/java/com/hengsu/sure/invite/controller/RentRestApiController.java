@@ -32,6 +32,7 @@ import com.hengsu.sure.invite.service.RentService;
 import com.hengsu.sure.invite.model.RentModel;
 import com.hengsu.sure.invite.vo.RentVO;
 
+import javax.validation.Valid;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
@@ -76,7 +77,7 @@ public class RentRestApiController {
      * @return
      */
     @RequestMapping(value = "/invite/queryRent", method = RequestMethod.POST)
-    public ResponseEntity<ResponseEnvelope<Page<QueryRentModel>>> queryRent(@RequestBody QueryRentVO queryRentVO,
+    public ResponseEntity<ResponseEnvelope<Page<QueryRentModel>>> queryRent(@Valid@RequestBody QueryRentVO queryRentVO,
                                                                             Pageable pageable) {
         QueryRentParamModel queryRentParamModel = beanMapper.map(queryRentVO, QueryRentParamModel.class);
         List<QueryRentModel> queryRentModels = rentService.queryRent(queryRentParamModel, pageable);
@@ -95,7 +96,7 @@ public class RentRestApiController {
      */
     @RequestMapping(value = "/invite/rent", method = RequestMethod.POST)
     public ResponseEntity<ResponseEnvelope<String>> createRent(
-            @RequestBody RentVO rentVO,
+            @Valid@RequestBody RentVO rentVO,
             @Value("#{request.getAttribute('userId')}") Long userId) {
         RentModel rentModel = beanMapper.map(rentVO, RentModel.class);
         rentModel.setUserId(userId);

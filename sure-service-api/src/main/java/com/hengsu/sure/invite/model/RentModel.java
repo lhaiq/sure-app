@@ -10,13 +10,12 @@ public class RentModel{
 	private Long userId;
 	private Integer city;
 	private String scene;
-	private Integer gender;
 	private String date;
 	private String time;
-	private Integer car;
 	private Double price;
 	private Double money;
 	private String state;
+	private Integer quantity;
 	private Date createTime;
 	private Integer status;
 	private String images;
@@ -52,15 +51,15 @@ public class RentModel{
 	public String getScene(){
 		return this.scene;
 	}
-		
-	public void setGender(Integer gender){
-		this.gender = gender;
+
+	public void setQuantity(Integer quantity) {
+		this.quantity = quantity;
 	}
-	
-	public Integer getGender(){
-		return this.gender;
+
+	public Integer getQuantity() {
+		return quantity;
 	}
-		
+
 	public void setDate(String date){
 		this.date = date;
 	}
@@ -76,15 +75,7 @@ public class RentModel{
 	public String getTime(){
 		return this.time;
 	}
-		
-	public void setCar(Integer car){
-		this.car = car;
-	}
-	
-	public Integer getCar(){
-		return this.car;
-	}
-		
+
 	public void setPrice(Double price){
 		this.price = price;
 	}

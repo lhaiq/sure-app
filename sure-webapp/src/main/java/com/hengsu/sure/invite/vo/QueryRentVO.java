@@ -11,7 +11,7 @@ import java.util.List;
 public class QueryRentVO {
 
     @NotNull
-    private Long cityId;
+    private Integer city;
     @NotNull
     private Integer gender;
     @NotEmpty
@@ -35,12 +35,12 @@ public class QueryRentVO {
         this.car = car;
     }
 
-    public Long getCityId() {
-        return cityId;
+    public void setCity(Integer city) {
+        this.city = city;
     }
 
-    public void setCityId(Long cityId) {
-        this.cityId = cityId;
+    public Integer getCity() {
+        return city;
     }
 
     public List<String> getDates() {

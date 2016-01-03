@@ -19,6 +19,8 @@ public class Rent {
 
     private Double money;
 
+    private Integer quantity;
+
     private String state;
 
     private Date createTime;
@@ -124,5 +126,13 @@ public class Rent {
 
     public void setImages(String images) {
         this.images = images;
+    }
+
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
+    }
+
+    public Integer getQuantity() {
+        return quantity;
     }
 }

@@ -19,6 +19,8 @@ public interface RentRepository {
 
     Rent selectByPrimaryKey(@Param("id") Long id);
 
+    Rent selectByPrimaryKeySync(@Param("id") Long id);
+
     int updateByPrimaryKeySelective(@Param("rent") Rent rent);
 
     int updateByPrimaryKey(@Param("rent") Rent rent);

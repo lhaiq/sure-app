@@ -22,6 +22,7 @@ public class InvitationModel{
 	private String state;
 	private Date createTime;
 	private Integer status;
+	private Integer quantity;
 		
 	public void setId(Long id){
 		this.id = id;
@@ -150,6 +151,12 @@ public class InvitationModel{
 	public Integer getStatus(){
 		return this.status;
 	}
-		
-		
+
+	public void setQuantity(Integer quantity) {
+		this.quantity = quantity;
+	}
+
+	public Integer getQuantity() {
+		return quantity;
+	}
 }

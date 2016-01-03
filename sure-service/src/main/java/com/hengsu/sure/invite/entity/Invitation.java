@@ -29,6 +29,8 @@ public class Invitation {
 
     private Double price;
 
+    private Integer quantity;
+
     private String state;
 
     private Date createTime;
@@ -161,5 +163,13 @@ public class Invitation {
 
     public void setStatus(Integer status) {
         this.status = status;
+    }
+
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
+    }
+
+    public Integer getQuantity() {
+        return quantity;
     }
 }

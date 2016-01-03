@@ -36,7 +36,7 @@ public class InvitationServiceImpl implements InvitationService {
     private static final Double DEFAULT_DISTANCE = 10.0;
     private static final Long DEFAULT_INTERVAL = 30 * 60L;
     private static final Integer DEFAULT_COUNT = 4;
-    private static final Integer DEAULT_PUBLISH_COUNT = 20;
+    private static final Integer DEFAULT_PUBLISH_COUNT = 20;
 
     private static final String INVITATION_REQUEST = "invitation_request";
     private static final String INVITATION_RECEIVE = "invitation_receive";
@@ -153,7 +153,7 @@ public class InvitationServiceImpl implements InvitationService {
                     UserRole.CUSTOMER,
                     invitationModel.getCity());
 
-            if (CollectionUtils.isNotEmpty(userModels) || userModels.size() <= DEAULT_PUBLISH_COUNT) {
+            if (CollectionUtils.isNotEmpty(userModels) || userModels.size() <= DEFAULT_PUBLISH_COUNT) {
                 continue;
             }
         }
@@ -172,6 +172,7 @@ public class InvitationServiceImpl implements InvitationService {
         invitationModel.setCreateTime(new Date());
         invitationModel.setStatus(InvitationStatus.PUBLISHED.getCode());
         invitationModel.setMoney(invitationModel.getPrice());
+        invitationModel.setQuantity(1);
         createSelective(invitationModel);
 
         //返回邀约Id
@@ -229,6 +230,11 @@ public class InvitationServiceImpl implements InvitationService {
             ErrorCode.throwBusinessException(ErrorCode.INVITATION_PUBLISHER_NOT_MATCH);
         }
 
+        //判断即时邀约状态
+        if (InvitationStatus.PUBLISHED.getCode() != invitationModel.getStatus()) {
+            ErrorCode.throwBusinessException(ErrorCode.INVITATION_STATUS_ERROR);
+        }
+
         //更新状态
         InvitationModel newInvitationModel = new InvitationModel();
         newInvitationModel.setId(confirmModel.getId());
@@ -239,9 +245,9 @@ public class InvitationServiceImpl implements InvitationService {
         IndentModel indentModel = new IndentModel();
         indentModel.setCustomerId(confirmModel.getUserId());
         indentModel.setSellerId(confirmModel.getReceivedUserId());
-        indentModel.setQuantity(confirmModel.getQuantity());
-        indentModel.setPrice(confirmModel.getPrice());
-        indentModel.setMoney(confirmModel.getMoney());
+        indentModel.setQuantity(invitationModel.getQuantity());
+        indentModel.setPrice(invitationModel.getPrice());
+        indentModel.setMoney(invitationModel.getMoney());
         indentModel.setIndentNo(confirmModel.getIndentNo());
         indentModel.setReferId(confirmModel.getId());
         indentModel.setType(IndentType.INVITATION.getCode());
@@ -272,7 +278,7 @@ public class InvitationServiceImpl implements InvitationService {
         in4.setTime("18-21");
         in4.setPrice(confService.getDouble(Constants.INVITATION_PRICE_18TO21));
 
-        return Arrays.asList(in1,in2,in3,in4);
+        return Arrays.asList(in1, in2, in3, in4);
     }
 
     private Integer getInvitedCount(Long userId) {
@@ -282,15 +288,17 @@ public class InvitationServiceImpl implements InvitationService {
     }
 
     private void setStartAndEndTime(IndentModel indentModel, String dateStr, List<String> times) {
-        List<String> timeSlots = new ArrayList<>();
+        List<Integer> timeSlots = new ArrayList<>();
         for (String time : times) {
-            timeSlots.addAll(Arrays.asList(time.split("-")));
+            String[] timeSplit = time.split("-");
+            timeSlots.add(Integer.parseInt(timeSplit[0]));
+            timeSlots.add(Integer.parseInt(timeSplit[1]));
         }
         Collections.sort(timeSlots);
         try {
             Date date = simpleFormat.parse(dateStr);
-            Date startTime = DateUtils.addHours(date, Integer.parseInt(timeSlots.get(0)));
-            Date endTime = DateUtils.addHours(date, Integer.parseInt(timeSlots.get(timeSlots.size() - 1)));
+            Date startTime = DateUtils.addHours(date, timeSlots.get(0));
+            Date endTime = DateUtils.addHours(date, timeSlots.get(timeSlots.size() - 1));
             indentModel.setStartTime(startTime);
             indentModel.setEndTime(endTime);
 

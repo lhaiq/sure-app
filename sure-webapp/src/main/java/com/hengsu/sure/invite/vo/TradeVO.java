@@ -28,16 +28,13 @@ public class TradeVO {
 
     private String sign;
 
-    @MapField("outTradeNo")
+    @MapField("tradeNo")
     private String out_trade_no;
 
     private String subject;
 
     @MapField("paymentType")
     private String payment_type;
-
-    @MapField("tradeNo")
-    private String trade_no;
 
     @MapField("tradeStatus")
     private String trade_status;
@@ -262,14 +259,6 @@ public class TradeVO {
 
     public void setTotal_fee(Double total_fee) {
         this.total_fee = total_fee;
-    }
-
-    public String getTrade_no() {
-        return trade_no;
-    }
-
-    public void setTrade_no(String trade_no) {
-        this.trade_no = trade_no;
     }
 
     public String getTrade_status() {

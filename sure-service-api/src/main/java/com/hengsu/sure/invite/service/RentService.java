@@ -18,6 +18,8 @@ public interface RentService {
 
     public RentModel findByPrimaryKey(Long id);
 
+    public RentModel findByPrimaryKeySync(Long id);
+
     public int updateByPrimaryKey(RentModel rentModel);
 
     public int updateByPrimaryKeySelective(RentModel rentModel);

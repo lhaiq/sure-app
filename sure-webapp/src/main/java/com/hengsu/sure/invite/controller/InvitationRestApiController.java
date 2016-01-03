@@ -94,7 +94,7 @@ public class InvitationRestApiController {
     @RequestMapping(value = "/invite/invitation/confirm/{id}", method = RequestMethod.POST)
     public ResponseEntity<ResponseEnvelope<String>> confirmInvitation(
             @PathVariable Long id,
-            @RequestBody InvitationConfirmVO confirmVO,
+            @Valid@RequestBody InvitationConfirmVO confirmVO,
             @Value("#{request.getAttribute('userId')}") Long userId) {
         InvitationConfirmModel confirmModel = beanMapper.map(confirmVO, InvitationConfirmModel.class);
         confirmModel.setId(id);

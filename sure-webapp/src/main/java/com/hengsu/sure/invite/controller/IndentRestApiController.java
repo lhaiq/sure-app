@@ -5,10 +5,7 @@ import com.hengsu.sure.ReturnCode;
 import com.hengsu.sure.core.ErrorCode;
 import com.hengsu.sure.invite.BillNumberBuilder;
 import com.hengsu.sure.invite.IndentType;
-import com.hengsu.sure.invite.model.CancelIndentModel;
-import com.hengsu.sure.invite.model.IndentCommentModel;
-import com.hengsu.sure.invite.model.IndentModel;
-import com.hengsu.sure.invite.model.TradeModel;
+import com.hengsu.sure.invite.model.*;
 import com.hengsu.sure.invite.service.IndentCommentService;
 import com.hengsu.sure.invite.service.IndentService;
 import com.hengsu.sure.invite.vo.IndentCommentVO;
@@ -47,10 +44,6 @@ public class IndentRestApiController {
 
     @Autowired
     private IndentService indentService;
-
-    @Autowired
-    private IndentCommentService indentCommentService;
-
 
     /**
      * 申请订单号
@@ -172,11 +165,11 @@ public class IndentRestApiController {
      * @return
      */
     @RequestMapping(value = "/invite/indent/cancel/{id}", method = RequestMethod.DELETE)
-    public ResponseEntity<ResponseEnvelope<String>> cancelIndent(
+    public ResponseEntity<ResponseEnvelope<CashModel>> cancelIndent(
             @PathVariable Long id,
             @Value("#{request.getAttribute('userId')}") Long userId) {
-        indentService.cancelIndent(id, userId);
-        ResponseEnvelope<String> responseEnv = new ResponseEnvelope<>(ReturnCode.OPERATION_SUCCESS, true);
+        CashModel cashModel = indentService.cancelIndent(id, userId);
+        ResponseEnvelope<CashModel> responseEnv = new ResponseEnvelope<>(cashModel, true);
         return new ResponseEntity<>(responseEnv, HttpStatus.OK);
     }
 
@@ -196,8 +189,7 @@ public class IndentRestApiController {
         IndentCommentModel indentCommentModel = beanMapper.map(indentCommentVO, IndentCommentModel.class);
         indentCommentModel.setIndentId(id);
         indentCommentModel.setUserId(userId);
-        indentCommentModel.setCreateTime(new Date());
-        indentCommentService.createSelective(indentCommentModel);
+        indentService.commentIndent(indentCommentModel);
         ResponseEnvelope<String> responseEnv = new ResponseEnvelope<>(ReturnCode.OPERATION_SUCCESS, true);
         return new ResponseEntity<>(responseEnv, HttpStatus.OK);
     }

@@ -2,6 +2,7 @@
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:context="http://www.springframework.org/schema/context" xmlns:jdbc="http://www.springframework.org/schema/jdbc"  
 	xmlns:jee="http://www.springframework.org/schema/jee" xmlns:tx="http://www.springframework.org/schema/tx"
+	   xmlns:task="http://www.springframework.org/schema/task"
 	xmlns:pylon-context="http://pylon.hkntv.com/schema/context" xmlns:pylon-datasource="http://pylon.hkntv.com/schema/datasource"
 	xmlns:jpa="http://www.springframework.org/schema/data/jpa"
 	xsi:schemaLocation="
@@ -11,6 +12,7 @@
 		http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-4.0.xsd
 		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
 		http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa-1.6.xsd
+		http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.2.xsd
 		http://pylon.hkntv.com/schema/context http://pylon.hkntv.com/schema/context/pylon-context-1.0.0.xsd
 		http://pylon.hkntv.com/schema/datasource http://pylon.hkntv.com/schema/datasource/pylon-datasource-1.0.0.xsd"
 	default-lazy-init="true">
@@ -18,9 +20,17 @@
 	<pylon-context:property-placeholder ignore-resource-not-found="true"/>
 	
 	<bean id="orikaBeanMapper" class="com.hkntv.pylon.core.beans.mapping.orika.OrikaBeanMapper">
-		<property name="basePackage" value="com.hengsu.sure.auth.model.**"></property>
+		<property name="basePackage" value="com.hengsu.sure.*.*.**"></property>
 	</bean>
 	
+	<task:executor id="executor" pool-size="5"/>
+	<task:scheduler id="scheduler" pool-size="10"/>
+	<task:annotation-driven executor="executor" scheduler="scheduler"/>
+	<task:scheduled-tasks>
+		<!--<task:scheduled ref="indentServiceImpl" method="scheduleFinishIndent" fixed-delay="50000000"/>-->
+		<task:scheduled ref="indentCommentServiceImpl" method="calculateScore" cron="0 0 01 * * ?"/>
+	</task:scheduled-tasks>
+
 	<!--i18n-->
   	<bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
       	<property name="basenames">

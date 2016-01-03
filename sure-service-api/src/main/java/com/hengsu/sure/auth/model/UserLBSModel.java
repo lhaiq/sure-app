@@ -3,7 +3,7 @@ package com.hengsu.sure.auth.model;
 import com.hkntv.pylon.core.beans.mapping.annotation.MapClass;
 import java.util.Date;
 
-@MapClass("com.hengsu.sure.invite.entity.UserLBS")
+@MapClass("com.hengsu.sure.auth.entity.UserLBS")
 public class UserLBSModel{
 	
 	private Long id;

@@ -54,7 +54,8 @@ public class SubAccountServiceImpl implements SubAccountService {
         if (null == subAccountModel) {
             UserModel userModel = userService.findByPrimaryKeyNoPass(userId);
             subAccountModel = yunTongXunService.createSubAccount(userModel.getPhone());
-//            createSelective(subAccountModel);
+            subAccountModel.setUserId(userId);
+            createSelective(subAccountModel);
         }
         return subAccountModel;
     }

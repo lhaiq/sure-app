@@ -16,6 +16,8 @@ public interface IndentCommentService{
 	public int updateByPrimaryKeySelective(IndentCommentModel indentCommentModel);
 	
 	public int deleteByPrimaryKey(Long id);
+
+	public void calculateScore();
 	
 	public int selectCount(IndentCommentModel indentCommentModel);
 	

@@ -4,6 +4,7 @@ import com.gexin.rp.sdk.http.IGtPush;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 /**
  * Created by haiquanli on 15/11/25.

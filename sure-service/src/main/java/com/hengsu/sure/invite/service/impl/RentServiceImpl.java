@@ -5,7 +5,9 @@ import com.hengsu.sure.auth.UserRole;
 import com.hengsu.sure.auth.model.UserModel;
 import com.hengsu.sure.auth.service.UserService;
 import com.hengsu.sure.core.ErrorCode;
+import com.hengsu.sure.invite.IndentStatus;
 import com.hengsu.sure.invite.IndentType;
+import com.hengsu.sure.invite.InvitationStatus;
 import com.hengsu.sure.invite.RentStatus;
 import com.hengsu.sure.invite.model.*;
 import com.hengsu.sure.invite.service.IndentService;
@@ -67,6 +69,13 @@ public class RentServiceImpl implements RentService {
         return beanMapper.map(rent, RentModel.class);
     }
 
+    @Transactional
+    @Override
+    public RentModel findByPrimaryKeySync(Long id) {
+        Rent rent = rentRepo.selectByPrimaryKeySync(id);
+        return beanMapper.map(rent, RentModel.class);
+    }
+
     @Transactional(readOnly = true)
     @Override
     public int selectCount(RentModel rentModel) {
@@ -84,6 +93,8 @@ public class RentServiceImpl implements RentService {
             ErrorCode.throwBusinessException(ErrorCode.RENT_ROLE_ERROR);
         }
 
+        //TODO 检查quality
+
         //设置时间
         rentModel.setCreateTime(new Date());
         rentModel.setStatus(RentStatus.PUBLISH.getCode());
@@ -95,31 +106,43 @@ public class RentServiceImpl implements RentService {
     @Override
     public void confirmRent(RentConfirmModel rentConfirmModel) {
 
-        RentModel rentModel = findByPrimaryKey(rentConfirmModel.getId());
+        RentModel rentModel = findByPrimaryKeySync(rentConfirmModel.getId());
         if (null == rentModel) {
             ErrorCode.throwBusinessException(ErrorCode.RENT_NOT_EXISTED);
         }
 
+        //判断即时发现状态
+        if (RentStatus.PUBLISH.getCode() != rentModel.getStatus()) {
+            ErrorCode.throwBusinessException(ErrorCode.INVITATION_STATUS_ERROR);
+        }
+
+        //不能买自己的东西
+        if (rentModel.getUserId() == rentConfirmModel.getUserId()) {
+            ErrorCode.throwBusinessException(ErrorCode.CANNOT_BUY_SLEF);
+        }
+
         //更新状态
-        RentModel newRentModel = new RentModel();
-        newRentModel.setId(rentConfirmModel.getId());
-        newRentModel.setStatus(RentStatus.FINISHED.getCode());
+        RentModel param = new RentModel();
+        param.setId(rentConfirmModel.getId());
+        param.setStatus(RentStatus.FINISHED.getCode());
+        updateByPrimaryKeySelective(param);
 
         //创建订单
         IndentModel indentModel = new IndentModel();
-        indentModel.setCustomerId(rentConfirmModel.getBuyerId());
-        indentModel.setSellerId(rentConfirmModel.getUserId());
+        indentModel.setCustomerId(rentConfirmModel.getUserId());
+        indentModel.setSellerId(rentModel.getUserId());
         indentModel.setIndentNo(rentConfirmModel.getIndentNo());
-        indentModel.setQuantity(rentConfirmModel.getQuantity());
-        indentModel.setPrice(rentConfirmModel.getPrice());
-        indentModel.setMoney(rentConfirmModel.getMoney());
+        indentModel.setQuantity(rentModel.getQuantity());
+        indentModel.setPrice(rentModel.getPrice());
+        indentModel.setMoney(rentModel.getMoney());
         indentModel.setCreateTime(new Date());
         indentModel.setType(IndentType.RENT.getCode());
         indentModel.setReferId(rentConfirmModel.getId());
+        indentModel.setStatus(IndentStatus.CONFIRMED.getCode());
         indentModel.setSnapshot(JSON.toJSONString(rentModel));
 
-        List<String> dates = JSON.parseArray(rentModel.getDate(),String.class);
-        setStartAndEndTime(indentModel,dates,rentModel.getTime());
+        List<String> dates = JSON.parseArray(rentModel.getDate(), String.class);
+        setStartAndEndTime(indentModel, dates, rentModel.getTime());
         indentService.createSelective(indentModel);
 
     }
@@ -129,7 +152,7 @@ public class RentServiceImpl implements RentService {
                                           Pageable pageable) {
 
         Map<String, Object> param = new HashMap<>();
-        param.put("cityId", queryRentParamModel.getCityId());
+        param.put("city", queryRentParamModel.getCity());
         param.put("gender", queryRentParamModel.getGender());
         param.put("car", queryRentParamModel.getCar());
         param.put("maxAge", queryRentParamModel.getMaxAge());
@@ -144,7 +167,7 @@ public class RentServiceImpl implements RentService {
     @Override
     public int queryRentCount(QueryRentParamModel queryRentParamModel) {
         Map<String, Object> param = new HashMap<>();
-        param.put("cityId", queryRentParamModel.getCityId());
+        param.put("city", queryRentParamModel.getCity());
         param.put("gender", queryRentParamModel.getGender());
         param.put("car", queryRentParamModel.getCar());
         param.put("maxAge", queryRentParamModel.getMaxAge());
@@ -167,14 +190,14 @@ public class RentServiceImpl implements RentService {
         return rentRepo.updateByPrimaryKeySelective(beanMapper.map(rentModel, Rent.class));
     }
 
-    private void setStartAndEndTime(IndentModel indentModel,List<String> dates,String time){
+    private void setStartAndEndTime(IndentModel indentModel, List<String> dates, String time) {
         Collections.sort(dates);
-        String [] timeSlots=time.split("-");
+        String[] timeSlots = time.split("-");
         try {
-            Date startDate=simpleFormat.parse(dates.get(0));
-            Date endDate=simpleFormat.parse(dates.get(dates.size()-1));
-            Date startTime = DateUtils.addDays(startDate, Integer.parseInt(timeSlots[0]));
-            Date endTime = DateUtils.addDays(endDate,Integer.parseInt(timeSlots[1]));
+            Date startDate = simpleFormat.parse(dates.get(0));
+            Date endDate = simpleFormat.parse(dates.get(dates.size() - 1));
+            Date startTime = DateUtils.addHours(startDate, Integer.parseInt(timeSlots[0]));
+            Date endTime = DateUtils.addHours(endDate, Integer.parseInt(timeSlots[1]));
             indentModel.setStartTime(startTime);
             indentModel.setEndTime(endTime);
         } catch (ParseException e) {

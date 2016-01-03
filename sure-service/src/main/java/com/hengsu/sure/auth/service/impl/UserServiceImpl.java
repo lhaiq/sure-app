@@ -15,6 +15,8 @@ import com.hengsu.sure.core.model.AuthCodeModel;
 import com.hengsu.sure.core.service.YunTongXunService;
 import com.hengsu.sure.core.util.RandomUtil;
 import com.hkntv.pylon.core.beans.mapping.BeanMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
@@ -29,6 +31,9 @@ import java.util.Map;
 
 @Service
 public class UserServiceImpl implements UserService {
+
+    private final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
+
 
     @Autowired
     private BeanMapper beanMapper;
@@ -295,11 +300,14 @@ public class UserServiceImpl implements UserService {
     public void addBalance(Long userId, Double money) {
 
         UserModel userModel = findByPrimaryKey(userId);
-
         UserModel param = new UserModel();
         param.setId(userId);
         param.setBalance(userModel.getBalance() + money);
         updateByPrimaryKeySelective(param);
+
+        logger.info("add balance , the user id:{}, the money: {}, " +
+                "the new balance:{}",userId,money,(userModel.getBalance()+money));
+
     }
 
     @Transactional
@@ -321,6 +329,9 @@ public class UserServiceImpl implements UserService {
         param.setId(userId);
         param.setBalance(balance);
         updateByPrimaryKeySelective(param);
+
+        logger.info("reduce balance, the user id:{} , the money:{}, the new balance :{}",
+                userId,money,balance);
     }
 
     //根据距离查询

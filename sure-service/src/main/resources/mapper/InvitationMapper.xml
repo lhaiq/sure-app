@@ -12,16 +12,17 @@
     <result column="age" property="age" jdbcType="VARCHAR" />
     <result column="date" property="date" jdbcType="VARCHAR" />
     <result column="money" property="money" jdbcType="DOUBLE" />
+    <result column="price" property="price" jdbcType="DOUBLE" />
+    <result column="quantity" property="quantity" jdbcType="INTEGER" />
     <result column="time" property="time" jdbcType="VARCHAR" />
     <result column="car" property="car" jdbcType="INTEGER" />
-    <result column="price" property="price" jdbcType="DOUBLE" />
     <result column="state" property="state" jdbcType="VARCHAR" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="status" property="status" jdbcType="INTEGER" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, user_id, city, scene, gender, latitude, longitude, age, date, money, time, car, 
-    price, state, create_time, status
+    id, user_id, city, scene, gender, latitude, longitude, age, date, money, price, quantity,
+    time, car, state, create_time, status
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
@@ -34,21 +35,29 @@
     delete from invitation
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.hengsu.sure.invite.entity.Invitation" keyProperty="id" useGeneratedKeys="true">
-    insert into invitation (id, user_id, city, 
-      scene, gender, latitude, 
-      longitude, age, date, 
-      money, time, car, price, 
-      state, create_time, status
-      )
-    values (#{id,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{city,jdbcType=INTEGER}, 
-      #{scene,jdbcType=VARCHAR}, #{gender,jdbcType=INTEGER}, #{latitude,jdbcType=DOUBLE}, 
-      #{longitude,jdbcType=DOUBLE}, #{age,jdbcType=VARCHAR}, #{date,jdbcType=VARCHAR}, 
-      #{money,jdbcType=DOUBLE}, #{time,jdbcType=VARCHAR}, #{car,jdbcType=INTEGER}, #{price,jdbcType=DOUBLE}, 
-      #{state,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{status,jdbcType=INTEGER}
-      )
+
+  <select id="getInvitedCount" resultType="java.lang.Integer">
+    select
+    count(*)
+    from invitation
+    where user_id = #{param1,jdbcType=BIGINT} and create_time>#{param2,jdbcType=TIMESTAMP} and create_time &gt;=#{param2,jdbcType=TIMESTAMP}
+  </select>
+
+  <insert id="insert" parameterType="com.hengsu.sure.invite.entity.Invitation" >
+    insert into invitation (id, user_id, city,
+    scene, gender, latitude,
+    longitude, age, date,
+    money, price, quantity,
+    time, car, state, create_time,
+    status)
+    values (#{id,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{city,jdbcType=INTEGER},
+    #{scene,jdbcType=VARCHAR}, #{gender,jdbcType=INTEGER}, #{latitude,jdbcType=DOUBLE},
+    #{longitude,jdbcType=DOUBLE}, #{age,jdbcType=VARCHAR}, #{date,jdbcType=VARCHAR},
+    #{money,jdbcType=DOUBLE}, #{price,jdbcType=DOUBLE}, #{quantity,jdbcType=INTEGER},
+    #{time,jdbcType=VARCHAR}, #{car,jdbcType=INTEGER}, #{state,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
+    #{status,jdbcType=INTEGER})
   </insert>
-  <insert id="insertSelective" parameterType="com.hengsu.sure.invite.entity.Invitation" keyProperty="id" useGeneratedKeys="true">
+  <insert id="insertSelective" parameterType="com.hengsu.sure.invite.entity.Invitation" >
     insert into invitation
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -81,14 +90,17 @@
       <if test="money != null" >
         money,
       </if>
+      <if test="price != null" >
+        price,
+      </if>
+      <if test="quantity != null" >
+        quantity,
+      </if>
       <if test="time != null" >
         time,
       </if>
       <if test="car != null" >
         car,
-      </if>
-      <if test="price != null" >
-        price,
       </if>
       <if test="state != null" >
         state,
@@ -131,14 +143,17 @@
       <if test="money != null" >
         #{money,jdbcType=DOUBLE},
       </if>
+      <if test="price != null" >
+        #{price,jdbcType=DOUBLE},
+      </if>
+      <if test="quantity != null" >
+        #{quantity,jdbcType=INTEGER},
+      </if>
       <if test="time != null" >
         #{time,jdbcType=VARCHAR},
       </if>
       <if test="car != null" >
         #{car,jdbcType=INTEGER},
-      </if>
-      <if test="price != null" >
-        #{price,jdbcType=DOUBLE},
       </if>
       <if test="state != null" >
         #{state,jdbcType=VARCHAR},
@@ -181,14 +196,17 @@
       <if test="money != null" >
         money = #{money,jdbcType=DOUBLE},
       </if>
+      <if test="price != null" >
+        price = #{price,jdbcType=DOUBLE},
+      </if>
+      <if test="quantity != null" >
+        quantity = #{quantity,jdbcType=INTEGER},
+      </if>
       <if test="time != null" >
         time = #{time,jdbcType=VARCHAR},
       </if>
       <if test="car != null" >
         car = #{car,jdbcType=INTEGER},
-      </if>
-      <if test="price != null" >
-        price = #{price,jdbcType=DOUBLE},
       </if>
       <if test="state != null" >
         state = #{state,jdbcType=VARCHAR},
@@ -205,20 +223,21 @@
   <update id="updateByPrimaryKey" parameterType="com.hengsu.sure.invite.entity.Invitation" >
     update invitation
     set user_id = #{userId,jdbcType=BIGINT},
-      city = #{city,jdbcType=INTEGER},
-      scene = #{scene,jdbcType=VARCHAR},
-      gender = #{gender,jdbcType=INTEGER},
-      latitude = #{latitude,jdbcType=DOUBLE},
-      longitude = #{longitude,jdbcType=DOUBLE},
-      age = #{age,jdbcType=VARCHAR},
-      date = #{date,jdbcType=VARCHAR},
-      money = #{money,jdbcType=DOUBLE},
-      time = #{time,jdbcType=VARCHAR},
-      car = #{car,jdbcType=INTEGER},
-      price = #{price,jdbcType=DOUBLE},
-      state = #{state,jdbcType=VARCHAR},
-      create_time = #{createTime,jdbcType=TIMESTAMP},
-      status = #{status,jdbcType=INTEGER}
+    city = #{city,jdbcType=INTEGER},
+    scene = #{scene,jdbcType=VARCHAR},
+    gender = #{gender,jdbcType=INTEGER},
+    latitude = #{latitude,jdbcType=DOUBLE},
+    longitude = #{longitude,jdbcType=DOUBLE},
+    age = #{age,jdbcType=VARCHAR},
+    date = #{date,jdbcType=VARCHAR},
+    money = #{money,jdbcType=DOUBLE},
+    price = #{price,jdbcType=DOUBLE},
+    quantity = #{quantity,jdbcType=INTEGER},
+    time = #{time,jdbcType=VARCHAR},
+    car = #{car,jdbcType=INTEGER},
+    state = #{state,jdbcType=VARCHAR},
+    create_time = #{createTime,jdbcType=TIMESTAMP},
+    status = #{status,jdbcType=INTEGER}
     where id = #{id,jdbcType=BIGINT}
   </update>
   <select id="selectCount" resultType="java.lang.Integer" parameterType="com.hengsu.sure.invite.entity.Invitation" >
@@ -254,14 +273,17 @@
       <if test="money != null" >
         and money = #{money,jdbcType=DOUBLE}
       </if>
+      <if test="price != null" >
+        and price = #{price,jdbcType=DOUBLE}
+      </if>
+      <if test="quantity != null" >
+        and quantity = #{quantity,jdbcType=INTEGER}
+      </if>
       <if test="time != null" >
         and time = #{time,jdbcType=VARCHAR}
       </if>
       <if test="car != null" >
         and car = #{car,jdbcType=INTEGER}
-      </if>
-      <if test="price != null" >
-        and price = #{price,jdbcType=DOUBLE}
       </if>
       <if test="state != null" >
         and state = #{state,jdbcType=VARCHAR}
@@ -274,17 +296,10 @@
       </if>
     </where>
   </select>
-
-  <select id="getInvitedCount" resultType="java.lang.Integer">
-    select
-    count(*)
-    from invitation
-    where user_id = #{param1,jdbcType=BIGINT} and create_time>#{param2,jdbcType=TIMESTAMP} and create_time &gt;=#{param2,jdbcType=TIMESTAMP}
-  </select>
   <select id="selectPage" resultMap="BaseResultMap" >
-    select 
+    select
     <include refid="Base_Column_List" />
-    from invitation where 1 = 1 
+    from invitation where 1 = 1
     <if test="param1.id != null" >
       and id = #{param1.id,jdbcType=BIGINT}
     </if>
@@ -315,14 +330,17 @@
     <if test="param1.money != null" >
       and money = #{param1.money,jdbcType=DOUBLE}
     </if>
+    <if test="param1.price != null" >
+      and price = #{param1.price,jdbcType=DOUBLE}
+    </if>
+    <if test="param1.quantity != null" >
+      and quantity = #{param1.quantity,jdbcType=INTEGER}
+    </if>
     <if test="param1.time != null" >
       and time = #{param1.time,jdbcType=VARCHAR}
     </if>
     <if test="param1.car != null" >
       and car = #{param1.car,jdbcType=INTEGER}
-    </if>
-    <if test="param1.price != null" >
-      and price = #{param1.price,jdbcType=DOUBLE}
     </if>
     <if test="param1.state != null" >
       and state = #{param1.state,jdbcType=VARCHAR}
@@ -334,7 +352,7 @@
       and status = #{param1.status,jdbcType=INTEGER}
     </if>
     <if test="param2.sort != null" >
-      order by 
+      order by
       <foreach collection="param2.sort" item="order" separator="," >
         ${order.property} ${order.direction}
       </foreach>

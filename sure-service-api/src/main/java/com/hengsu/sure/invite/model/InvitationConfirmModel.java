@@ -9,9 +9,7 @@ public class InvitationConfirmModel {
     private Long userId;
     private Long receivedUserId;
     private String indentNo;
-    private Double money;
-    private Double price;
-    private Integer quantity;
+
 
     public String getIndentNo() {
         return indentNo;
@@ -19,14 +17,6 @@ public class InvitationConfirmModel {
 
     public void setIndentNo(String indentNo) {
         this.indentNo = indentNo;
-    }
-
-    public Double getMoney() {
-        return money;
-    }
-
-    public void setMoney(Double money) {
-        this.money = money;
     }
 
     public Long getReceivedUserId() {
@@ -53,19 +43,4 @@ public class InvitationConfirmModel {
         this.userId = userId;
     }
 
-    public Double getPrice() {
-        return price;
-    }
-
-    public void setPrice(Double price) {
-        this.price = price;
-    }
-
-    public Integer getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(Integer quantity) {
-        this.quantity = quantity;
-    }
 }

@@ -6,30 +6,29 @@ import com.hengsu.sure.core.ErrorCode;
 import com.hengsu.sure.core.service.ConfService;
 import com.hengsu.sure.core.service.PushService;
 import com.hengsu.sure.invite.*;
+import com.hengsu.sure.invite.entity.Indent;
 import com.hengsu.sure.invite.model.*;
-import com.hengsu.sure.invite.service.CashService;
-import com.hengsu.sure.invite.service.StatementService;
-import com.hengsu.sure.invite.service.TradeService;
+import com.hengsu.sure.invite.repository.IndentRepository;
+import com.hengsu.sure.invite.service.*;
 import com.hengsu.sure.sns.RelationType;
 import com.hengsu.sure.sns.model.RelationModel;
 import com.hengsu.sure.sns.service.RelationService;
-import org.apache.commons.lang.time.DateUtils;
+import com.hkntv.pylon.core.beans.mapping.BeanMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import com.hengsu.sure.invite.entity.Indent;
-import com.hengsu.sure.invite.repository.IndentRepository;
-import com.hengsu.sure.invite.service.IndentService;
-import com.hkntv.pylon.core.beans.mapping.BeanMapper;
 
 import java.util.Date;
 import java.util.List;
 
 @Service
 public class IndentServiceImpl implements IndentService {
+
+    private final Logger logger = LoggerFactory.getLogger(IndentServiceImpl.class);
+
 
     private static final String INVITATION_PAYED = "invitation_payed";
     private static final String RENT_PAYED = "rent_payed";
@@ -68,6 +67,10 @@ public class IndentServiceImpl implements IndentService {
 
     @Autowired
     private StatementService statementService;
+
+    @Autowired
+    private IndentCommentService indentCommentService;
+
 
     @Transactional
     @Override
@@ -121,8 +124,15 @@ public class IndentServiceImpl implements IndentService {
 
         IndentModel indentModel = findByNo(tradeModel.getTradeNo());
 
+        //判断状态是否正确
+        if (IndentStatus.CONFIRMED.getCode() != indentModel.getStatus()) {
+            logger.info("error status: indent no: {}, indent status: {}",
+                    indentModel.getIndentNo(), indentModel.getStatus());
+            ErrorCode.throwBusinessException(ErrorCode.INVITATION_STATUS_ERROR);
+        }
+
         //检查交易 金额是否足够
-        if (indentModel.getMoney() != tradeModel.getTotalFee()) {
+        if (indentModel.getMoney().doubleValue() != tradeModel.getTotalFee().doubleValue()) {
             ErrorCode.throwBusinessException(ErrorCode.AMOUNT_ERROR);
         }
 
@@ -134,7 +144,8 @@ public class IndentServiceImpl implements IndentService {
         } else if (IndentType.RENT.getCode() == type) {
             message.put("pushId", RENT_PAYED);
         }
-        message.put("content", indentModel.getSnapshot());
+
+        message.put("indent", indentModel);
         pushService.pushMessage(message.toJSONString(),
                 userService.findByPrimaryKeyNoPass(indentModel.getSellerId()));
 
@@ -153,11 +164,12 @@ public class IndentServiceImpl implements IndentService {
         param.setStatus(IndentStatus.PAYED.getCode());
         param.setApplyTime(new Date());
         param.setTradeId(tradeId);
+        updateByPrimaryKeySelective(param);
     }
 
     @Transactional
     @Override
-    public void cancelIndent(Long id, Long userId) {
+    public CashModel cancelIndent(Long id, Long userId) {
 
         //判断是否为自己的订单
         IndentModel indentModel = findByPrimaryKey(id);
@@ -174,7 +186,6 @@ public class IndentServiceImpl implements IndentService {
         IndentModel param = new IndentModel();
         param.setId(indentModel.getId());
         param.setStatus(IndentStatus.CANCELING.getCode());
-        param.setApplyTime(new Date());
         updateByPrimaryKeySelective(param);
 
         //退款
@@ -189,8 +200,9 @@ public class IndentServiceImpl implements IndentService {
         cashModel.setRate(cancelIndentModel.getRate());
         cashModel.setStatus(CashStatus.APPLYING.getCode());
         cashModel.setType(CashType.REFUND.getCode());
-
         cashService.createSelective(cashModel);
+
+        return cashModel;
 
     }
 
@@ -219,6 +231,34 @@ public class IndentServiceImpl implements IndentService {
 
     @Transactional
     @Override
+    public void commentIndent(IndentCommentModel indentCommentModel) {
+
+        //只有买家才可以评论
+        IndentModel indentModel = findByPrimaryKey(indentCommentModel.getIndentId());
+        if (indentCommentModel.getUserId().longValue() != indentModel.getCustomerId().longValue()) {
+            ErrorCode.throwBusinessException(ErrorCode.CANNOT_COMMENT_INDENT);
+        }
+
+        //判断订单是否可以取消
+        if (IndentStatus.FINISHED.getCode() != indentModel.getStatus()) {
+            ErrorCode.throwBusinessException(ErrorCode.CANNOT_COMMENT_INDENT_AS_STATUS);
+        }
+
+        //检查是否已经评论过
+        IndentCommentModel param = new IndentCommentModel();
+        param.setIndentId(indentCommentModel.getIndentId());
+        int count = indentCommentService.selectCount(param);
+        if (count > 0) {
+            ErrorCode.throwBusinessException(ErrorCode.HAVE_COMMENTED);
+        }
+
+        indentCommentModel.setCreateTime(new Date());
+        indentCommentService.createSelective(indentCommentModel);
+
+    }
+
+    @Transactional
+    @Override
     public int updateByPrimaryKey(IndentModel indentModel) {
         return indentRepo.updateByPrimaryKey(beanMapper.map(indentModel, Indent.class));
     }
@@ -229,11 +269,11 @@ public class IndentServiceImpl implements IndentService {
         return indentRepo.updateByPrimaryKeySelective(beanMapper.map(indentModel, Indent.class));
     }
 
-    @Scheduled(fixedDelay = 5000)
     public void scheduleFinishIndent() {
         List<Indent> indents = indentRepo.selectFinishing(IndentStatus.PAYED.getCode(), new Date());
         for (Indent indent : indents) {
             finishIndent(beanMapper.map(indent, IndentModel.class));
+            logger.info("the indent finished, the indent no:{}", indent.getIndentNo());
         }
 
     }
@@ -241,41 +281,58 @@ public class IndentServiceImpl implements IndentService {
     @Transactional
     public void finishIndent(IndentModel indentModel) {
 
-        //根据订单类型计算扣费金额
-        Double money = 0.0;
-        if (IndentType.INVITATION.getCode() == indentModel.getType()) {
-            money = indentModel.getMoney() - confService.getDouble(INVITATION_POUNDAGE);
-        } else if (IndentType.RENT.getCode() == indentModel.getType()) {
-            money = indentModel.getMoney() - confService.getDouble(RENT_POUNDAGE);
+        try {
+            //根据订单类型计算扣费金额
+            Double money = 0.0;
+            if (IndentType.INVITATION.getCode() == indentModel.getType()) {
+                money = indentModel.getMoney() - confService.getDouble(INVITATION_POUNDAGE);
+            } else if (IndentType.RENT.getCode() == indentModel.getType()) {
+                money = indentModel.getMoney() - confService.getDouble(RENT_POUNDAGE);
+            }
+
+            //创建流水
+            Date now = new Date();
+            StatementModel statementModel = new StatementModel();
+            statementModel.setName("收入");
+            statementModel.setTime(now);
+            statementModel.setType(StatementType.INCOME.getCode());
+            statementModel.setUserId(indentModel.getSellerId());
+            statementModel.setMoney(money);
+            statementService.createSelective(statementModel);
+
+            //为卖家账户加钱
+            userService.addBalance(indentModel.getSellerId(), money);
+
+            //更新状态
+            IndentModel param = new IndentModel();
+            param.setId(indentModel.getId());
+            param.setFinishTime(now);
+            param.setStatus(IndentStatus.FINISHED.getCode());
+            updateByPrimaryKeySelective(param);
+        } catch (Exception e) {
+            logger.info("unexpected error", e);
         }
-
-        //创建流水
-        Date now = new Date();
-        StatementModel statementModel = new StatementModel();
-        statementModel.setName("收入");
-        statementModel.setTime(now);
-        statementModel.setType(StatementType.INCOME.getCode());
-        statementModel.setUserId(indentModel.getSellerId());
-        statementModel.setMoney(money);
-        statementService.createSelective(statementModel);
-
-        //为卖家账户加钱
-        userService.addBalance(indentModel.getSellerId(), money);
-
-        //更新状态
-        IndentModel param = new IndentModel();
-        param.setId(indentModel.getId());
-        param.setFinishTime(now);
-        param.setStatus(IndentStatus.FINISHED.getCode());
-        updateByPrimaryKeySelective(param);
     }
+
 
     private CancelIndentModel getCancelIndentModel(IndentModel indentModel) {
 
         Date applyTime = indentModel.getApplyTime();
         Date now = new Date();
-        String percentageStr = null;
+
         int expireHour = (int) (now.getTime() - applyTime.getTime()) / (1000 * 3600);
+
+        //轻奢不扣除任何费用
+        if (IndentType.GOODS.getCode() == indentModel.getType()) {
+            CancelIndentModel cancelIndentModel = new CancelIndentModel();
+            cancelIndentModel.setExpireHour(expireHour);
+            cancelIndentModel.setRate(0d);
+            cancelIndentModel.setPoundage(0d);
+            cancelIndentModel.setMoney(indentModel.getMoney());
+            return cancelIndentModel;
+        }
+
+        String percentageStr = null;
         if (expireHour <= 1) {
             percentageStr = confService.selectByPrimaryKey(INDENT_REFUND_PERCENTAGE_LESS1HOUR).getConfValue();
         } else if (expireHour > 3) {
@@ -284,9 +341,12 @@ public class IndentServiceImpl implements IndentService {
             percentageStr = confService.selectByPrimaryKey(INDENT_REFUND_PERCENTAGE_1TO3HOUR).getConfValue();
         }
 
+        double percentage = Double.parseDouble(percentageStr);
+
         CancelIndentModel cancelIndentModel = new CancelIndentModel();
         cancelIndentModel.setExpireHour(expireHour);
-        cancelIndentModel.setPoundage(Double.parseDouble(percentageStr));
+        cancelIndentModel.setRate(percentage);
+        cancelIndentModel.setPoundage(indentModel.getMoney() * (percentage / 100));
         cancelIndentModel.setMoney(indentModel.getMoney());
         return cancelIndentModel;
     }
