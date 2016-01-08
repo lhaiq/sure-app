@@ -65,16 +65,12 @@
     <orderEntry type="library" exported="" name="Gradle: jline:jline:0.9.94" level="project" />
     <orderEntry type="library" exported="" name="Gradle: io.netty:netty:3.7.0.Final" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.aliyun.oss:aliyun-sdk-oss:2.0.6" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: org.apache.httpcomponents:httpclient:4.4" level="project" />
     <orderEntry type="library" exported="" name="Gradle: org.jdom:jdom:1.1" level="project" />
     <orderEntry type="library" exported="" name="Gradle: net.sf.json-lib:json-lib:2.4:jdk15" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: org.apache.httpcomponents:httpcore:4.4" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: commons-codec:commons-codec:1.9" level="project" />
     <orderEntry type="library" exported="" name="Gradle: commons-beanutils:commons-beanutils:1.8.0" level="project" />
     <orderEntry type="library" exported="" name="Gradle: commons-collections:commons-collections:3.2.1" level="project" />
     <orderEntry type="library" exported="" name="Gradle: commons-lang:commons-lang:2.5" level="project" />
     <orderEntry type="library" exported="" name="Gradle: net.sf.ezmorph:ezmorph:1.0.6" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: commons-logging:commons-logging:1.2" level="project" />
     <orderEntry type="library" exported="" name="Gradle: net.coobird:thumbnailator:0.4.8" level="project" />
     <orderEntry type="module-library" exported="">
       <library name="Gradle: CCP_REST_SMS_JAVA_v2.6.3r">
@@ -156,10 +152,14 @@
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="library" exported="" name="Gradle: org.apache.httpcomponents:httpclient:4.4" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: org.apache.httpcomponents:httpcore:4.4" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: commons-codec:commons-codec:1.9" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: commons-logging:commons-logging:1.2" level="project" />
     <orderEntry type="module-library" exported="">
-      <library name="Gradle: faceppsdk_min">
+      <library name="Gradle: face">
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/../lib/faceppsdk_min.jar!/" />
+          <root url="jar://$MODULE_DIR$/../lib/face.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />

@@ -10,7 +10,8 @@ public class RentModel{
 	private Long userId;
 	private Integer city;
 	private String scene;
-	private String date;
+	private String startDate;
+	private String endDate;
 	private String time;
 	private Double price;
 	private Double money;
@@ -60,14 +61,22 @@ public class RentModel{
 		return quantity;
 	}
 
-	public void setDate(String date){
-		this.date = date;
+	public String getEndDate() {
+		return endDate;
 	}
-	
-	public String getDate(){
-		return this.date;
+
+	public void setEndDate(String endDate) {
+		this.endDate = endDate;
 	}
-		
+
+	public String getStartDate() {
+		return startDate;
+	}
+
+	public void setStartDate(String startDate) {
+		this.startDate = startDate;
+	}
+
 	public void setTime(String time){
 		this.time = time;
 	}

@@ -8,6 +8,7 @@ import com.hengsu.sure.core.service.YunTongXunService;
 import com.hkntv.pylon.core.exception.BusinessException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.HashMap;
 import java.util.List;
@@ -32,13 +33,12 @@ public class YunTongXunServiceImpl implements YunTongXunService {
 
     @Override
     public void sendAuthCode(List<String> phones, String templateId, String[] data) {
-        //TODO 开发阶段暂时不发
-//        String phoneNumbers = StringUtils.collectionToDelimitedString(phones, PHONE_DELIMITER);
-//        HashMap<String, Object> result = smsClient.sendTemplateSMS(phoneNumbers, templateId, data);
-//        Object statusCode = result.get("statusCode");
-//        if (!MSM_DEFAULT_RETURN_CODE.equals(statusCode)) {
-//            throw new BusinessException(statusCode.toString(), result.get("statusMsg").toString());
-//        }
+        String phoneNumbers = StringUtils.collectionToDelimitedString(phones, ",");
+        HashMap<String, Object> result = smsClient.sendTemplateSMS(phoneNumbers, templateId, data);
+        Object statusCode = result.get("statusCode");
+        if (!MSM_DEFAULT_RETURN_CODE.equals(statusCode)) {
+            throw new BusinessException(statusCode.toString(), result.get("statusMsg").toString());
+        }
 
     }
 

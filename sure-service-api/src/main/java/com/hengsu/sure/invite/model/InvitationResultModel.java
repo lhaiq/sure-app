@@ -33,4 +33,5 @@ public class InvitationResultModel {
     public Integer getSendCount() {
         return sendCount;
     }
+
 }

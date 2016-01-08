@@ -11,7 +11,9 @@ public class Rent {
 
     private String scene;
 
-    private String date;
+    private String startDate;
+
+    private String endDate;
 
     private String time;
 
@@ -59,16 +61,6 @@ public class Rent {
 
     public void setScene(String scene) {
         this.scene = scene;
-    }
-
-
-
-    public String getDate() {
-        return date;
-    }
-
-    public void setDate(String date) {
-        this.date = date;
     }
 
     public String getTime() {
@@ -134,5 +126,21 @@ public class Rent {
 
     public Integer getQuantity() {
         return quantity;
+    }
+
+    public String getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(String endDate) {
+        this.endDate = endDate;
+    }
+
+    public String getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(String startDate) {
+        this.startDate = startDate;
     }
 }

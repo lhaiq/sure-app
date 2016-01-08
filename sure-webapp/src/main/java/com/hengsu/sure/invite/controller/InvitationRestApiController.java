@@ -51,7 +51,6 @@ public class InvitationRestApiController {
             @Value("#{request.getAttribute('userId')}") Long userId) {
         InvitationModel invitationModel = beanMapper.map(invitationVO, InvitationModel.class);
         invitationModel.setScene(JSON.toJSONString(invitationVO.getScenes()));
-        invitationModel.setTime(JSON.toJSONString(invitationVO.getTimeSolts()));
         invitationModel.setUserId(userId);
         InvitationResultModel response = invitationService.publishInvitation(invitationModel);
         ResponseEnvelope<InvitationResultModel> responseEnv = new ResponseEnvelope<>(response, true);

@@ -43,7 +43,7 @@
     where user_id = #{param1,jdbcType=BIGINT} and create_time>#{param2,jdbcType=TIMESTAMP} and create_time &gt;=#{param2,jdbcType=TIMESTAMP}
   </select>
 
-  <insert id="insert" parameterType="com.hengsu.sure.invite.entity.Invitation" >
+  <insert id="insert" parameterType="com.hengsu.sure.invite.entity.Invitation" useGeneratedKeys="true" keyProperty="id">
     insert into invitation (id, user_id, city,
     scene, gender, latitude,
     longitude, age, date,
@@ -57,7 +57,7 @@
     #{time,jdbcType=VARCHAR}, #{car,jdbcType=INTEGER}, #{state,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
     #{status,jdbcType=INTEGER})
   </insert>
-  <insert id="insertSelective" parameterType="com.hengsu.sure.invite.entity.Invitation" >
+  <insert id="insertSelective" parameterType="com.hengsu.sure.invite.entity.Invitation" keyProperty="id" useGeneratedKeys="true">
     insert into invitation
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >

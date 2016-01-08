@@ -41,8 +41,11 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserRepository userRepo;
 
-    @Value("$register.authcode.template.id")
+    @Value("${register.authcode.template.id}")
     private String registerAuthCodeTemplateId;
+
+    @Value("${modifypass.authcode.template.id}")
+    private String modifyPassAuthCodeTemplateId;
 
     @Value("${register.auth.code.valid.time}")
     private Long registerAuthCodeValidTime;
@@ -148,6 +151,8 @@ public class UserServiceImpl implements UserService {
         String authCode = RandomUtil.createRandom(true, 4);
         AuthCodeModel authCodeModel = new AuthCodeModel(authCode);
         changePassAuthCodes.put(phone, authCodeModel);
+        authCodeService.sendAuthCode(ImmutableList.of(phone), modifyPassAuthCodeTemplateId,
+                new String[]{authCode});
 
     }
 

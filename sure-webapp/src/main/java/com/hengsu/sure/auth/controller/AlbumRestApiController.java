@@ -1,6 +1,11 @@
 package com.hengsu.sure.auth.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.hengsu.sure.ReturnCode;
+import com.hengsu.sure.sns.model.MTimeModel;
+import com.hengsu.sure.sns.service.MTimeService;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,6 +23,8 @@ import com.hengsu.sure.auth.service.AlbumService;
 import com.hengsu.sure.auth.model.AlbumModel;
 import com.hengsu.sure.auth.vo.AlbumVO;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -33,21 +40,48 @@ public class AlbumRestApiController {
     @Autowired
     private AlbumService albumService;
 
+    @Autowired
+    private MTimeService mTimeService;
+
+
+//    @RequestMapping(value = "/auth/album", method = RequestMethod.GET)
+//    public ResponseEntity<ResponseEnvelope<Page<AlbumModel>>> getAlbumById(
+//            @Value("#{request.getAttribute('userId')}") Long userId,
+//            Pageable pageable) {
+//
+//        //设置查询参数
+//        AlbumModel param = new AlbumModel();
+//        param.setUserId(userId);
+//
+//        //返回数据
+//        Integer count = albumService.selectCount(param);
+//        List<AlbumModel> albumModels = albumService.selectPage(param, pageable);
+//        Page<AlbumModel> pageContent = new PageImpl<AlbumModel>(albumModels, pageable, count);
+//        ResponseEnvelope<Page<AlbumModel>> responseEnv = new ResponseEnvelope<>(pageContent, true);
+//        return new ResponseEntity<>(responseEnv, HttpStatus.OK);
+//    }
 
     @RequestMapping(value = "/auth/album", method = RequestMethod.GET)
-    public ResponseEntity<ResponseEnvelope<Page<AlbumModel>>> getAlbumById(
-            @Value("#{request.getAttribute('userId')}") Long userId,
-            Pageable pageable) {
+    public ResponseEntity<ResponseEnvelope<List<Long>>> getAlbumById(
+            @RequestParam Long userId) {
 
         //设置查询参数
-        AlbumModel param = new AlbumModel();
+        MTimeModel param = new MTimeModel();
         param.setUserId(userId);
 
+        Pageable pageable = new PageRequest(0, Integer.MAX_VALUE, Sort.Direction.DESC, "time");
+
         //返回数据
-        Integer count = albumService.selectCount(param);
-        List<AlbumModel> albumModels = albumService.selectPage(param, pageable);
-        Page<AlbumModel> pageContent = new PageImpl<AlbumModel>(albumModels, pageable, count);
-        ResponseEnvelope<Page<AlbumModel>> responseEnv = new ResponseEnvelope<>(pageContent, true);
+        List<MTimeModel> mTimeModels = mTimeService.listMTimeModels(param, pageable);
+        List<Long> imageIds = new ArrayList<>();
+
+        for (MTimeModel mTimeModel : mTimeModels) {
+            if (StringUtils.isNotEmpty(mTimeModel.getImages())) {
+                imageIds.addAll(JSON.parseArray(mTimeModel.getImages(), Long.class));
+            }
+        }
+
+        ResponseEnvelope<List<Long>> responseEnv = new ResponseEnvelope<>(imageIds, true);
         return new ResponseEntity<>(responseEnv, HttpStatus.OK);
     }
 

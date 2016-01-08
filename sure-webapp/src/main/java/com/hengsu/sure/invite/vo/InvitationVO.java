@@ -22,7 +22,7 @@ public class InvitationVO {
     @NotNull
     private String date;
     @NotNull
-    private List<String> timeSolts;
+    private String time;
     @NotNull
     private Integer car;
     @NotNull
@@ -127,12 +127,12 @@ public class InvitationVO {
         this.status = status;
     }
 
-    public List<String> getTimeSolts() {
-        return timeSolts;
+    public void setTime(String time) {
+        this.time = time;
     }
 
-    public void setTimeSolts(List<String> timeSolts) {
-        this.timeSolts = timeSolts;
+    public String getTime() {
+        return time;
     }
 
     public Double getLatitude() {

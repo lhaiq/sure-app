@@ -110,6 +110,8 @@ project("sure-service-api") {
         compile(libraries.pylon_data)
         compile(fileTree(dir: "../lib", include: "*.jar"))
     }
+
+
 }
 
 project("sure-service") {
@@ -122,16 +124,17 @@ project("sure-service") {
         compile(libraries.pylon_web)
         compile(libraries.immortal_logback)
         compile(libraries.commons_codec)
+        compile("org.apache.httpcomponents:httpmime:4.4")
         testCompile(libraries.pylon_test)
 
     }
+
 }
 
 project("sure-webapp") {
     description = "sure web application"
     dependencies {
         compile(project(":sure-service"))
-
         compile(libraries.jackson_databind)
         compile(libraries.hibernate_validator)
         compile(libraries.logback_classic)
@@ -140,4 +143,5 @@ project("sure-webapp") {
         compile(libraries.commons_io)
         compile(libraries.c3p0)
     }
+
 }

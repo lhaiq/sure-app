@@ -1,6 +1,7 @@
 package com.hengsu.sure.invite.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.alipay.util.AlipayNotify;
 import com.hengsu.sure.ReturnCode;
 import com.hengsu.sure.core.ErrorCode;
 import com.hengsu.sure.invite.BillNumberBuilder;
@@ -24,8 +25,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
-import java.util.List;
+import javax.servlet.http.HttpServletRequest;
+import java.util.*;
 
 @RestApiController
 @RequestMapping("/sure")
@@ -68,6 +69,20 @@ public class IndentRestApiController {
             @PathVariable Long id) {
 
         IndentModel indentModel = indentService.findByPrimaryKey(id);
+        ResponseEnvelope<IndentModel> responseEnv = new ResponseEnvelope<>(indentModel, true);
+        return new ResponseEntity<>(responseEnv, HttpStatus.OK);
+    }
+
+    /**
+     * 根据订单号单个订单
+     *
+     * @param indentNo
+     * @return
+     */
+    @RequestMapping(value = "/invite/indent", method = RequestMethod.GET)
+    public ResponseEntity<ResponseEnvelope<IndentModel>> getIndentByIndentNo(
+            @RequestParam String  indentNo) {
+        IndentModel indentModel = indentService.findByNo(indentNo);
         ResponseEnvelope<IndentModel> responseEnv = new ResponseEnvelope<>(indentModel, true);
         return new ResponseEntity<>(responseEnv, HttpStatus.OK);
     }
@@ -127,19 +142,73 @@ public class IndentRestApiController {
     }
 
 
+//    /**
+//     * 支付宝回写
+//     *
+//     * @param tradeVO
+//     * @return
+//     */
+//    @RequestMapping(value = "/invite/trade", method = RequestMethod.POST)
+//    public ResponseEntity<String> receiveTrade(@RequestBody TradeVO tradeVO) {
+//        logger.info(JSON.toJSONString(tradeVO));
+//        TradeModel tradeModel = beanMapper.map(tradeVO, TradeModel.class);
+//        indentService.receiveTrade(tradeModel);
+//        return new ResponseEntity<>(TRADE_SUCSESS_STATUS, HttpStatus.OK);
+//    }
+
     /**
      * 支付宝回写
      *
-     * @param tradeVO
      * @return
      */
     @RequestMapping(value = "/invite/trade", method = RequestMethod.POST)
-    public ResponseEntity<String> receiveTrade(@RequestBody TradeVO tradeVO) {
-        logger.info(JSON.toJSONString(tradeVO));
-        TradeModel tradeModel = beanMapper.map(tradeVO, TradeModel.class);
-        indentService.receiveTrade(tradeModel);
-        return new ResponseEntity<>(TRADE_SUCSESS_STATUS, HttpStatus.OK);
+    public ResponseEntity<String> receiveTrade(HttpServletRequest request) throws Exception {
+        Map<String, String> params = new HashMap<>();
+        Map requestParams = request.getParameterMap();
+        for (Iterator iter = requestParams.keySet().iterator(); iter.hasNext(); ) {
+            String name = (String) iter.next();
+            String[] values = (String[]) requestParams.get(name);
+            String valueStr = "";
+            for (int i = 0; i < values.length; i++) {
+                valueStr = (i == values.length - 1) ? valueStr + values[i]
+                        : valueStr + values[i] + ",";
+            }
+
+            params.put(name, valueStr);
+        }
+
+        logger.info(JSON.toJSONString(params));
+
+        //获取支付宝的通知返回参数，可参考技术文档中页面跳转同步通知参数列表(以下仅供参考)//
+        //商户订单号
+        String out_trade_no = new String(request.getParameter("out_trade_no").getBytes("ISO-8859-1"), "UTF-8");
+
+//        支付宝交易号
+        String trade_no = new String(request.getParameter("trade_no").getBytes("ISO-8859-1"), "UTF-8");
+
+        //seller_id
+        String seller_id = new String(request.getParameter("seller_id").getBytes("ISO-8859-1"), "UTF-8");
+
+        //total_fee
+        Double total_fee = Double.parseDouble(request.getParameter("seller_id"));
+
+        //交易状态
+        String trade_status = new String(request.getParameter("trade_status").getBytes("ISO-8859-1"), "UTF-8");
+
+        if (AlipayNotify.verify(params)) {//验证成功
+            if (trade_status.equals("TRADE_FINISHED")) {
+                TradeModel tradeModel = new TradeModel();
+                tradeModel.setSellerId(seller_id);
+                tradeModel.setTotalFee(total_fee);
+                tradeModel.setOutTradeNo(out_trade_no);
+                tradeModel.setTradeNo(trade_no);
+                indentService.receiveTrade(tradeModel);
+                return new ResponseEntity<>(TRADE_SUCSESS_STATUS, HttpStatus.OK);
+            }
+        }
+        return new ResponseEntity<>(TRADE_FAILURE_STATUS, HttpStatus.OK);
     }
+
 
     /**
      * 准备取消订单

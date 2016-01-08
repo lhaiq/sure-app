@@ -1,6 +1,7 @@
 package com.hengsu.sure.core.service.impl;
 
 import com.aliyun.oss.OSSClient;
+import com.aliyun.oss.OSSException;
 import com.aliyun.oss.model.OSSObject;
 import com.aliyun.oss.model.ObjectMetadata;
 import com.hengsu.sure.core.ErrorCode;
@@ -97,11 +98,19 @@ public class ImageServiceImpl implements ImageService {
         //从数据库加载图片数据
         ImageModel imageModel = findByPrimaryKey(id);
         if (null == imageModel) {
-            ErrorCode.throwBusinessException(ErrorCode.IMAGE_EXISTED);
+            ErrorCode.throwBusinessException(ErrorCode.IMAGE_NOT_EXISTED);
         }
 
         //从OSS读取数据
-        OSSObject ossObject = ossClient.getObject(ossBucketName, imageModel.getPath());
+        OSSObject ossObject = null;
+
+        try {
+            ossObject = ossClient.getObject(ossBucketName, imageModel.getPath());
+        } catch (OSSException e) {
+            if("NoSuchKey".equals(e.getErrorCode())){
+                ErrorCode.throwBusinessException(ErrorCode.IMAGE_NOT_EXISTED);
+            }
+        }
         imageModel.setContent(ossObject.getObjectContent());
 
         return imageModel;

@@ -16,7 +16,7 @@ def config = new ConfigSlurper().parse(props)
 
 def env =  System.properties['spring.profiles.active'] ?: 'production'
 def appenderList = []
-def level = DEBUG
+def level = INFO
 def LOG_DIR = '/apps/logs/'+config.appname+'/logs'
 
 if (env == 'production') {
@@ -26,7 +26,7 @@ if (env == 'production') {
 	level = WARN
 } else if(env == 'development') {
 	appenderList.add("CONSOLE")
-	level = DEBUG
+	level = INFO
 }
 if(env=='development') {
 	appender("CONSOLE", ConsoleAppender) {

@@ -10,7 +10,8 @@ public class QueryRentParamModel {
     private Integer city;
     private Integer gender;
     private List<String> scenes;
-    private List<String> dates;
+    private String startDate;
+    private String endDate;
     private String time;
     private Integer car;
     private Integer minAge;
@@ -33,12 +34,20 @@ public class QueryRentParamModel {
         return city;
     }
 
-    public List<String> getDates() {
-        return dates;
+    public String getEndDate() {
+        return endDate;
     }
 
-    public void setDates(List<String> dates) {
-        this.dates = dates;
+    public void setEndDate(String endDate) {
+        this.endDate = endDate;
+    }
+
+    public String getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(String startDate) {
+        this.startDate = startDate;
     }
 
     public Integer getGender() {

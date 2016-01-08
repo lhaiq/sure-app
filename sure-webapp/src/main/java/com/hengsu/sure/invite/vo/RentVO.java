@@ -20,7 +20,11 @@ public class RentVO{
 	private List<String> scenes;
 
 	@NotEmpty
-	private List<String> dates;
+	private String startDate;
+
+	@NotEmpty
+	private String endDate;
+
 	@NotEmpty
 	private String time;
 
@@ -57,13 +61,22 @@ public class RentVO{
 		this.createTime = createTime;
 	}
 
-	public List<String> getDates() {
-		return dates;
+	public void setEndDate(String endDate) {
+		this.endDate = endDate;
 	}
 
-	public void setDates(List<String> dates) {
-		this.dates = dates;
+	public String getEndDate() {
+		return endDate;
 	}
+
+	public String getStartDate() {
+		return startDate;
+	}
+
+	public void setStartDate(String startDate) {
+		this.startDate = startDate;
+	}
+
 
 	public Long getId() {
 		return id;

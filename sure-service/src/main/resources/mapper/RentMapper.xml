@@ -6,7 +6,8 @@
         <result column="user_id" property="userId" jdbcType="BIGINT" />
         <result column="city" property="city" jdbcType="INTEGER" />
         <result column="scene" property="scene" jdbcType="VARCHAR" />
-        <result column="date" property="date" jdbcType="VARCHAR" />
+        <result column="start_date" property="startDate" jdbcType="VARCHAR" />
+        <result column="end_date" property="endDate" jdbcType="VARCHAR" />
         <result column="time" property="time" jdbcType="VARCHAR" />
         <result column="price" property="price" jdbcType="DOUBLE" />
         <result column="money" property="money" jdbcType="DOUBLE" />
@@ -28,36 +29,31 @@
         <result column="credit" property="credit" jdbcType="DOUBLE"/>
         <result column="rent_id" property="rentId" jdbcType="BIGINT"/>
     </resultMap>
+
     <sql id="Base_Column_List" >
-        id, user_id, city, scene, date, time, price, money, quantity, state, create_time,
-        status, images
+        id, user_id, city, scene, start_date, end_date, time, price, money, quantity, state,
+        create_time, status, images
     </sql>
-    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
         select
-        <include refid="Base_Column_List"/>
+        <include refid="Base_Column_List" />
         from rent
         where id = #{id,jdbcType=BIGINT}
     </select>
-    <select id="selectByPrimaryKeySync" resultMap="BaseResultMap" parameterType="java.lang.Long">
-        select
-        <include refid="Base_Column_List"/>
-        from rent
-        where id = #{id,jdbcType=BIGINT} for update
-    </select>
-    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-    delete from rent
-    where id = #{id,jdbcType=BIGINT}
-  </delete>
 
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+        delete from rent
+        where id = #{id,jdbcType=BIGINT}
+    </delete>
     <insert id="insert" parameterType="com.hengsu.sure.invite.entity.Rent" >
         insert into rent (id, user_id, city,
-        scene, date, time,
-        price, money, quantity,
+        scene, start_date, end_date,
+        time, price, money, quantity,
         state, create_time, status,
         images)
         values (#{id,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{city,jdbcType=INTEGER},
-        #{scene,jdbcType=VARCHAR}, #{date,jdbcType=VARCHAR}, #{time,jdbcType=VARCHAR},
-        #{price,jdbcType=DOUBLE}, #{money,jdbcType=DOUBLE}, #{quantity,jdbcType=INTEGER},
+        #{scene,jdbcType=VARCHAR}, #{startDate,jdbcType=VARCHAR}, #{endDate,jdbcType=VARCHAR},
+        #{time,jdbcType=VARCHAR}, #{price,jdbcType=DOUBLE}, #{money,jdbcType=DOUBLE}, #{quantity,jdbcType=INTEGER},
         #{state,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{status,jdbcType=INTEGER},
         #{images,jdbcType=VARCHAR})
     </insert>
@@ -76,8 +72,11 @@
             <if test="scene != null" >
                 scene,
             </if>
-            <if test="date != null" >
-                date,
+            <if test="startDate != null" >
+                start_date,
+            </if>
+            <if test="endDate != null" >
+                end_date,
             </if>
             <if test="time != null" >
                 time,
@@ -117,8 +116,11 @@
             <if test="scene != null" >
                 #{scene,jdbcType=VARCHAR},
             </if>
-            <if test="date != null" >
-                #{date,jdbcType=VARCHAR},
+            <if test="startDate != null" >
+                #{startDate,jdbcType=VARCHAR},
+            </if>
+            <if test="endDate != null" >
+                #{endDate,jdbcType=VARCHAR},
             </if>
             <if test="time != null" >
                 #{time,jdbcType=VARCHAR},
@@ -158,8 +160,11 @@
             <if test="scene != null" >
                 scene = #{scene,jdbcType=VARCHAR},
             </if>
-            <if test="date != null" >
-                date = #{date,jdbcType=VARCHAR},
+            <if test="startDate != null" >
+                start_date = #{startDate,jdbcType=VARCHAR},
+            </if>
+            <if test="endDate != null" >
+                end_date = #{endDate,jdbcType=VARCHAR},
             </if>
             <if test="time != null" >
                 time = #{time,jdbcType=VARCHAR},
@@ -193,7 +198,8 @@
         set user_id = #{userId,jdbcType=BIGINT},
         city = #{city,jdbcType=INTEGER},
         scene = #{scene,jdbcType=VARCHAR},
-        date = #{date,jdbcType=VARCHAR},
+        start_date = #{startDate,jdbcType=VARCHAR},
+        end_date = #{endDate,jdbcType=VARCHAR},
         time = #{time,jdbcType=VARCHAR},
         price = #{price,jdbcType=DOUBLE},
         money = #{money,jdbcType=DOUBLE},
@@ -219,8 +225,11 @@
             <if test="scene != null" >
                 and scene = #{scene,jdbcType=VARCHAR}
             </if>
-            <if test="date != null" >
-                and date = #{date,jdbcType=VARCHAR}
+            <if test="startDate != null" >
+                and start_date = #{startDate,jdbcType=VARCHAR}
+            </if>
+            <if test="endDate != null" >
+                and end_date = #{endDate,jdbcType=VARCHAR}
             </if>
             <if test="time != null" >
                 and time = #{time,jdbcType=VARCHAR}
@@ -264,8 +273,11 @@
         <if test="param1.scene != null" >
             and scene = #{param1.scene,jdbcType=VARCHAR}
         </if>
-        <if test="param1.date != null" >
-            and date = #{param1.date,jdbcType=VARCHAR}
+        <if test="param1.startDate != null" >
+            and start_date = #{param1.startDate,jdbcType=VARCHAR}
+        </if>
+        <if test="param1.endDate != null" >
+            and end_date = #{param1.endDate,jdbcType=VARCHAR}
         </if>
         <if test="param1.time != null" >
             and time = #{param1.time,jdbcType=VARCHAR}
@@ -307,25 +319,38 @@
         u.age,u.icon,u.face_score,u.credit,r.id as rent_id
         FROM sure.rent r ,sure.user u
         where r.user_id = u.id
-        and u.gender=#{param1.gender,jdbcType=INTEGER}
-        and u.car=#{param1.car,jdbcType=INTEGER}
-        and u.age &lt;=#{param1.maxAge,jdbcType=INTEGER}
-        and u.age &gt;=#{param1.minAge,jdbcType=INTEGER}
-        and r.city=#{param1.city,jdbcType=INTEGER}
-        and r.time=#{param1.time,jdbcType=VARCHAR}
-        <foreach collection="param1.scenes" item="scene">
-            and r.scene like '%${scene}%'
-        </foreach>
-        <foreach collection="param1.dates" item="date">
-            and r.date like '%${date}%'
-        </foreach>
-
-        <if test="param2.sort != null">
-            order by
-            <foreach collection="param2.sort" item="order" separator=",">
-                ${order.property} ${order.direction}
+        <if test="param1.gender != null">
+            and u.gender=#{param1.gender,jdbcType=INTEGER}
+        </if>
+        <if test="param1.car != null">
+            and u.car=#{param1.car,jdbcType=INTEGER}
+        </if>
+        <if test="param1.maxAge != null">
+            and u.age &lt;=#{param1.maxAge,jdbcType=INTEGER}
+        </if>
+        <if test="param1.minAge != null">
+            and u.age &gt;=#{param1.minAge,jdbcType=INTEGER}
+        </if>
+        <if test="param1.city != null">
+            and r.city=#{param1.city,jdbcType=INTEGER}
+        </if>
+        <if test="param1.time != null">
+            and r.time=#{param1.time,jdbcType=VARCHAR}
+        </if>
+        <if test="param1.startDate != null">
+            and r.start_date &gt;=#{param1.startDate,jdbcType=VARCHAR}
+        </if>
+        <if test="param1.endDate != null">
+            and r.end_date &lt;=#{param1.endDate,jdbcType=VARCHAR}
+        </if>
+        <if test="param1.scenes != null">
+            <foreach collection="param1.scenes" item="scene">
+                and r.scene like '%${scene}%'
             </foreach>
         </if>
+
+        order by r.create_time desc
+
         <if test="param2.offset >= 0 and param2.pageSize > 0">
             limit ${param2.offset}, ${param2.pageSize}
         </if>
@@ -335,21 +360,44 @@
         SELECT count(1)
         FROM sure.rent r ,sure.user u
         where r.user_id = u.id
-        and u.gender=#{param1.gender,jdbcType=INTEGER}
-        and u.city=#{param1.city,jdbcType=INTEGER}
-        and u.car=#{param1.car,jdbcType=INTEGER}
-        and u.age &lt;=#{param1.maxAge,jdbcType=INTEGER}
-        and u.age &gt;=#{param1.minAge,jdbcType=INTEGER}
-        and r.time=#{param1.time,jdbcType=VARCHAR}
+        <if test="gender != null">
+            and u.gender=#{gender,jdbcType=INTEGER}
+        </if>
+        <if test="car != null">
+            and u.car=#{car,jdbcType=INTEGER}
+        </if>
+        <if test="maxAge != null">
+            and u.age &lt;=#{maxAge,jdbcType=INTEGER}
+        </if>
+        <if test="minAge != null">
+            and u.age &gt;=#{minAge,jdbcType=INTEGER}
+        </if>
+        <if test="city != null">
+            and r.city=#{city,jdbcType=INTEGER}
+        </if>
+        <if test="time != null">
+            and r.time=#{time,jdbcType=VARCHAR}
+        </if>
+        <if test="startDate != null">
+            and r.start_date &gt;= #{startDate,jdbcType=VARCHAR}
+        </if>
+        <if test="endDate != null">
+            and r.end_date &lt;=#{endDate,jdbcType=VARCHAR}
+        </if>
+
+        <if test="scenes != null">
+            <foreach collection="scenes" item="scene">
+                and r.scene like '%${scene}%'
+            </foreach>
+        </if>
 
 
-        <foreach collection="scenes" item="scene">
-            and r.scene like '%${scene}%'
-        </foreach>
+    </select>
 
-        <foreach collection="dates" item="date">
-            and r.date like '%${date}%'
-        </foreach>
-
+    <select id="selectByPrimaryKeySync" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        from rent
+        where id = #{id,jdbcType=BIGINT} for update
     </select>
 </mapper>

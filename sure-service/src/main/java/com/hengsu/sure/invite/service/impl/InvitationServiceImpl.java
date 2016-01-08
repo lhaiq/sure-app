@@ -165,6 +165,7 @@ public class InvitationServiceImpl implements InvitationService {
             invitationModel.setCreateTime(new Date());
             createSelective(invitationModel);
             invitationResultModel.setSendCount(0);
+            invitationResultModel.setInvitationId(invitationModel.getId());
             return invitationResultModel;
         }
 
@@ -178,6 +179,7 @@ public class InvitationServiceImpl implements InvitationService {
         //返回邀约Id
         invitationResultModel.setInvitationId(invitationModel.getId());
 
+        invitationModel.setScenes(JSON.parseArray(invitationModel.getScene(),String.class));
 
         //广播邀约
         JSONObject message = new JSONObject();
@@ -254,7 +256,7 @@ public class InvitationServiceImpl implements InvitationService {
         indentModel.setStatus(IndentStatus.CONFIRMED.getCode());
         indentModel.setCreateTime(new Date());
         indentModel.setSnapshot(JSON.toJSONString(invitationModel));
-        setStartAndEndTime(indentModel, invitationModel.getDate(), JSON.parseArray(invitationModel.getTime(), String.class));
+        setStartAndEndTime(indentModel, invitationModel.getDate(), invitationModel.getTime());
         indentService.createSelective(indentModel);
 
     }
@@ -263,19 +265,19 @@ public class InvitationServiceImpl implements InvitationService {
     public List<InvitationPriceModel> queryPrice() {
 
         InvitationPriceModel in1 = new InvitationPriceModel();
-        in1.setTime("09-12");
+        in1.setTime("09:00-12:00");
         in1.setPrice(confService.getDouble(Constants.INVITATION_PRICE_09TO12));
 
         InvitationPriceModel in2 = new InvitationPriceModel();
-        in2.setTime("09-18");
+        in2.setTime("09:00-18:00");
         in2.setPrice(confService.getDouble(Constants.INVITATION_PRICE_09TO18));
 
         InvitationPriceModel in3 = new InvitationPriceModel();
-        in3.setTime("14-18");
+        in3.setTime("14:00-18:00");
         in3.setPrice(confService.getDouble(Constants.INVITATION_PRICE_14TO18));
 
         InvitationPriceModel in4 = new InvitationPriceModel();
-        in4.setTime("18-21");
+        in4.setTime("18:00-21:00");
         in4.setPrice(confService.getDouble(Constants.INVITATION_PRICE_18TO21));
 
         return Arrays.asList(in1, in2, in3, in4);
@@ -287,18 +289,14 @@ public class InvitationServiceImpl implements InvitationService {
         return invitationRepo.getInvitedCount(userId, startDate, endDate);
     }
 
-    private void setStartAndEndTime(IndentModel indentModel, String dateStr, List<String> times) {
-        List<Integer> timeSlots = new ArrayList<>();
-        for (String time : times) {
-            String[] timeSplit = time.split("-");
-            timeSlots.add(Integer.parseInt(timeSplit[0]));
-            timeSlots.add(Integer.parseInt(timeSplit[1]));
-        }
-        Collections.sort(timeSlots);
+    private void setStartAndEndTime(IndentModel indentModel, String dateStr, String time) {
+//        time = time.substring(2, time.length());
+        String[] timeSplit = time.split("-");
+
         try {
             Date date = simpleFormat.parse(dateStr);
-            Date startTime = DateUtils.addHours(date, timeSlots.get(0));
-            Date endTime = DateUtils.addHours(date, timeSlots.get(timeSlots.size() - 1));
+            Date startTime = DateUtils.addHours(date, Integer.parseInt(timeSplit[0].replaceAll(":00","")));
+            Date endTime = DateUtils.addHours(date, Integer.parseInt(timeSplit[1].replaceAll(":00","")));
             indentModel.setStartTime(startTime);
             indentModel.setEndTime(endTime);
 
@@ -307,6 +305,5 @@ public class InvitationServiceImpl implements InvitationService {
         }
 
     }
-
 
 }

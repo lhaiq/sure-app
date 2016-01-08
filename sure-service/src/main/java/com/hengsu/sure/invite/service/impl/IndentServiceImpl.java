@@ -2,6 +2,7 @@ package com.hengsu.sure.invite.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hengsu.sure.auth.service.UserService;
+import com.hengsu.sure.core.Constants;
 import com.hengsu.sure.core.ErrorCode;
 import com.hengsu.sure.core.service.ConfService;
 import com.hengsu.sure.core.service.PushService;
@@ -17,6 +18,7 @@ import com.hkntv.pylon.core.beans.mapping.BeanMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,17 +31,15 @@ public class IndentServiceImpl implements IndentService {
 
     private final Logger logger = LoggerFactory.getLogger(IndentServiceImpl.class);
 
+    @Value("${sure.seller.account}")
+    private String sellerAccount;
+
 
     private static final String INVITATION_PAYED = "invitation_payed";
     private static final String RENT_PAYED = "rent_payed";
 
     private static final String TRADE_FINISHED = "TRADE_FINISHED";
 
-    private static final String INDENT_REFUND_PERCENTAGE_LESS1HOUR = "indent.refund.percentage.less1hour";
-    private static final String INDENT_REFUND_PERCENTAGE_1TO3HOUR = "indent.refund.percentage.1to3hour";
-    private static final String INDENT_REFUND_PERCENTAGE_GREATER3HOUR = "indent.refund.percentage.greater3hour";
-    private static final String INVITATION_POUNDAGE = "invitation.poundage";
-    private static final String RENT_POUNDAGE = "rent.poundage";
 
     @Autowired
     private BeanMapper beanMapper;
@@ -117,10 +117,10 @@ public class IndentServiceImpl implements IndentService {
         tradeService.createSelective(tradeModel);
         Long tradeId = tradeModel.getId();
 
-        //判断是否交易成功
-        if (!TRADE_FINISHED.equals(tradeModel.getTradeStatus())) {
-            ErrorCode.throwBusinessException(ErrorCode.TRADE_NOT_SUCCESS);
-        }
+//        //判断是否交易成功
+//        if (!TRADE_FINISHED.equals(tradeModel.getTradeStatus())) {
+//            ErrorCode.throwBusinessException(ErrorCode.TRADE_NOT_SUCCESS);
+//        }
 
         IndentModel indentModel = findByNo(tradeModel.getTradeNo());
 
@@ -130,6 +130,12 @@ public class IndentServiceImpl implements IndentService {
                     indentModel.getIndentNo(), indentModel.getStatus());
             ErrorCode.throwBusinessException(ErrorCode.INVITATION_STATUS_ERROR);
         }
+
+        //检查卖家账号
+        if(!sellerAccount.equals(tradeModel.getSellerId())){
+            ErrorCode.throwBusinessException(ErrorCode.SELLER_ERROR);
+        }
+
 
         //检查交易 金额是否足够
         if (indentModel.getMoney().doubleValue() != tradeModel.getTotalFee().doubleValue()) {
@@ -182,6 +188,12 @@ public class IndentServiceImpl implements IndentService {
             ErrorCode.throwBusinessException(ErrorCode.CANNOT_CANCEL_STATUS_ERROR);
         }
 
+        //判断订单是否开始,只对即时邀约 发现邀约有效
+        if ((IndentType.GOODS.getCode() != indentModel.getType())
+                && new Date().after(indentModel.getStartTime())) {
+            ErrorCode.throwBusinessException(ErrorCode.INDENT_HAS_START);
+        }
+
         //更新订单状态
         IndentModel param = new IndentModel();
         param.setId(indentModel.getId());
@@ -219,6 +231,13 @@ public class IndentServiceImpl implements IndentService {
         if (IndentStatus.PAYED.getCode() != indentModel.getStatus()) {
             ErrorCode.throwBusinessException(ErrorCode.CANNOT_CANCEL_STATUS_ERROR);
         }
+
+        //判断订单是否开始,只对即时邀约 发现邀约有效
+        if ((IndentType.GOODS.getCode() != indentModel.getType())
+                && new Date().after(indentModel.getStartTime())) {
+            ErrorCode.throwBusinessException(ErrorCode.INDENT_HAS_START);
+        }
+
 
         return getCancelIndentModel(indentModel);
     }
@@ -285,9 +304,9 @@ public class IndentServiceImpl implements IndentService {
             //根据订单类型计算扣费金额
             Double money = 0.0;
             if (IndentType.INVITATION.getCode() == indentModel.getType()) {
-                money = indentModel.getMoney() - confService.getDouble(INVITATION_POUNDAGE);
+                money = indentModel.getMoney() - confService.getDouble(Constants.INVITATION_POUNDAGE);
             } else if (IndentType.RENT.getCode() == indentModel.getType()) {
-                money = indentModel.getMoney() - confService.getDouble(RENT_POUNDAGE);
+                money = indentModel.getMoney() - confService.getDouble(Constants.RENT_POUNDAGE);
             }
 
             //创建流水
@@ -334,11 +353,11 @@ public class IndentServiceImpl implements IndentService {
 
         String percentageStr = null;
         if (expireHour <= 1) {
-            percentageStr = confService.selectByPrimaryKey(INDENT_REFUND_PERCENTAGE_LESS1HOUR).getConfValue();
+            percentageStr = confService.selectByPrimaryKey(Constants.INDENT_REFUND_PERCENTAGE_LESS1HOUR).getConfValue();
         } else if (expireHour > 3) {
-            percentageStr = confService.selectByPrimaryKey(INDENT_REFUND_PERCENTAGE_GREATER3HOUR).getConfValue();
+            percentageStr = confService.selectByPrimaryKey(Constants.INDENT_REFUND_PERCENTAGE_GREATER3HOUR).getConfValue();
         } else {
-            percentageStr = confService.selectByPrimaryKey(INDENT_REFUND_PERCENTAGE_1TO3HOUR).getConfValue();
+            percentageStr = confService.selectByPrimaryKey(Constants.INDENT_REFUND_PERCENTAGE_1TO3HOUR).getConfValue();
         }
 
         double percentage = Double.parseDouble(percentageStr);

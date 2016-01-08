@@ -89,9 +89,9 @@ public class RentServiceImpl implements RentService {
         //角色是否为卖家
         Long userId = rentModel.getUserId();
         UserModel userModel = userService.findByPrimaryKeyNoPass(userId);
-        if (UserRole.SELLER.getCode() != userModel.getRole()) {
-            ErrorCode.throwBusinessException(ErrorCode.RENT_ROLE_ERROR);
-        }
+//        if (UserRole.SELLER.getCode() != userModel.getRole()) {
+//            ErrorCode.throwBusinessException(ErrorCode.RENT_ROLE_ERROR);
+//        }
 
         //TODO 检查quality
 
@@ -141,8 +141,8 @@ public class RentServiceImpl implements RentService {
         indentModel.setStatus(IndentStatus.CONFIRMED.getCode());
         indentModel.setSnapshot(JSON.toJSONString(rentModel));
 
-        List<String> dates = JSON.parseArray(rentModel.getDate(), String.class);
-        setStartAndEndTime(indentModel, dates, rentModel.getTime());
+        setStartAndEndTime(indentModel, rentModel.getStartDate(),
+                rentModel.getEndDate(), rentModel.getTime());
         indentService.createSelective(indentModel);
 
     }
@@ -159,7 +159,8 @@ public class RentServiceImpl implements RentService {
         param.put("minAge", queryRentParamModel.getMinAge());
         param.put("time", queryRentParamModel.getTime());
         param.put("scenes", queryRentParamModel.getScenes());
-        param.put("dates", queryRentParamModel.getDates());
+        param.put("startDate", queryRentParamModel.getStartDate());
+        param.put("endDate", queryRentParamModel.getEndDate());
         List<QueryRentModel> rents = rentRepo.queryRent(param, pageable);
         return rents;
     }
@@ -174,7 +175,8 @@ public class RentServiceImpl implements RentService {
         param.put("minAge", queryRentParamModel.getMinAge());
         param.put("time", queryRentParamModel.getTime());
         param.put("scenes", queryRentParamModel.getScenes());
-        param.put("dates", queryRentParamModel.getDates());
+        param.put("startDate", queryRentParamModel.getStartDate());
+        param.put("endDate", queryRentParamModel.getEndDate());
         return rentRepo.queryRentCount(param);
     }
 
@@ -190,14 +192,14 @@ public class RentServiceImpl implements RentService {
         return rentRepo.updateByPrimaryKeySelective(beanMapper.map(rentModel, Rent.class));
     }
 
-    private void setStartAndEndTime(IndentModel indentModel, List<String> dates, String time) {
-        Collections.sort(dates);
+    private void setStartAndEndTime(IndentModel indentModel, String startDateStr, String endDateStr, String time) {
+//        time=time.substring(2,time.length());
         String[] timeSlots = time.split("-");
         try {
-            Date startDate = simpleFormat.parse(dates.get(0));
-            Date endDate = simpleFormat.parse(dates.get(dates.size() - 1));
-            Date startTime = DateUtils.addHours(startDate, Integer.parseInt(timeSlots[0]));
-            Date endTime = DateUtils.addHours(endDate, Integer.parseInt(timeSlots[1]));
+            Date startDate = simpleFormat.parse(startDateStr);
+            Date endDate = simpleFormat.parse(endDateStr);
+            Date startTime = DateUtils.addHours(startDate, Integer.parseInt(timeSlots[0].replaceAll(":00","")));
+            Date endTime = DateUtils.addHours(endDate, Integer.parseInt(timeSlots[1].replaceAll(":00","")));
             indentModel.setStartTime(startTime);
             indentModel.setEndTime(endTime);
         } catch (ParseException e) {

@@ -2,6 +2,7 @@ package com.hengsu.sure.invite.model;
 
 import com.hkntv.pylon.core.beans.mapping.annotation.MapClass;
 import java.util.Date;
+import java.util.List;
 
 @MapClass("com.hengsu.sure.invite.entity.Invitation")
 public class InvitationModel{
@@ -10,6 +11,7 @@ public class InvitationModel{
 	private Long userId;
 	private Integer city;
 	private String scene;
+	private List<String> scenes;
 	private Integer gender;
 	private Double latitude;
 	private Double longitude;
@@ -158,5 +160,13 @@ public class InvitationModel{
 
 	public Integer getQuantity() {
 		return quantity;
+	}
+
+	public void setScenes(List<String> scenes) {
+		this.scenes = scenes;
+	}
+
+	public List<String> getScenes() {
+		return scenes;
 	}
 }

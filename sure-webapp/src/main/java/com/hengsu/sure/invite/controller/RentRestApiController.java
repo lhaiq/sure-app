@@ -64,7 +64,6 @@ public class RentRestApiController {
         RentVO rentVO = beanMapper.map(rentModel, RentVO.class);
         rentVO.setImageIds(JSON.parseArray(rentModel.getImages(), Long.class));
         rentVO.setScenes(JSON.parseArray(rentModel.getScene(), String.class));
-        rentVO.setDates(JSON.parseArray(rentModel.getDate(), String.class));
         ResponseEnvelope<RentVO> responseEnv = new ResponseEnvelope<>(rentVO, true);
         return new ResponseEntity<>(responseEnv, HttpStatus.OK);
     }
@@ -103,7 +102,6 @@ public class RentRestApiController {
 
         rentModel.setScene(JSON.toJSONString(rentVO.getScenes()));
         rentModel.setImages(JSON.toJSONString(rentVO.getImageIds()));
-        rentModel.setDate(JSON.toJSONString(rentVO.getDates()));
 
         rentService.publishRent(rentModel);
         ResponseEnvelope<String> responseEnv = new ResponseEnvelope<>(ReturnCode.OPERATION_SUCCESS, true);
