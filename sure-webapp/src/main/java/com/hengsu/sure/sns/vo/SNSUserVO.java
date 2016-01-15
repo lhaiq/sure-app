@@ -10,7 +10,7 @@ public class SNSUserVO {
     private Integer gender;
     private Integer age;
     private Integer city;
-    private Long icon;
+    private String icon;
     private Long fansCount;
     private Long attentionCount;
     private Long friendCount;
@@ -39,11 +39,11 @@ public class SNSUserVO {
         this.gender = gender;
     }
 
-    public Long getIcon() {
+    public String getIcon() {
         return icon;
     }
 
-    public void setIcon(Long icon) {
+    public void setIcon(String icon) {
         this.icon = icon;
     }
 

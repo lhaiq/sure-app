@@ -1,5 +1,6 @@
 package com.hengsu.sure.auth.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hengsu.sure.ReturnCode;
 import com.hengsu.sure.auth.annotation.IgnoreAuth;
 import com.hengsu.sure.auth.entity.SubAccount;
@@ -8,10 +9,9 @@ import com.hengsu.sure.auth.model.UserLBSModel;
 import com.hengsu.sure.auth.request.*;
 import com.hengsu.sure.auth.service.SubAccountService;
 import com.hengsu.sure.auth.service.UserService;
-import com.hengsu.sure.auth.vo.LoginSuccessVO;
-import com.hengsu.sure.auth.vo.ModifyUserVO;
-import com.hengsu.sure.auth.vo.UserLBSVO;
+import com.hengsu.sure.auth.vo.*;
 import com.hengsu.sure.core.Context;
+import com.hengsu.sure.core.service.PushService;
 import com.hengsu.sure.core.util.RandomUtil;
 import com.hengsu.sure.sns.RelationType;
 import com.hengsu.sure.sns.model.RelationModel;
@@ -24,6 +24,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import com.hkntv.pylon.core.beans.mapping.BeanMapper;
@@ -31,9 +32,9 @@ import com.hkntv.pylon.web.rest.ResponseEnvelope;
 import com.hkntv.pylon.web.rest.annotation.RestApiController;
 
 import com.hengsu.sure.auth.model.UserModel;
-import com.hengsu.sure.auth.vo.UserVO;
 
 import javax.validation.Valid;
+import java.util.List;
 
 
 @RestApiController
@@ -41,6 +42,8 @@ import javax.validation.Valid;
 public class UserRestApiController {
 
     private final Logger logger = LoggerFactory.getLogger(UserRestApiController.class);
+
+    private static final String OTHER_LOGIN="other_login";
 
     @Autowired
     private BeanMapper beanMapper;
@@ -53,10 +56,17 @@ public class UserRestApiController {
     private Context<String, Long> authContext;
 
     @Autowired
+    @Qualifier("loginContext")
+    private Context<Long, String> loginContext;
+
+    @Autowired
     private RelationService relationService;
 
     @Autowired
     private SubAccountService subAccountService;
+
+    @Autowired
+    private PushService pushService;
 
     /**
      * 注册获取验证码
@@ -119,7 +129,7 @@ public class UserRestApiController {
         loginSuccessVO.setUser(userVO);
 
         //auth token保存到缓存
-        authContext.put(authToken, userModel.getId());
+        updateAuthToken(authToken,userModel);
 
         ResponseEnvelope<LoginSuccessVO> responseEnv = new ResponseEnvelope<>(loginSuccessVO, true);
         return responseEnv;
@@ -135,7 +145,8 @@ public class UserRestApiController {
     @RequestMapping(value = "/auth/accountlogin", method = RequestMethod.POST)
     @ResponseBody
     public ResponseEnvelope<LoginSuccessVO> accountLogin(@Valid @RequestBody LoginRequest loginRequest) {
-        UserModel userModel = userService.accountLogin(loginRequest.getPhone(), loginRequest.getPassword());
+        UserModel userModel = userService.accountLogin(loginRequest.getPhone(),
+                loginRequest.getPassword(),loginRequest.getClientId());
 
         //登录成功后生成auth token，并保存到内存
         LoginSuccessVO loginSuccessVO = new LoginSuccessVO();
@@ -144,7 +155,9 @@ public class UserRestApiController {
         UserVO userVO = beanMapper.map(userModel, UserVO.class);
         setSNSInfo(userVO);
         loginSuccessVO.setUser(userVO);
-        authContext.put(authToken, userModel.getId());
+
+        //auth token保存到缓存
+        updateAuthToken(authToken, userModel);
 
         ResponseEnvelope<LoginSuccessVO> responseEnv = new ResponseEnvelope<>(loginSuccessVO, true);
         return responseEnv;
@@ -157,24 +170,24 @@ public class UserRestApiController {
      * @param faceLoginRequest
      * @return
      */
-    @IgnoreAuth
-    @RequestMapping(value = "/auth/facelogin", method = RequestMethod.POST)
-    @ResponseBody
-    public ResponseEnvelope<LoginSuccessVO> faceLogin(@Valid @RequestBody FaceLoginRequest faceLoginRequest) {
-        UserModel userModel = userService.faceLogin(faceLoginRequest.getPhone(), faceLoginRequest.getLoginFaceId());
-
-        //登录成功后生成auth token，并保存到内存
-        LoginSuccessVO loginSuccessVO = new LoginSuccessVO();
-        String authToken = RandomUtil.generateAuthToken();
-        loginSuccessVO.setAuthToken(authToken);
-        UserVO userVO = beanMapper.map(userModel, UserVO.class);
-        setSNSInfo(userVO);
-        loginSuccessVO.setUser(userVO);
-        authContext.put(authToken, userModel.getId());
-
-        ResponseEnvelope<LoginSuccessVO> responseEnv = new ResponseEnvelope<>(loginSuccessVO, true);
-        return responseEnv;
-    }
+//    @IgnoreAuth
+//    @RequestMapping(value = "/auth/facelogin", method = RequestMethod.POST)
+//    @ResponseBody
+//    public ResponseEnvelope<LoginSuccessVO> faceLogin(@Valid @RequestBody FaceLoginRequest faceLoginRequest) {
+//        UserModel userModel = userService.faceLogin(faceLoginRequest.getPhone(), faceLoginRequest.getLoginFaceId());
+//
+//        //登录成功后生成auth token，并保存到内存
+//        LoginSuccessVO loginSuccessVO = new LoginSuccessVO();
+//        String authToken = RandomUtil.generateAuthToken();
+//        loginSuccessVO.setAuthToken(authToken);
+//        UserVO userVO = beanMapper.map(userModel, UserVO.class);
+//        setSNSInfo(userVO);
+//        loginSuccessVO.setUser(userVO);
+//        updateAuthToken(authToken,userModel.getId());
+//
+//        ResponseEnvelope<LoginSuccessVO> responseEnv = new ResponseEnvelope<>(loginSuccessVO, true);
+//        return responseEnv;
+//    }
 
     /**
      * 修改密码：获取验证码
@@ -249,7 +262,7 @@ public class UserRestApiController {
      * @param userId
      * @return
      */
-    @RequestMapping(value = "/auth/cloudpen", method = RequestMethod.GET)
+    @RequestMapping(value = "/auth/cloudopen", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<ResponseEnvelope<SubAccountModel>> getCloudOpenAccount(
             @Value("#{request.getAttribute('userId')}") Long userId) {
@@ -312,5 +325,42 @@ public class UserRestApiController {
         userModel.setAlipay(null);
         ResponseEnvelope<UserModel> responseEnv = new ResponseEnvelope<>(userModel, true);
         return responseEnv;
+    }
+
+    /**
+     * 附近的人
+     *
+     * @param queryNearUserVO
+     * @param userId
+     * @return
+     */
+    @RequestMapping(value = "/auth/nearuser", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEnvelope<List<UserModel>> queryNearUser(
+            @Valid @RequestBody QueryNearUserVO queryNearUserVO,
+            @Value("#{request.getAttribute('userId')}") Long userId) {
+        List<UserModel> userModels = userService.queryUserByTimeAndLocation(2 * 60 * 60L,
+                30.0 * 1000, queryNearUserVO.getLongitude(), queryNearUserVO.getLatitude(),
+                userId);
+        ResponseEnvelope<List<UserModel>> responseEnv = new ResponseEnvelope<>(userModels, true);
+        return responseEnv;
+    }
+
+    private void updateAuthToken(String authToken,UserModel userModel){
+
+        //该用户是否已经登陆过，如果是，以前登陆的失效
+        long id = userModel.getId();
+        String auth = loginContext.get(id);
+        if(!StringUtils.isEmpty(auth)){
+            JSONObject message = new JSONObject();
+            message.put("pushId", OTHER_LOGIN);
+            pushService.pushMessage(message.toJSONString(),userModel);
+            authContext.remove(auth);
+        }
+
+        //保存该clientId
+        authContext.put(authToken,id);
+        loginContext.put(id,authToken);
+
     }
 }

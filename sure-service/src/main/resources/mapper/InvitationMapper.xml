@@ -40,7 +40,7 @@
     select
     count(*)
     from invitation
-    where user_id = #{param1,jdbcType=BIGINT} and create_time>#{param2,jdbcType=TIMESTAMP} and create_time &gt;=#{param2,jdbcType=TIMESTAMP}
+    where user_id = #{param1,jdbcType=BIGINT} and create_time &lt;#{param2,jdbcType=TIMESTAMP} and create_time &gt;=#{param2,jdbcType=TIMESTAMP}
   </select>
 
   <insert id="insert" parameterType="com.hengsu.sure.invite.entity.Invitation" useGeneratedKeys="true" keyProperty="id">

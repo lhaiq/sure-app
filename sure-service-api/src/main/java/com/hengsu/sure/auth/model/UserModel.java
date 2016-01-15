@@ -30,7 +30,7 @@ public class UserModel {
 
 	private Integer age;
 
-	private Long icon;
+	private String icon;
 
 	private Double faceScore;
 
@@ -140,11 +140,11 @@ public class UserModel {
 		this.height = height;
 	}
 
-	public Long getIcon() {
+	public String getIcon() {
 		return icon;
 	}
 
-	public void setIcon(Long icon) {
+	public void setIcon(String icon) {
 		this.icon = icon;
 	}
 
@@ -235,4 +235,5 @@ public class UserModel {
 	public void setStatus(Integer status) {
 		this.status = status;
 	}
+
 }

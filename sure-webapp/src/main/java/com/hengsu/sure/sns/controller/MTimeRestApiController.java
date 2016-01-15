@@ -20,6 +20,7 @@ import com.hkntv.pylon.web.rest.ResponseEnvelope;
 import com.hkntv.pylon.web.rest.annotation.RestApiController;
 import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiParam;
+import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -71,14 +73,16 @@ public class MTimeRestApiController {
             @Value("#{request.getAttribute('userId')}") Long userId) {
         MTimeModel mTimeModel = mTimeService.findByPrimaryKey(id);
         ListMTimesVO listMTimesVO = beanMapper.map(mTimeModel, ListMTimesVO.class);
-        listMTimesVO.setImageIds(JSON.parseArray(mTimeModel.getImages(), Long.class));
+        if (!StringUtils.isEmpty(mTimeModel.getImages())) {
+            listMTimesVO.setImageIds(JSON.parseArray(mTimeModel.getImages(), String.class));
+        }
         setSNSUser(listMTimesVO, mTimeModel.getUserId());
         setCommentAndStatueCount(listMTimesVO);
         //检查本人是否点赞
-        listMTimesVO.setIsStatus(checkIsStatus(userId,mTimeModel.getId()));
+        listMTimesVO.setIsStatus(checkIsStatus(userId, mTimeModel.getId()));
 
         //检查本人是否关注
-        listMTimesVO.setIsAttention(checkIsStatus(userId,mTimeModel.getUserId()));
+        listMTimesVO.setIsAttention(checkIsStatus(userId, mTimeModel.getUserId()));
 
         ResponseEnvelope<ListMTimesVO> responseEnv = new ResponseEnvelope<>(listMTimesVO, true);
         return new ResponseEntity<>(responseEnv, HttpStatus.OK);
@@ -98,7 +102,10 @@ public class MTimeRestApiController {
         mTimeModel.setUserId(userId);
 
         //设置图片
-        mTimeModel.setImages(JSON.toJSONString(mTimeVO.getImageIds()));
+        if (CollectionUtils.isNotEmpty(mTimeVO.getImageIds())) {
+            mTimeModel.setImages(JSON.toJSONString(mTimeVO.getImageIds()));
+        }
+
         mTimeModel.setTime(new Date());
         Integer result = mTimeService.create(mTimeModel);
         ResponseEnvelope<Integer> responseEnv = new ResponseEnvelope<Integer>(result, true);
@@ -143,7 +150,9 @@ public class MTimeRestApiController {
         List<ListMTimesVO> listMTimesVOs = new ArrayList<>();
         for (MTimeModel mTimeModel : mTimeModels) {
             ListMTimesVO listMTimesVO = beanMapper.map(mTimeModel, ListMTimesVO.class);
-            listMTimesVO.setImageIds(JSON.parseArray(mTimeModel.getImages(), Long.class));
+            if (!StringUtils.isEmpty(mTimeModel.getImages())) {
+                listMTimesVO.setImageIds(JSON.parseArray(mTimeModel.getImages(), String.class));
+            }
             //SNS User
             setSNSUser(listMTimesVO, mTimeModel.getUserId());
 
@@ -151,10 +160,10 @@ public class MTimeRestApiController {
             setCommentAndStatueCount(listMTimesVO);
 
             //检查本人是否点赞
-            listMTimesVO.setIsStatus(checkIsStatus(userId,mTimeModel.getId()));
+            listMTimesVO.setIsStatus(checkIsStatus(userId, mTimeModel.getId()));
 
             //检查本人是否关注
-            listMTimesVO.setIsAttention(checkIsStatus(userId,mTimeModel.getUserId()));
+            listMTimesVO.setIsAttention(checkIsStatus(userId, mTimeModel.getUserId()));
 
             listMTimesVOs.add(listMTimesVO);
         }
@@ -189,30 +198,28 @@ public class MTimeRestApiController {
         listMTimesVO.setUser(snsUserVO);
     }
 
-    private boolean checkIsStatus(Long userId,Long mid){
+    private boolean checkIsStatus(Long userId, Long mid) {
         CommentModel param = new CommentModel();
         param.setmId(mid);
         param.setUserid(userId);
         param.setType(CommentType.STATUSES.getCode());
         int count = commentService.selectCount(param);
-        if(count>0){
+        if (count > 0) {
             return true;
-        }
-        else{
+        } else {
             return false;
         }
     }
 
-    public boolean checkIsAttention(Long fromUserId,Long toUserId){
+    public boolean checkIsAttention(Long fromUserId, Long toUserId) {
         RelationModel param = new RelationModel();
         param.setFromUser(fromUserId);
         param.setToUser(toUserId);
         param.setType(RelationType.RELATION.getCode());
         int count = relationService.selectCount(param);
-        if(count>0){
+        if (count > 0) {
             return true;
-        }
-        else{
+        } else {
             return false;
         }
     }

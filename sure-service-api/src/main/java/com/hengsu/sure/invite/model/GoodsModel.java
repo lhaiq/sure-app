@@ -18,7 +18,7 @@ public class GoodsModel{
 	private Double price;
 	private Double money;
 	private Long goodsType;
-	private List<Long> imageIds;
+	private List<String> imageIds;
 		
 	public void setId(Long id){
 		this.id = id;
@@ -109,11 +109,11 @@ public class GoodsModel{
 	}
 
 
-	public void setImageIds(List<Long> imageIds) {
+	public void setImageIds(List<String> imageIds) {
 		this.imageIds = imageIds;
 	}
 
-	public List<Long> getImageIds() {
+	public List<String> getImageIds() {
 		return imageIds;
 	}
 }

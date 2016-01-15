@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hengsu.sure.core.repository.FeedbackRepository" >
+  <resultMap id="BaseResultMap" type="com.hengsu.sure.core.entity.Feedback" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="user_id" property="userId" jdbcType="BIGINT" />
+    <result column="feedback_date" property="feedbackDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.hengsu.sure.core.entity.Feedback" extends="BaseResultMap" >
+    <result column="content" property="content" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, user_id, feedback_date
+  </sql>
+  <sql id="Blob_Column_List" >
+    content
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from feedback
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from feedback
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.hengsu.sure.core.entity.Feedback" >
+    insert into feedback (id, user_id, feedback_date, 
+      content)
+    values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=BIGINT}, #{feedbackDate,jdbcType=TIMESTAMP}, 
+      #{content,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hengsu.sure.core.entity.Feedback" >
+    insert into feedback
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="feedbackDate != null" >
+        feedback_date,
+      </if>
+      <if test="content != null" >
+        content,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="feedbackDate != null" >
+        #{feedbackDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hengsu.sure.core.entity.Feedback" >
+    update feedback
+    <set >
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="feedbackDate != null" >
+        feedback_date = #{feedbackDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="content != null" >
+        content = #{content,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.hengsu.sure.core.entity.Feedback" >
+    update feedback
+    set user_id = #{userId,jdbcType=BIGINT},
+      feedback_date = #{feedbackDate,jdbcType=TIMESTAMP},
+      content = #{content,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hengsu.sure.core.entity.Feedback" >
+    update feedback
+    set user_id = #{userId,jdbcType=BIGINT},
+      feedback_date = #{feedbackDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectCount" resultType="java.lang.Integer" parameterType="com.hengsu.sure.core.entity.Feedback" >
+    select count(*) from feedback
+    <where >
+      <if test="id != null" >
+        and id = #{id,jdbcType=INTEGER}
+      </if>
+      <if test="userId != null" >
+        and user_id = #{userId,jdbcType=BIGINT}
+      </if>
+      <if test="feedbackDate != null" >
+        and feedback_date = #{feedbackDate,jdbcType=TIMESTAMP}
+      </if>
+      <if test="content != null" >
+        and content = #{content,jdbcType=LONGVARCHAR}
+      </if>
+    </where>
+  </select>
+  <select id="selectPage" resultMap="BaseResultMap" >
+    select 
+    <include refid="Base_Column_List" />
+    from feedback where 1 = 1 
+    <if test="param1.id != null" >
+      and id = #{param1.id,jdbcType=INTEGER}
+    </if>
+    <if test="param1.userId != null" >
+      and user_id = #{param1.userId,jdbcType=BIGINT}
+    </if>
+    <if test="param1.feedbackDate != null" >
+      and feedback_date = #{param1.feedbackDate,jdbcType=TIMESTAMP}
+    </if>
+    <if test="param1.content != null" >
+      and content = #{param1.content,jdbcType=LONGVARCHAR}
+    </if>
+    <if test="param2.sort != null" >
+      order by 
+      <foreach collection="param2.sort" item="order" separator="," >
+        ${order.property} ${order.direction}
+      </foreach>
+    </if>
+    <if test="param2.offset >= 0 and param2.pageSize > 0" >
+      limit ${param2.offset}, ${param2.pageSize}
+    </if>
+  </select>
+</mapper>

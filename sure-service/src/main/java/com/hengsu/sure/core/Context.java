@@ -17,4 +17,8 @@ public class Context<K,V> {
     public V get(K k){
         return maps.get(k);
     }
+
+    public V remove(K k){
+        return maps.remove(k);
+    }
 }

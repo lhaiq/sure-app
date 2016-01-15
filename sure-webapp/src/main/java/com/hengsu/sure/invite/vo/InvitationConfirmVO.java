@@ -7,7 +7,7 @@ import javax.validation.constraints.NotNull;
 /**
  * Created by haiquanli on 15/12/20.
  */
-public class InvitationConfirmVO {
+public class   InvitationConfirmVO {
 
     @NotNull
     private Long receivedUserId;

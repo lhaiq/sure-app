@@ -5,7 +5,7 @@ package com.hengsu.sure.auth.service;
  */
 public interface FaceService {
 
-    public boolean isSimilar(String registerFaceId, String loginFaceId);
+    public boolean isSimilar(String personId, String loginFaceId);
 
-    public void createPerson(String phone, String faceId);
+    public String createPerson(String phone, String faceId);
 }

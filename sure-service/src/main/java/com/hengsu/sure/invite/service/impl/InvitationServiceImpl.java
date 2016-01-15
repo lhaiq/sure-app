@@ -14,6 +14,7 @@ import com.hengsu.sure.invite.IndentType;
 import com.hengsu.sure.invite.InvitationStatus;
 import com.hengsu.sure.invite.model.*;
 import com.hengsu.sure.invite.service.IndentService;
+import com.hengsu.sure.invite.service.InvitationReceiveService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,6 +62,9 @@ public class InvitationServiceImpl implements InvitationService {
 
     @Autowired
     private ConfService confService;
+
+    @Autowired
+    private InvitationReceiveService invitationReceiveService;
 
     @Value("${push.retry.count}")
     private Integer retryCount;
@@ -144,13 +148,13 @@ public class InvitationServiceImpl implements InvitationService {
 
         //查询符合条件的user,
         for (int i = 1; i < DEFAULT_COUNT; i++) {
-            userModels = userService.queryUserByTimeAndLocation(
+            userModels = userService.queryUserByTimeAndLocationWithRole(
                     DEFAULT_INTERVAL * i,
                     DEFAULT_DISTANCE * i,
                     invitationModel.getLongitude(),
                     invitationModel.getLatitude(),
                     invitationModel.getUserId(),
-                    UserRole.CUSTOMER,
+                    UserRole.SELLER,
                     invitationModel.getCity());
 
             if (CollectionUtils.isNotEmpty(userModels) || userModels.size() <= DEFAULT_PUBLISH_COUNT) {
@@ -198,6 +202,7 @@ public class InvitationServiceImpl implements InvitationService {
 
     }
 
+    @Transactional
     @Override
     public void receiveInvitation(Long id, Long userId) {
 
@@ -213,6 +218,19 @@ public class InvitationServiceImpl implements InvitationService {
         if (userModel.getId() == receivedUser.getId()) {
             ErrorCode.throwBusinessException(ErrorCode.CANNOT_RECEIVE_SLEF_INVITATION);
         }
+
+        //判断是否已经接受过邀约
+        InvitationReceiveModel param = new InvitationReceiveModel();
+        param.setInvitationId(invitationModel.getId());
+        param.setUserId(userId);
+        int count = invitationReceiveService.selectCount(param);
+        if(count>0){
+            ErrorCode.throwBusinessException(ErrorCode.INVITATION_HAVE_RECEIVED);
+        }
+
+        //更新该接受
+        param.setTime(new Date());
+        invitationReceiveService.createSelective(param);
 
         //向发布邀约者推送消息
         JSONObject message = new JSONObject();

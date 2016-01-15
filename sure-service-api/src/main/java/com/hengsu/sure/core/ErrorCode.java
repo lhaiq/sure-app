@@ -57,6 +57,7 @@ public enum ErrorCode {
     CANNOT_COMMENT_INDENT_AS_STATUS("6010", "只有完成订单才可以评论"),
     HAVE_COMMENTED("6011", "该订单已经评论"),
     INDENT_HAS_START("6012", "该订单已经评论"),
+    INVITATION_HAVE_RECEIVED("6013", "已经接受该邀约"),
     //700
     RENT_NOT_EXISTED("7000", "邀约不存在"),
     CANNOT_BUY_SLEF("7001", "不能邀约自己"),

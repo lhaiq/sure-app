@@ -1,7 +1,6 @@
 package com.hengsu.sure.auth.service.impl;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 import com.hengsu.sure.auth.UserRole;
 import com.hengsu.sure.auth.entity.User;
 import com.hengsu.sure.auth.model.UserLBSModel;
@@ -111,7 +110,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void generateRegisterAuthCode(String phone) {
-        String authCode = RandomUtil.createRandom(true, 4);
+        String authCode = RandomUtil.createRandom(true, 6);
         registerAuthCodes.put(phone, new AuthCodeModel(authCode));
         authCodeService.sendAuthCode(ImmutableList.of(phone), registerAuthCodeTemplateId,
                 new String[]{authCode});
@@ -148,7 +147,7 @@ public class UserServiceImpl implements UserService {
         }
 
         //生成验证码
-        String authCode = RandomUtil.createRandom(true, 4);
+        String authCode = RandomUtil.createRandom(true, 6);
         AuthCodeModel authCodeModel = new AuthCodeModel(authCode);
         changePassAuthCodes.put(phone, authCodeModel);
         authCodeService.sendAuthCode(ImmutableList.of(phone), modifyPassAuthCodeTemplateId,
@@ -224,12 +223,15 @@ public class UserServiceImpl implements UserService {
         userModel.setNickname(phone.substring(phone.length() - 6));
 
         //创建人脸
-        faceService.createPerson(userModel.getPhone(),userModel.getFaceId());
+//        String personId = faceService.createPerson(userModel.getPhone(), userModel.getFaceId());
+//        userModel.setFaceId(personId);
 
         //MD5加密
         String password = DigestUtils.md5DigestAsHex(userModel.getPassword().getBytes());
         userModel.setPassword(password);
         createSelective(userModel);
+
+        handleClientId(userModel.getId(),userModel.getClientId());
     }
 
     @Override
@@ -241,7 +243,7 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public UserModel accountLogin(String phone, String password) {
+    public UserModel accountLogin(String phone, String password,String clientId) {
         UserModel userModel = findUserByPhone(phone);
 
         //判断用户是否存在
@@ -255,8 +257,11 @@ public class UserServiceImpl implements UserService {
             ErrorCode.throwBusinessException(ErrorCode.LOGIN_PASSWORD_ERROR);
         }
 
+        String oldClientId =handleClientId(userModel.getId(),clientId);
+
         //密码不返回
         userModel.setPassword(null);
+        userModel.setClientId(oldClientId);
         return userModel;
     }
 
@@ -272,7 +277,7 @@ public class UserServiceImpl implements UserService {
         }
 
         //判断为否通过人脸识别
-        boolean isSimilar = faceService.isSimilar(phone, loginFaceId);
+        boolean isSimilar = faceService.isSimilar(userModel.getFaceId(), loginFaceId);
         if (!isSimilar) {
             ErrorCode.throwBusinessException(ErrorCode.LOGIN_FACE_ERROR);
         }
@@ -311,7 +316,7 @@ public class UserServiceImpl implements UserService {
         updateByPrimaryKeySelective(param);
 
         logger.info("add balance , the user id:{}, the money: {}, " +
-                "the new balance:{}",userId,money,(userModel.getBalance()+money));
+                "the new balance:{}", userId, money, (userModel.getBalance() + money));
 
     }
 
@@ -336,18 +341,36 @@ public class UserServiceImpl implements UserService {
         updateByPrimaryKeySelective(param);
 
         logger.info("reduce balance, the user id:{} , the money:{}, the new balance :{}",
-                userId,money,balance);
+                userId, money, balance);
+    }
+
+    @Transactional
+    @Override
+    public String handleClientId(Long userId, String clientId) {
+
+        //判断该clientId是否被占用
+        User user = userRepo.findUserByClientId(clientId);
+        String oldClientId="";
+
+        //是否当前用户占用client
+        if (user != null && (user.getId() != userId)) {
+            oldClientId= user.getClientId();
+            userRepo.updateClientNull(user.getId());
+        }
+
+        return oldClientId;
+
     }
 
     //根据距离查询
     @Override
-    public List<UserModel> queryUserByTimeAndLocation(Long sec,
-                                                      Double distance,
-                                                      Double longitude,
-                                                      Double latitude,
-                                                      Long userId,
-                                                      UserRole userRole,
-                                                      Integer cityId) {
+    public List<UserModel> queryUserByTimeAndLocationWithRole(Long sec,
+                                                              Double distance,
+                                                              Double longitude,
+                                                              Double latitude,
+                                                              Long userId,
+                                                              UserRole userRole,
+                                                              Integer cityId) {
 
         //经纬度范围
         double range = 180 / Math.PI * distance / 6372.797;
@@ -356,16 +379,45 @@ public class UserServiceImpl implements UserService {
         double minLat = latitude - range;
         double maxLng = longitude + ingR;
         double minLng = longitude - ingR;
-        Date date = new Date(System.currentTimeMillis() / 1000 - sec);
+        Date date = new Date(System.currentTimeMillis() - 1000 * sec);
         Map<String, Object> param = new HashMap<>();
         param.put("maxLat", maxLat);
         param.put("minLat", minLat);
         param.put("maxLng", maxLng);
         param.put("minLng", minLng);
+        param.put("role", userRole.getCode());
+        param.put("id", userId);
         param.put("locationModifyTime", date);
         //TODO
-//        List<User> users = userRepo.queryNearUser(param,new PageRequest(0, 15));
-        List<User> users = userRepo.selectPage(new User(), new PageRequest(0, 10));
+        List<User> users = userRepo.queryNearUserWithRole(param, new PageRequest(0, 15));
+//        List<User> users = userRepo.selectPage(new User(), new PageRequest(0, 10));
+        return beanMapper.mapAsList(users, UserModel.class);
+    }
+
+    //根据距离查询
+    @Override
+    public List<UserModel> queryUserByTimeAndLocation(Long sec,
+                                                      Double distance,
+                                                      Double longitude,
+                                                      Double latitude,
+                                                      Long userId) {
+
+        //经纬度范围
+        double range = 180 / Math.PI * distance / 6372.797;
+        double ingR = range / Math.cos(latitude * Math.PI / 180.0);
+        double maxLat = latitude + range;
+        double minLat = latitude - range;
+        double maxLng = longitude + ingR;
+        double minLng = longitude - ingR;
+        Date date = new Date(System.currentTimeMillis() - sec * 1000);
+        Map<String, Object> param = new HashMap<>();
+        param.put("maxLat", maxLat);
+        param.put("minLat", minLat);
+        param.put("maxLng", maxLng);
+        param.put("minLng", minLng);
+        param.put("id", userId);
+        param.put("locationModifyTime", date);
+        List<User> users = userRepo.queryNearUser(param, new PageRequest(0, 30));
         return beanMapper.mapAsList(users, UserModel.class);
     }
 

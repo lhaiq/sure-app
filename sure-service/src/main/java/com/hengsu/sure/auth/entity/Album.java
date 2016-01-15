@@ -5,7 +5,7 @@ import java.util.Date;
 public class Album {
     private Long id;
 
-    private Long imageId;
+    private String imageId;
 
     private Long userId;
 
@@ -19,11 +19,11 @@ public class Album {
         this.id = id;
     }
 
-    public Long getImageId() {
+    public String getImageId() {
         return imageId;
     }
 
-    public void setImageId(Long imageId) {
+    public void setImageId(String imageId) {
         this.imageId = imageId;
     }
 

@@ -42,7 +42,7 @@ public class RentVO{
 	private Date createTime;
 	private Integer status;
 
-	private List<Long> imageIds;
+	private List<String> imageIds;
 
 
 	public Integer getCity() {
@@ -86,11 +86,11 @@ public class RentVO{
 		this.id = id;
 	}
 
-	public void setImageIds(List<Long> imageIds) {
+	public void setImageIds(List<String> imageIds) {
 		this.imageIds = imageIds;
 	}
 
-	public List<Long> getImageIds() {
+	public List<String> getImageIds() {
 		return imageIds;
 	}
 

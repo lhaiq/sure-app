@@ -33,29 +33,37 @@ public interface UserService {
 
     public void changePass(String phone, String password, String authCode);
 
-    public void modifyPass(Long userId, String oldPass,String newPass);
+    public void modifyPass(Long userId, String oldPass, String newPass);
 
     public void registerUser(UserModel userModel);
 
     public UserModel findUserByPhone(String phone);
 
 
-    public UserModel accountLogin(String phone, String password);
+    public UserModel accountLogin(String phone, String password,String clientId);
 
     public UserModel faceLogin(String phone, String loginFaceId);
 
     public void updateLBS(UserLBSModel userLBSModel);
 
-    public void addBalance(Long userId,Double money);
+    public void addBalance(Long userId, Double money);
 
-    public void reduceBalance(Long userId,Double money);
+    public void reduceBalance(Long userId, Double money);
+
+    public String handleClientId(Long userId,String clientId);
+
+    public List<UserModel> queryUserByTimeAndLocationWithRole(Long sec,
+                                                              Double distance,
+                                                              Double longitude,
+                                                              Double latitude,
+                                                              Long userId,
+                                                              UserRole userRole,
+                                                              Integer cityId);
 
     public List<UserModel> queryUserByTimeAndLocation(Long sec,
                                                       Double distance,
                                                       Double longitude,
                                                       Double latitude,
-                                                      Long userId,
-                                                      UserRole userRole,
-                                                      Integer cityId);
+                                                      Long userId);
 
 }

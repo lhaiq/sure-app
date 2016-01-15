@@ -14,7 +14,7 @@ public class FaceConfig {
     @Value("${face.api.key}")
     private String apiKey;
 
-    @Value("$(face.api.secret)")
+    @Value("${face.api.secret}")
     private String apiSecret;
 
     @Bean

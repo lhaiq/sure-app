@@ -108,6 +108,7 @@ project("sure-service-api") {
         compile(libraries.thumbnailator)
         compile(libraries.aliyun_oss)
         compile(libraries.pylon_data)
+        compile(libraries.commons_io)
         compile(fileTree(dir: "../lib", include: "*.jar"))
     }
 
@@ -140,7 +141,6 @@ project("sure-webapp") {
         compile(libraries.logback_classic)
         compile(libraries.groovy_all)
         compile(libraries.commons_fileupload)
-        compile(libraries.commons_io)
         compile(libraries.c3p0)
     }
 

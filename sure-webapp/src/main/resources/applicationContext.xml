@@ -27,7 +27,7 @@
 	<task:scheduler id="scheduler" pool-size="10"/>
 	<task:annotation-driven executor="executor" scheduler="scheduler"/>
 	<task:scheduled-tasks>
-		<!--<task:scheduled ref="indentServiceImpl" method="scheduleFinishIndent" fixed-delay="50000000"/>-->
+		<task:scheduled ref="indentServiceImpl" method="scheduleFinishIndent" fixed-delay="60000"/>
 		<task:scheduled ref="indentCommentServiceImpl" method="calculateScore" cron="0 0 01 * * ?"/>
 	</task:scheduled-tasks>
 

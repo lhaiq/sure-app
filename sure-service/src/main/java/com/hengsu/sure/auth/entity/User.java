@@ -27,7 +27,7 @@ public class User {
 
     private Integer age;
 
-    private Long icon;
+    private String icon;
 
     private Double faceScore;
 
@@ -145,11 +145,11 @@ public class User {
         this.age = age;
     }
 
-    public Long getIcon() {
+    public String getIcon() {
         return icon;
     }
 
-    public void setIcon(Long icon) {
+    public void setIcon(String icon) {
         this.icon = icon;
     }
 

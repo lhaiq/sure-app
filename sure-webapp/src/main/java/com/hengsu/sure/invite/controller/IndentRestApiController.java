@@ -3,6 +3,9 @@ package com.hengsu.sure.invite.controller;
 import com.alibaba.fastjson.JSON;
 import com.alipay.util.AlipayNotify;
 import com.hengsu.sure.ReturnCode;
+import com.hengsu.sure.auth.model.UserModel;
+import com.hengsu.sure.auth.service.UserService;
+import com.hengsu.sure.auth.vo.UserVO;
 import com.hengsu.sure.core.ErrorCode;
 import com.hengsu.sure.invite.BillNumberBuilder;
 import com.hengsu.sure.invite.IndentType;
@@ -10,7 +13,8 @@ import com.hengsu.sure.invite.model.*;
 import com.hengsu.sure.invite.service.IndentCommentService;
 import com.hengsu.sure.invite.service.IndentService;
 import com.hengsu.sure.invite.vo.IndentCommentVO;
-import com.hengsu.sure.invite.vo.TradeVO;
+import com.hengsu.sure.invite.vo.IndentVO;
+import com.hengsu.sure.invite.vo.UserCommentVO;
 import com.hkntv.pylon.core.beans.mapping.BeanMapper;
 import com.hkntv.pylon.web.rest.ResponseEnvelope;
 import com.hkntv.pylon.web.rest.annotation.RestApiController;
@@ -34,7 +38,7 @@ public class IndentRestApiController {
 
     private final Logger logger = LoggerFactory.getLogger(IndentRestApiController.class);
 
-    private static final String TRADE_SUCSESS_STATUS = "success";
+    private static final String TRADE_SUCCESS_STATUS = "success";
 
     private static final String TRADE_FAILURE_STATUS = "failure";
 
@@ -45,6 +49,12 @@ public class IndentRestApiController {
 
     @Autowired
     private IndentService indentService;
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private IndentCommentService indentCommentService;
 
     /**
      * 申请订单号
@@ -81,7 +91,7 @@ public class IndentRestApiController {
      */
     @RequestMapping(value = "/invite/indent", method = RequestMethod.GET)
     public ResponseEntity<ResponseEnvelope<IndentModel>> getIndentByIndentNo(
-            @RequestParam String  indentNo) {
+            @RequestParam String indentNo) {
         IndentModel indentModel = indentService.findByNo(indentNo);
         ResponseEnvelope<IndentModel> responseEnv = new ResponseEnvelope<>(indentModel, true);
         return new ResponseEntity<>(responseEnv, HttpStatus.OK);
@@ -96,7 +106,7 @@ public class IndentRestApiController {
      * @return
      */
     @RequestMapping(value = "/invite/indent/buyers", method = RequestMethod.GET)
-    public ResponseEntity<ResponseEnvelope<Page<IndentModel>>> queryBuyerIndents(
+    public ResponseEntity<ResponseEnvelope<Page<IndentVO>>> queryBuyerIndents(
             @RequestParam Integer type,
             @Value("#{request.getAttribute('userId')}") Long userId,
             Pageable pageable) {
@@ -106,9 +116,14 @@ public class IndentRestApiController {
 
         Integer count = indentService.selectCount(param);
         List<IndentModel> indentModels = indentService.selectPage(param, pageable);
-        Page<IndentModel> page = new PageImpl<>(indentModels, pageable, count);
+        List<IndentVO> indentVOs = beanMapper.mapAsList(indentModels, IndentVO.class);
+        for (IndentVO indentVO : indentVOs) {
+            UserModel userModel = userService.findByPrimaryKeyNoPass(indentVO.getSellerId());
+            indentVO.setUser(beanMapper.map(userModel, UserVO.class));
+        }
+        Page<IndentVO> page = new PageImpl<>(indentVOs, pageable, count);
 
-        ResponseEnvelope<Page<IndentModel>> responseEnv = new ResponseEnvelope<>(page, true);
+        ResponseEnvelope<Page<IndentVO>> responseEnv = new ResponseEnvelope<>(page, true);
         return new ResponseEntity<>(responseEnv, HttpStatus.OK);
     }
 
@@ -121,7 +136,7 @@ public class IndentRestApiController {
      * @return
      */
     @RequestMapping(value = "/invite/indent/sellers", method = RequestMethod.GET)
-    public ResponseEntity<ResponseEnvelope<Page<IndentModel>>> querySellerIndents(
+    public ResponseEntity<ResponseEnvelope<Page<IndentVO>>> querySellerIndents(
             @RequestParam Integer type,
             @Value("#{request.getAttribute('userId')}") Long userId,
             Pageable pageable) {
@@ -135,9 +150,14 @@ public class IndentRestApiController {
 
         Integer count = indentService.selectCount(param);
         List<IndentModel> indentModels = indentService.selectPage(param, pageable);
-        Page<IndentModel> page = new PageImpl<>(indentModels, pageable, count);
+        List<IndentVO> indentVOs = beanMapper.mapAsList(indentModels, IndentVO.class);
+        for (IndentVO indentVO : indentVOs) {
+            UserModel userModel = userService.findByPrimaryKeyNoPass(indentVO.getCustomerId());
+            indentVO.setUser(beanMapper.map(userModel, UserVO.class));
+        }
+        Page<IndentVO> page = new PageImpl<>(indentVOs, pageable, count);
 
-        ResponseEnvelope<Page<IndentModel>> responseEnv = new ResponseEnvelope<>(page, true);
+        ResponseEnvelope<Page<IndentVO>> responseEnv = new ResponseEnvelope<>(page, true);
         return new ResponseEntity<>(responseEnv, HttpStatus.OK);
     }
 
@@ -196,14 +216,14 @@ public class IndentRestApiController {
         String trade_status = new String(request.getParameter("trade_status").getBytes("ISO-8859-1"), "UTF-8");
 
         if (AlipayNotify.verify(params)) {//验证成功
-            if (trade_status.equals("TRADE_FINISHED")) {
+            if (trade_status.equals("TRADE_FINISHED") || trade_status.equals("TRADE_SUCCESS")) {
                 TradeModel tradeModel = new TradeModel();
                 tradeModel.setSellerId(seller_id);
                 tradeModel.setTotalFee(total_fee);
                 tradeModel.setOutTradeNo(out_trade_no);
                 tradeModel.setTradeNo(trade_no);
                 indentService.receiveTrade(tradeModel);
-                return new ResponseEntity<>(TRADE_SUCSESS_STATUS, HttpStatus.OK);
+                return new ResponseEntity<>(TRADE_SUCCESS_STATUS, HttpStatus.OK);
             }
         }
         return new ResponseEntity<>(TRADE_FAILURE_STATUS, HttpStatus.OK);
@@ -260,6 +280,30 @@ public class IndentRestApiController {
         indentCommentModel.setUserId(userId);
         indentService.commentIndent(indentCommentModel);
         ResponseEnvelope<String> responseEnv = new ResponseEnvelope<>(ReturnCode.OPERATION_SUCCESS, true);
+        return new ResponseEntity<>(responseEnv, HttpStatus.OK);
+    }
+
+    /**
+     * 关于订单的评论
+     *
+     * @param userId
+     * @return
+     */
+    @RequestMapping(value = "/invite/indent/comment", method = RequestMethod.GET)
+    public ResponseEntity<ResponseEnvelope<Page<UserCommentVO>>> selectPage(
+            @RequestParam Long userId,
+            Pageable pageable) {
+        int count = indentCommentService.selectCommentCount(userId);
+        List<IndentCommentModel> indentCommentModels = indentCommentService.selectCommentPage(userId, pageable);
+        List<UserCommentVO> userComments = new ArrayList<>();
+        for (IndentCommentModel indentCommentModel : indentCommentModels) {
+            UserCommentVO userCommentVO = beanMapper.map(indentCommentModel, UserCommentVO.class);
+            UserModel userModel = userService.findByPrimaryKeyNoPass(indentCommentModel.getUserId());
+            userCommentVO.setUser(beanMapper.map(userModel, UserVO.class));
+            userComments.add(userCommentVO);
+        }
+        Page<UserCommentVO> content = new PageImpl<>(userComments, pageable, count);
+        ResponseEnvelope<Page<UserCommentVO>> responseEnv = new ResponseEnvelope<>(content, true);
         return new ResponseEntity<>(responseEnv, HttpStatus.OK);
     }
 

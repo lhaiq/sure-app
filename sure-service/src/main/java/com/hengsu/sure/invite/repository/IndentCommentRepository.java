@@ -1,6 +1,7 @@
 package com.hengsu.sure.invite.repository;
 
 import com.hengsu.sure.invite.entity.IndentComment;
+
 import java.util.List;
 
 import com.hengsu.sure.invite.entity.IndentCommentScore;
@@ -27,4 +28,8 @@ public interface IndentCommentRepository {
     List<IndentComment> selectPage(@Param("indentcomment") IndentComment indentcomment, @Param("pageable") Pageable pageable);
 
     List<IndentCommentScore> selectScore();
+
+    int selectCommentCount(@Param("id") Long id);
+
+    List<IndentComment> selectCommentPage(@Param("id") Long id, @Param("pageable") Pageable pageable);
 }

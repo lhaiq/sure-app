@@ -8,6 +8,7 @@ import com.hengsu.sure.invite.model.QueryRentParamModel;
 import com.hengsu.sure.invite.model.RentConfirmModel;
 import com.hengsu.sure.invite.vo.QueryRentVO;
 import com.hengsu.sure.invite.vo.RentConfirmVO;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,7 +63,9 @@ public class RentRestApiController {
     public ResponseEntity<ResponseEnvelope<RentVO>> getRentById(@PathVariable Long id) {
         RentModel rentModel = rentService.findByPrimaryKey(id);
         RentVO rentVO = beanMapper.map(rentModel, RentVO.class);
-        rentVO.setImageIds(JSON.parseArray(rentModel.getImages(), Long.class));
+        if (!StringUtils.isEmpty(rentModel.getImages())) {
+            rentVO.setImageIds(JSON.parseArray(rentModel.getImages(), String.class));
+        }
         rentVO.setScenes(JSON.parseArray(rentModel.getScene(), String.class));
         ResponseEnvelope<RentVO> responseEnv = new ResponseEnvelope<>(rentVO, true);
         return new ResponseEntity<>(responseEnv, HttpStatus.OK);
@@ -76,7 +79,7 @@ public class RentRestApiController {
      * @return
      */
     @RequestMapping(value = "/invite/queryRent", method = RequestMethod.POST)
-    public ResponseEntity<ResponseEnvelope<Page<QueryRentModel>>> queryRent(@Valid@RequestBody QueryRentVO queryRentVO,
+    public ResponseEntity<ResponseEnvelope<Page<QueryRentModel>>> queryRent(@Valid @RequestBody QueryRentVO queryRentVO,
                                                                             Pageable pageable) {
         QueryRentParamModel queryRentParamModel = beanMapper.map(queryRentVO, QueryRentParamModel.class);
         List<QueryRentModel> queryRentModels = rentService.queryRent(queryRentParamModel, pageable);
@@ -95,13 +98,15 @@ public class RentRestApiController {
      */
     @RequestMapping(value = "/invite/rent", method = RequestMethod.POST)
     public ResponseEntity<ResponseEnvelope<String>> createRent(
-            @Valid@RequestBody RentVO rentVO,
+            @Valid @RequestBody RentVO rentVO,
             @Value("#{request.getAttribute('userId')}") Long userId) {
         RentModel rentModel = beanMapper.map(rentVO, RentModel.class);
         rentModel.setUserId(userId);
 
         rentModel.setScene(JSON.toJSONString(rentVO.getScenes()));
-        rentModel.setImages(JSON.toJSONString(rentVO.getImageIds()));
+        if (CollectionUtils.isNotEmpty(rentVO.getImageIds())) {
+            rentModel.setImages(JSON.toJSONString(rentVO.getImageIds()));
+        }
 
         rentService.publishRent(rentModel);
         ResponseEnvelope<String> responseEnv = new ResponseEnvelope<>(ReturnCode.OPERATION_SUCCESS, true);

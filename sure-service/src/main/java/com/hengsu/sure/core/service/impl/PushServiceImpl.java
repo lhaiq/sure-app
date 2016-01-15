@@ -38,8 +38,6 @@ public class PushServiceImpl implements PushService {
     @Override
     public void pushMessage(String data, List<UserModel> users) {
 
-        //TODO
-        System.out.println(data);
         TransmissionTemplate transmissionTemplate = transmissionTemplate(data);
         ListMessage message = new ListMessage();
         message.setData(transmissionTemplate);
@@ -61,7 +59,7 @@ public class PushServiceImpl implements PushService {
 
         //获取taskId
         String taskId = push.getContentId(message);
-        logger.info("push request:{}", JSON.toJSON(targets));
+        logger.info("push message:{},user:{}", data, JSON.toJSONString(users));
         //使用taskID对目标进行推送
         //TODO 联调再开
         IPushResult result = push.pushMessageToList(taskId, targets);

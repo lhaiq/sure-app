@@ -117,11 +117,6 @@ public class IndentServiceImpl implements IndentService {
         tradeService.createSelective(tradeModel);
         Long tradeId = tradeModel.getId();
 
-//        //判断是否交易成功
-//        if (!TRADE_FINISHED.equals(tradeModel.getTradeStatus())) {
-//            ErrorCode.throwBusinessException(ErrorCode.TRADE_NOT_SUCCESS);
-//        }
-
         IndentModel indentModel = findByNo(tradeModel.getTradeNo());
 
         //判断状态是否正确
@@ -135,7 +130,6 @@ public class IndentServiceImpl implements IndentService {
         if(!sellerAccount.equals(tradeModel.getSellerId())){
             ErrorCode.throwBusinessException(ErrorCode.SELLER_ERROR);
         }
-
 
         //检查交易 金额是否足够
         if (indentModel.getMoney().doubleValue() != tradeModel.getTotalFee().doubleValue()) {

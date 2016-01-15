@@ -15,7 +15,7 @@ public class MTimeModel{
 	private Double latitude;
 	private String content;
 	private String images;
-	private List<Long> imageIds;
+	private List<String> imageIds;
 	private Long commentsCount;
 	private Long statusesCount;
 		
@@ -75,11 +75,11 @@ public class MTimeModel{
 		return this.images;
 	}
 
-	public void setImageIds(List<Long> imageIds) {
+	public void setImageIds(List<String> imageIds) {
 		this.imageIds = imageIds;
 	}
 
-	public List<Long> getImageIds() {
+	public List<String> getImageIds() {
 		return imageIds;
 	}
 

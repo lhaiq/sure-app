@@ -17,7 +17,7 @@ public class MTimeVO {
     private String content;
     @NotNull
     private Integer cityId;
-    private List<Long> imageIds;
+    private List<String> imageIds;
 
 
     public void setTime(Date time) {
@@ -53,11 +53,11 @@ public class MTimeVO {
     }
 
 
-    public void setImageIds(List<Long> imageIds) {
+    public void setImageIds(List<String> imageIds) {
         this.imageIds = imageIds;
     }
 
-    public List<Long> getImageIds() {
+    public List<String> getImageIds() {
         return imageIds;
     }
 

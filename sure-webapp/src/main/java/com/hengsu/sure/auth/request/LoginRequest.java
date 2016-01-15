@@ -15,6 +15,9 @@ public class LoginRequest {
     @NotEmpty
     private String password;
 
+    @NotEmpty
+    private String clientId;
+
     public String getPassword() {
         return password;
     }
@@ -29,5 +32,13 @@ public class LoginRequest {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public void setClientId(String clientId) {
+        this.clientId = clientId;
+    }
+
+    public String getClientId() {
+        return clientId;
     }
 }

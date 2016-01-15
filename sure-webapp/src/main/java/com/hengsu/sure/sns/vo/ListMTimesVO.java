@@ -16,7 +16,7 @@ public class ListMTimesVO {
     private Integer cityId;
     private Long commentsCount;
     private Long statusesCount;
-    private List<Long> imageIds;
+    private List<String> imageIds;
     private SNSUserVO user;
     private boolean isStatus;
     private boolean isAttention;
@@ -37,11 +37,11 @@ public class ListMTimesVO {
         this.content = content;
     }
 
-    public void setImageIds(List<Long> imageIds) {
+    public void setImageIds(List<String> imageIds) {
         this.imageIds = imageIds;
     }
 
-    public List<Long> getImageIds() {
+    public List<String> getImageIds() {
         return imageIds;
     }
 

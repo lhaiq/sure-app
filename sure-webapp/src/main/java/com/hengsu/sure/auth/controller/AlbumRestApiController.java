@@ -62,7 +62,7 @@ public class AlbumRestApiController {
 //    }
 
     @RequestMapping(value = "/auth/album", method = RequestMethod.GET)
-    public ResponseEntity<ResponseEnvelope<List<Long>>> getAlbumById(
+    public ResponseEntity<ResponseEnvelope<List<String>>> getAlbumById(
             @RequestParam Long userId) {
 
         //设置查询参数
@@ -73,15 +73,15 @@ public class AlbumRestApiController {
 
         //返回数据
         List<MTimeModel> mTimeModels = mTimeService.listMTimeModels(param, pageable);
-        List<Long> imageIds = new ArrayList<>();
+        List<String> imageIds = new ArrayList<>();
 
         for (MTimeModel mTimeModel : mTimeModels) {
             if (StringUtils.isNotEmpty(mTimeModel.getImages())) {
-                imageIds.addAll(JSON.parseArray(mTimeModel.getImages(), Long.class));
+                imageIds.addAll(JSON.parseArray(mTimeModel.getImages(), String.class));
             }
         }
 
-        ResponseEnvelope<List<Long>> responseEnv = new ResponseEnvelope<>(imageIds, true);
+        ResponseEnvelope<List<String>> responseEnv = new ResponseEnvelope<>(imageIds, true);
         return new ResponseEntity<>(responseEnv, HttpStatus.OK);
     }
 
@@ -92,23 +92,23 @@ public class AlbumRestApiController {
      * @param userId
      * @return
      */
-    @RequestMapping(value = "/auth/album", method = RequestMethod.POST)
-    public ResponseEntity<ResponseEnvelope<String>> createAlbum(
-            @RequestBody AlbumVO albumVO,
-            @Value("#{request.getAttribute('userId')}") Long userId) {
-        List<Long> imageIds = albumVO.getImageIds();
-
-        for (Long imageId : imageIds) {
-            AlbumModel albumModel = new AlbumModel();
-            albumModel.setImageId(imageId);
-            albumModel.setUserId(userId);
-            albumModel.setCreateTime(new Date());
-            albumService.createSelective(albumModel);
-        }
-
-        ResponseEnvelope<String> responseEnv = new ResponseEnvelope<>(ReturnCode.OPERATION_SUCCESS, true);
-        return new ResponseEntity<>(responseEnv, HttpStatus.OK);
-    }
+//    @RequestMapping(value = "/auth/album", method = RequestMethod.POST)
+//    public ResponseEntity<ResponseEnvelope<String>> createAlbum(
+//            @RequestBody AlbumVO albumVO,
+//            @Value("#{request.getAttribute('userId')}") Long userId) {
+//        List<Long> imageIds = albumVO.getImageIds();
+//
+//        for (Long imageId : imageIds) {
+//            AlbumModel albumModel = new AlbumModel();
+//            albumModel.setImageId(imageId);
+//            albumModel.setUserId(userId);
+//            albumModel.setCreateTime(new Date());
+//            albumService.createSelective(albumModel);
+//        }
+//
+//        ResponseEnvelope<String> responseEnv = new ResponseEnvelope<>(ReturnCode.OPERATION_SUCCESS, true);
+//        return new ResponseEntity<>(responseEnv, HttpStatus.OK);
+//    }
 
 
     /**
@@ -118,14 +118,14 @@ public class AlbumRestApiController {
      * @param userId
      * @return
      */
-    @RequestMapping(value = "/auth/album/{id}", method = RequestMethod.DELETE)
-    public ResponseEntity<ResponseEnvelope<String>> deleteAlbum(
-            @PathVariable Long id,
-            @Value("#{request.getAttribute('userId')}") Long userId) {
-        albumService.deleteAlbum(id, userId);
-        ResponseEnvelope<String> responseEnv = new ResponseEnvelope<>(ReturnCode.OPERATION_SUCCESS, true);
-        return new ResponseEntity<>(responseEnv, HttpStatus.OK);
-    }
+//    @RequestMapping(value = "/auth/album/{id}", method = RequestMethod.DELETE)
+//    public ResponseEntity<ResponseEnvelope<String>> deleteAlbum(
+//            @PathVariable Long id,
+//            @Value("#{request.getAttribute('userId')}") Long userId) {
+//        albumService.deleteAlbum(id, userId);
+//        ResponseEnvelope<String> responseEnv = new ResponseEnvelope<>(ReturnCode.OPERATION_SUCCESS, true);
+//        return new ResponseEntity<>(responseEnv, HttpStatus.OK);
+//    }
 
 
 }

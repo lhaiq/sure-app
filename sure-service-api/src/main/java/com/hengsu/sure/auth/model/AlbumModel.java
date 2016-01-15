@@ -7,7 +7,7 @@ import java.util.Date;
 public class AlbumModel{
 	
 	private Long id;
-	private Long imageId;
+	private String imageId;
 	private Long userId;
 	private Date createTime;
 		
@@ -19,11 +19,11 @@ public class AlbumModel{
 		return this.id;
 	}
 		
-	public void setImageId(Long imageId){
+	public void setImageId(String imageId){
 		this.imageId = imageId;
 	}
 	
-	public Long getImageId(){
+	public String getImageId(){
 		return this.imageId;
 	}
 		

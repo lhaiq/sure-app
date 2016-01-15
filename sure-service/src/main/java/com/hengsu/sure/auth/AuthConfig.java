@@ -20,4 +20,13 @@ public class AuthConfig {
         context.put("bbbbb",4L);
         return context;
     }
+
+    @Bean
+    @Qualifier("loginContext")
+    public Context loginContext(){
+        Context<Long,String> context = new Context<>();
+        //TODO 需要去掉这行
+        context.put(3L,"aaaaa");
+        return context;
+    }
 }

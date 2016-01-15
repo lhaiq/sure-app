@@ -7,13 +7,13 @@ import java.util.List;
 @MapClass("com.hengsu.sure.auth.model.AlbumModel")
 public class AlbumVO{
 	
-	private List<Long> imageIds;
+	private List<String> imageIds;
 
-	public void setImageIds(List<Long> imageIds) {
+	public void setImageIds(List<String> imageIds) {
 		this.imageIds = imageIds;
 	}
 
-	public List<Long> getImageIds() {
+	public List<String> getImageIds() {
 		return imageIds;
 	}
 }

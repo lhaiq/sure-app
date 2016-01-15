@@ -3,6 +3,7 @@ package com.hengsu.sure.invite.controller;
 import com.hengsu.sure.ReturnCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,8 @@ import com.hengsu.sure.invite.service.CashService;
 import com.hengsu.sure.invite.model.CashModel;
 import com.hengsu.sure.invite.vo.CashVO;
 
+import javax.validation.Valid;
+
 @RestApiController
 @RequestMapping("/sure")
 public class CashRestApiController {
@@ -32,9 +35,12 @@ public class CashRestApiController {
 	private CashService cashService;
 
 	@RequestMapping(value = "/invite/cash", method = RequestMethod.POST)
-	public ResponseEntity<ResponseEnvelope<String>> createCash(@RequestBody CashVO cashVO){
+	public ResponseEntity<ResponseEnvelope<String>> createCash(
+			@Valid@RequestBody CashVO cashVO,
+			@Value("#{request.getAttribute('userId')}") Long userId){
 		CashModel cashModel = beanMapper.map(cashVO, CashModel.class);
-		cashService.create(cashModel);
+		cashModel.setUserId(userId);
+		cashService.applyCash(cashModel);
 		ResponseEnvelope<String> responseEnv = new ResponseEnvelope<>(ReturnCode.OPERATION_SUCCESS,true);
 		return new ResponseEntity<>(responseEnv, HttpStatus.OK);
 	}

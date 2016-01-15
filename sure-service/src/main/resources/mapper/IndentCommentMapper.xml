@@ -188,4 +188,21 @@
             limit ${param2.offset}, ${param2.pageSize}
         </if>
     </select>
+
+    <select id="selectCommentCount" resultType="java.lang.Integer" parameterType="java.lang.Long">
+        SELECT count(1) FROM indent_comment c ,indent i
+            where c.indent_id = i.id
+            and i.seller_id= #{id,jdbcType=BIGINT}
+            and c.content is not null
+    </select>
+    <select id="selectCommentPage" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        SELECT c.* FROM indent_comment c ,indent i
+        where c.indent_id = i.id
+        and i.seller_id= #{param1,jdbcType=BIGINT}
+        and c.content is not null
+        order by c.create_time desc
+        <if test="param2.offset >= 0 and param2.pageSize > 0">
+            limit ${param2.offset}, ${param2.pageSize}
+        </if>
+    </select>
 </mapper>

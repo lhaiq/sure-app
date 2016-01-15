@@ -9,7 +9,7 @@ public class QueryRentModel {
     private Integer gender;
     private Integer height;
     private Integer age;
-    private Long  icon;
+    private String  icon;
     private Double  faceScore;
     private Double  credit;
     private Long  rentId;
@@ -54,11 +54,11 @@ public class QueryRentModel {
         this.height = height;
     }
 
-    public Long getIcon() {
+    public String getIcon() {
         return icon;
     }
 
-    public void setIcon(Long icon) {
+    public void setIcon(String icon) {
         this.icon = icon;
     }
 

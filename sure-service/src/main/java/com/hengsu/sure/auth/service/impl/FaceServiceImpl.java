@@ -22,11 +22,11 @@ public class FaceServiceImpl implements FaceService {
     private HttpRequests httpRequests;
 
     @Override
-    public boolean isSimilar(String phone, String loginFaceId) {
+    public boolean isSimilar(String personId, String loginFaceId) {
         try {
             JSONObject result = httpRequests.recognitionVerify(
-                    new PostParameters().setPersonName("sure_" + phone).setFaceId(loginFaceId));
-            logger.info("verify account: phone-{},login face id-{}, result={}", phone, loginFaceId, result);
+                    new PostParameters().setPersonId(personId).setFaceId(loginFaceId));
+            logger.info("verify account: phone-{},login face id-{}, result={}", personId, loginFaceId, result);
             return result.getBoolean("is_same_person");
         } catch (Exception e) {
             ErrorCode.throwBusinessException(ErrorCode.VERIFY_PERSON_ERROR);
@@ -34,17 +34,23 @@ public class FaceServiceImpl implements FaceService {
         return false;
     }
 
-    public void createPerson(String phone, String faceId) {
+    public String createPerson(String phone, String faceId) {
         phone = "sure_" + phone;
         try {
-            JSONObject createResult = httpRequests.personCreate(new PostParameters().setPersonName(phone));
+            JSONObject createResult = httpRequests.personCreate(new PostParameters().setPersonId(phone));
+            String personId=createResult.getString("person_id");
             logger.info("create person:{}, result:{}", phone, createResult);
-            JSONObject addFaceResult = httpRequests.personAddFace(new PostParameters().setFaceId(faceId));
+            JSONObject addFaceResult = httpRequests.personAddFace(new PostParameters()
+                    .setPersonId(personId).setFaceId(faceId));
             logger.info("add face id:{} , result: {}", faceId, addFaceResult);
-            JSONObject trainResult = httpRequests.trainVerify(new PostParameters().setPersonName(phone));
+            JSONObject trainResult = httpRequests.trainVerify(new PostParameters()
+                    .setPersonId(personId));
             logger.info("train person: {},result :{}", phone, trainResult);
+            return personId;
         } catch (Exception e) {
+            logger.error("fetch face error ",e);
             ErrorCode.throwBusinessException(ErrorCode.CREATE_PERSON_ERROR);
+            return null;
         }
     }
 }

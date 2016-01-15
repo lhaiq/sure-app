@@ -30,9 +30,15 @@ public interface UserRepository {
 
     List<User> selectPage(@Param("user") User user, @Param("pageable") Pageable pageable);
 
+    List<User> queryNearUserWithRole(@Param("param") Map<String, Object> param, @Param("pageable") Pageable pageable);
+
     List<User> queryNearUser(@Param("param") Map<String, Object> param, @Param("pageable") Pageable pageable);
 
     User findUserByPhone(String phone);
 
     User findUserByFaceId(String faceId);
+
+    User findUserByClientId(String clientId);
+
+    void updateClientNull(Long userId);
 }

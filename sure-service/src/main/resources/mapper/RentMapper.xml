@@ -24,7 +24,7 @@
         <result column="gender" property="gender" jdbcType="INTEGER"/>
         <result column="height" property="height" jdbcType="INTEGER"/>
         <result column="age" property="age" jdbcType="INTEGER"/>
-        <result column="icon" property="icon" jdbcType="BIGINT"/>
+        <result column="icon" property="icon" jdbcType="VARCHAR"/>
         <result column="face_score" property="faceScore" jdbcType="DOUBLE"/>
         <result column="credit" property="credit" jdbcType="DOUBLE"/>
         <result column="rent_id" property="rentId" jdbcType="BIGINT"/>

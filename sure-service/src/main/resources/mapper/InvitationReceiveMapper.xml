@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hengsu.sure.invite.repository.InvitationReceiveRepository" >
+  <resultMap id="BaseResultMap" type="com.hengsu.sure.invite.entity.InvitationReceive" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="invitation_id" property="invitationId" jdbcType="BIGINT" />
+    <result column="user_id" property="userId" jdbcType="BIGINT" />
+    <result column="time" property="time" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, invitation_id, user_id, time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from invitation_receive
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from invitation_receive
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.hengsu.sure.invite.entity.InvitationReceive" >
+    insert into invitation_receive (id, invitation_id, user_id, 
+      time)
+    values (#{id,jdbcType=BIGINT}, #{invitationId,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, 
+      #{time,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hengsu.sure.invite.entity.InvitationReceive" >
+    insert into invitation_receive
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="invitationId != null" >
+        invitation_id,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="time != null" >
+        time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="invitationId != null" >
+        #{invitationId,jdbcType=BIGINT},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="time != null" >
+        #{time,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hengsu.sure.invite.entity.InvitationReceive" >
+    update invitation_receive
+    <set >
+      <if test="invitationId != null" >
+        invitation_id = #{invitationId,jdbcType=BIGINT},
+      </if>
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="time != null" >
+        time = #{time,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hengsu.sure.invite.entity.InvitationReceive" >
+    update invitation_receive
+    set invitation_id = #{invitationId,jdbcType=BIGINT},
+      user_id = #{userId,jdbcType=BIGINT},
+      time = #{time,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectCount" resultType="java.lang.Integer" parameterType="com.hengsu.sure.invite.entity.InvitationReceive" >
+    select count(*) from invitation_receive
+    <where >
+      <if test="id != null" >
+        and id = #{id,jdbcType=BIGINT}
+      </if>
+      <if test="invitationId != null" >
+        and invitation_id = #{invitationId,jdbcType=BIGINT}
+      </if>
+      <if test="userId != null" >
+        and user_id = #{userId,jdbcType=BIGINT}
+      </if>
+      <if test="time != null" >
+        and time = #{time,jdbcType=TIMESTAMP}
+      </if>
+    </where>
+  </select>
+  <select id="selectPage" resultMap="BaseResultMap" >
+    select 
+    <include refid="Base_Column_List" />
+    from invitation_receive where 1 = 1 
+    <if test="param1.id != null" >
+      and id = #{param1.id,jdbcType=BIGINT}
+    </if>
+    <if test="param1.invitationId != null" >
+      and invitation_id = #{param1.invitationId,jdbcType=BIGINT}
+    </if>
+    <if test="param1.userId != null" >
+      and user_id = #{param1.userId,jdbcType=BIGINT}
+    </if>
+    <if test="param1.time != null" >
+      and time = #{param1.time,jdbcType=TIMESTAMP}
+    </if>
+    <if test="param2.sort != null" >
+      order by 
+      <foreach collection="param2.sort" item="order" separator="," >
+        ${order.property} ${order.direction}
+      </foreach>
+    </if>
+    <if test="param2.offset >= 0 and param2.pageSize > 0" >
+      limit ${param2.offset}, ${param2.pageSize}
+    </if>
+  </select>
+</mapper>

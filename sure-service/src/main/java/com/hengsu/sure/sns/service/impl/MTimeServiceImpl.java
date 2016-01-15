@@ -82,10 +82,10 @@ public class MTimeServiceImpl implements MTimeService {
         commentService.deleteCommentByMid(id);
 
         //删除图片
-        List<Long> imageIds = mTimeModel.getImageIds();
-        for (Long imageId : imageIds) {
-            imageService.deleteByPrimaryKey(imageId);
-        }
+//        List<Long> imageIds = mTimeModel.getImageIds();
+//        for (Long imageId : imageIds) {
+//            imageService.deleteByPrimaryKey(imageId);
+//        }
 
         //删除自身
         deleteByPrimaryKey(id);
