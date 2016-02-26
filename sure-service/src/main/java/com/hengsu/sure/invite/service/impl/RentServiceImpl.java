@@ -86,6 +86,10 @@ public class RentServiceImpl implements RentService {
     @Override
     public void publishRent(RentModel rentModel) {
 
+        if(!rentModel.getTime().contains("-")){
+            ErrorCode.throwBusinessException(ErrorCode.RENT_ROLE_ERROR);
+        }
+
         //角色是否为卖家
         Long userId = rentModel.getUserId();
         UserModel userModel = userService.findByPrimaryKeyNoPass(userId);
@@ -194,7 +198,7 @@ public class RentServiceImpl implements RentService {
 
     private void setStartAndEndTime(IndentModel indentModel, String startDateStr, String endDateStr, String time) {
 //        time=time.substring(2,time.length());
-        String[] timeSlots = time.split("-");
+        String[] timeSlots = time.split("\\-");
         try {
             Date startDate = simpleFormat.parse(startDateStr);
             Date endDate = simpleFormat.parse(endDateStr);

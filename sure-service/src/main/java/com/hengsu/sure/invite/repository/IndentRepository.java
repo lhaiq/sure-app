@@ -27,7 +27,14 @@ public interface IndentRepository {
 
     int selectCount(@Param("indent") Indent indent);
 
+    int selectIndentCount(@Param("indent") Indent indent);
+
     List<Indent> selectPage(@Param("indent") Indent indent, @Param("pageable") Pageable pageable);
 
+    List<Indent> selectIndent(@Param("indent") Indent indent, @Param("pageable") Pageable pageable);
+
     List<Indent> selectFinishing(@Param("status")Integer status,@Param("now")Date now);
+
+    List<Indent> selectStarting(@Param("status")Integer status,@Param("now")Date now);
+
 }

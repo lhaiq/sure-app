@@ -32,10 +32,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 
 @RestApiController
@@ -76,8 +73,8 @@ public class MTimeRestApiController {
         if (!StringUtils.isEmpty(mTimeModel.getImages())) {
             listMTimesVO.setImageIds(JSON.parseArray(mTimeModel.getImages(), String.class));
         }
-        setSNSUser(listMTimesVO, mTimeModel.getUserId());
-        setCommentAndStatueCount(listMTimesVO);
+        SNSUserVO snsUserVO = getSNSUser( mTimeModel.getUserId());
+        listMTimesVO.setUser(snsUserVO);
         //检查本人是否点赞
         listMTimesVO.setIsStatus(checkIsStatus(userId, mTimeModel.getId()));
 
@@ -107,7 +104,7 @@ public class MTimeRestApiController {
         }
 
         mTimeModel.setTime(new Date());
-        Integer result = mTimeService.create(mTimeModel);
+        Integer result = mTimeService.createSelective(mTimeModel);
         ResponseEnvelope<Integer> responseEnv = new ResponseEnvelope<Integer>(result, true);
         return new ResponseEntity<>(responseEnv, HttpStatus.OK);
     }
@@ -146,6 +143,9 @@ public class MTimeRestApiController {
         List<MTimeModel> mTimeModels = mTimeService.listMTimeModels(param, pageable);
         Integer count = mTimeService.selectCount(param);
 
+        //SNS user列表
+        Map<Long,SNSUserVO> snsUsers = new HashMap<>();
+
         //添加User
         List<ListMTimesVO> listMTimesVOs = new ArrayList<>();
         for (MTimeModel mTimeModel : mTimeModels) {
@@ -154,16 +154,21 @@ public class MTimeRestApiController {
                 listMTimesVO.setImageIds(JSON.parseArray(mTimeModel.getImages(), String.class));
             }
             //SNS User
-            setSNSUser(listMTimesVO, mTimeModel.getUserId());
+            SNSUserVO snsUserVO = snsUsers.get(mTimeModel.getUserId());
+            if(null==snsUserVO){
+                snsUserVO=getSNSUser(mTimeModel.getUserId());
+                snsUsers.put(mTimeModel.getUserId(),snsUserVO);
+            }
+            listMTimesVO.setUser(snsUserVO);
 
             //点赞评论数
-            setCommentAndStatueCount(listMTimesVO);
+//            setCommentAndStatueCount(listMTimesVO);
 
             //检查本人是否点赞
             listMTimesVO.setIsStatus(checkIsStatus(userId, mTimeModel.getId()));
 
             //检查本人是否关注
-            listMTimesVO.setIsAttention(checkIsStatus(userId, mTimeModel.getUserId()));
+            listMTimesVO.setIsAttention(checkIsAttention(userId, mTimeModel.getUserId()));
 
             listMTimesVOs.add(listMTimesVO);
         }
@@ -175,27 +180,10 @@ public class MTimeRestApiController {
         return new ResponseEntity<>(responseEnv, HttpStatus.OK);
     }
 
-    private void setCommentAndStatueCount(ListMTimesVO listMTimesVO) {
-
-        //评论数
-        CommentModel commentParam = new CommentModel();
-        commentParam.setmId(listMTimesVO.getId());
-        commentParam.setType(CommentType.COMMENT.getCode());
-        Integer commentCount = commentService.selectCount(commentParam);
-        listMTimesVO.setCommentsCount(Long.valueOf(commentCount));
-
-        //点赞数
-        CommentModel statueParam = new CommentModel();
-        statueParam.setmId(listMTimesVO.getId());
-        statueParam.setType(CommentType.STATUSES.getCode());
-        Integer statueCount = commentService.selectCount(statueParam);
-        listMTimesVO.setStatusesCount(Long.valueOf(statueCount));
-    }
-
-    private void setSNSUser(ListMTimesVO listMTimesVO, Long userId) {
+    private SNSUserVO getSNSUser(Long userId) {
         UserModel userModel = userService.findByPrimaryKey(userId);
         SNSUserVO snsUserVO = beanMapper.map(userModel, SNSUserVO.class);
-        listMTimesVO.setUser(snsUserVO);
+        return snsUserVO;
     }
 
     private boolean checkIsStatus(Long userId, Long mid) {

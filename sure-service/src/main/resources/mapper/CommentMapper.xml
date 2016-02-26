@@ -26,7 +26,7 @@
     delete from comment
     where m_id = #{mId,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.hengsu.sure.sns.entity.Comment" >
+  <insert id="insert" parameterType="com.hengsu.sure.sns.entity.Comment" keyProperty="id" useGeneratedKeys="true" >
     insert into comment (id, m_id, content, 
       time, type, userId
       )
@@ -34,7 +34,7 @@
       #{time,jdbcType=TIMESTAMP}, #{type,jdbcType=INTEGER}, #{userid,jdbcType=BIGINT}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.hengsu.sure.sns.entity.Comment" >
+  <insert id="insertSelective" parameterType="com.hengsu.sure.sns.entity.Comment" keyProperty="id" useGeneratedKeys="true">
     insert into comment
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >

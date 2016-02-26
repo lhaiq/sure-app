@@ -44,7 +44,7 @@ public enum ErrorCode {
     RELATION_ERROR("5003", "不能关注自己或加自己为好友"),
 
     //600邀约
-    HAVE_EXCEED_INVITATION("6000", "超出邀约次数"),
+    HAVE_EXCEED_INVITATION("6000", "今天已超过邀约次数"),
     INVITATION_FINISHED("6001", "该邀约已经完成"),
     INVITATION_PUBLISHER_NOT_MATCH("6002", "只能更新自己的邀约"),
     INVITATION_ROLE_ERROR("6003", "只有买家才能发布即时邀约"),
@@ -56,8 +56,9 @@ public enum ErrorCode {
     CANNOT_COMMENT_INDENT("6009", "只有买家才可以评论订单"),
     CANNOT_COMMENT_INDENT_AS_STATUS("6010", "只有完成订单才可以评论"),
     HAVE_COMMENTED("6011", "该订单已经评论"),
-    INDENT_HAS_START("6012", "该订单已经评论"),
+    INDENT_HAS_START("6012", "该订单已经开始,无法取消"),
     INVITATION_HAVE_RECEIVED("6013", "已经接受该邀约"),
+    RENT_TIME_ERROR("6014", "时间格式错误,类似18:00-21:00"),
     //700
     RENT_NOT_EXISTED("7000", "邀约不存在"),
     CANNOT_BUY_SLEF("7001", "不能邀约自己"),

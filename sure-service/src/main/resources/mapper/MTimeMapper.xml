@@ -4,22 +4,22 @@
   <resultMap id="BaseResultMap" type="com.hengsu.sure.sns.entity.MTime" >
     <id column="id" property="id" jdbcType="BIGINT" />
     <result column="user_id" property="userId" jdbcType="BIGINT" />
+    <result column="content" property="content" jdbcType="VARCHAR" />
+    <result column="images" property="images" jdbcType="VARCHAR" />
     <result column="time" property="time" jdbcType="TIMESTAMP" />
     <result column="longitude" property="longitude" jdbcType="DOUBLE" />
     <result column="latitude" property="latitude" jdbcType="DOUBLE" />
+    <result column="comments_count" property="commentsCount" jdbcType="BIGINT" />
+    <result column="statuses_count" property="statusesCount" jdbcType="BIGINT" />
     <result column="city_id" property="cityId" jdbcType="INTEGER" />
-    <result column="content" property="content" jdbcType="LONGVARCHAR" />
-    <result column="images" property="images" jdbcType="LONGVARCHAR" />
   </resultMap>
-
   <sql id="Base_Column_List" >
-    id, user_id, time, longitude, latitude, city_id, content, images
+    id, user_id, content, images, time, longitude, latitude, comments_count, statuses_count, 
+    city_id
   </sql>
-
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
     <include refid="Base_Column_List" />
-
     from mtime
     where id = #{id,jdbcType=BIGINT}
   </select>
@@ -28,12 +28,14 @@
     where id = #{id,jdbcType=BIGINT}
   </delete>
   <insert id="insert" parameterType="com.hengsu.sure.sns.entity.MTime" >
-    insert into mtime (id, user_id, time, 
-      longitude, latitude, city_id, 
-      content, images)
-    values (#{id,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{time,jdbcType=TIMESTAMP}, 
-      #{longitude,jdbcType=DOUBLE}, #{latitude,jdbcType=DOUBLE}, #{cityId,jdbcType=INTEGER}, 
-      #{content,jdbcType=LONGVARCHAR}, #{images,jdbcType=LONGVARCHAR})
+    insert into mtime (id, user_id, content, 
+      images, time, longitude, 
+      latitude, comments_count, statuses_count, 
+      city_id)
+    values (#{id,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{content,jdbcType=VARCHAR}, 
+      #{images,jdbcType=VARCHAR}, #{time,jdbcType=TIMESTAMP}, #{longitude,jdbcType=DOUBLE}, 
+      #{latitude,jdbcType=DOUBLE}, #{commentsCount,jdbcType=BIGINT}, #{statusesCount,jdbcType=BIGINT}, 
+      #{cityId,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="com.hengsu.sure.sns.entity.MTime" >
     insert into mtime
@@ -44,6 +46,12 @@
       <if test="userId != null" >
         user_id,
       </if>
+      <if test="content != null" >
+        content,
+      </if>
+      <if test="images != null" >
+        images,
+      </if>
       <if test="time != null" >
         time,
       </if>
@@ -53,14 +61,14 @@
       <if test="latitude != null" >
         latitude,
       </if>
+      <if test="commentsCount != null" >
+        comments_count,
+      </if>
+      <if test="statusesCount != null" >
+        statuses_count,
+      </if>
       <if test="cityId != null" >
         city_id,
-      </if>
-      <if test="content != null" >
-        content,
-      </if>
-      <if test="images != null" >
-        images,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -69,6 +77,12 @@
       </if>
       <if test="userId != null" >
         #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="images != null" >
+        #{images,jdbcType=VARCHAR},
       </if>
       <if test="time != null" >
         #{time,jdbcType=TIMESTAMP},
@@ -79,14 +93,14 @@
       <if test="latitude != null" >
         #{latitude,jdbcType=DOUBLE},
       </if>
+      <if test="commentsCount != null" >
+        #{commentsCount,jdbcType=BIGINT},
+      </if>
+      <if test="statusesCount != null" >
+        #{statusesCount,jdbcType=BIGINT},
+      </if>
       <if test="cityId != null" >
         #{cityId,jdbcType=INTEGER},
-      </if>
-      <if test="content != null" >
-        #{content,jdbcType=LONGVARCHAR},
-      </if>
-      <if test="images != null" >
-        #{images,jdbcType=LONGVARCHAR},
       </if>
     </trim>
   </insert>
@@ -95,6 +109,12 @@
     <set >
       <if test="userId != null" >
         user_id = #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="content != null" >
+        content = #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="images != null" >
+        images = #{images,jdbcType=VARCHAR},
       </if>
       <if test="time != null" >
         time = #{time,jdbcType=TIMESTAMP},
@@ -105,25 +125,28 @@
       <if test="latitude != null" >
         latitude = #{latitude,jdbcType=DOUBLE},
       </if>
+      <if test="commentsCount != null" >
+        comments_count = #{commentsCount,jdbcType=BIGINT},
+      </if>
+      <if test="statusesCount != null" >
+        statuses_count = #{statusesCount,jdbcType=BIGINT},
+      </if>
       <if test="cityId != null" >
         city_id = #{cityId,jdbcType=INTEGER},
-      </if>
-      <if test="content != null" >
-        content = #{content,jdbcType=LONGVARCHAR},
-      </if>
-      <if test="images != null" >
-        images = #{images,jdbcType=LONGVARCHAR},
       </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-
   <update id="updateByPrimaryKey" parameterType="com.hengsu.sure.sns.entity.MTime" >
     update mtime
     set user_id = #{userId,jdbcType=BIGINT},
+      content = #{content,jdbcType=VARCHAR},
+      images = #{images,jdbcType=VARCHAR},
       time = #{time,jdbcType=TIMESTAMP},
       longitude = #{longitude,jdbcType=DOUBLE},
       latitude = #{latitude,jdbcType=DOUBLE},
+      comments_count = #{commentsCount,jdbcType=BIGINT},
+      statuses_count = #{statusesCount,jdbcType=BIGINT},
       city_id = #{cityId,jdbcType=INTEGER}
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -136,6 +159,12 @@
       <if test="userId != null" >
         and user_id = #{userId,jdbcType=BIGINT}
       </if>
+      <if test="content != null" >
+        and content = #{content,jdbcType=VARCHAR}
+      </if>
+      <if test="images != null" >
+        and images = #{images,jdbcType=VARCHAR}
+      </if>
       <if test="time != null" >
         and time = #{time,jdbcType=TIMESTAMP}
       </if>
@@ -145,14 +174,14 @@
       <if test="latitude != null" >
         and latitude = #{latitude,jdbcType=DOUBLE}
       </if>
+      <if test="commentsCount != null" >
+        and comments_count = #{commentsCount,jdbcType=BIGINT}
+      </if>
+      <if test="statusesCount != null" >
+        and statuses_count = #{statusesCount,jdbcType=BIGINT}
+      </if>
       <if test="cityId != null" >
         and city_id = #{cityId,jdbcType=INTEGER}
-      </if>
-      <if test="content != null" >
-        and content = #{content,jdbcType=LONGVARCHAR}
-      </if>
-      <if test="images != null" >
-        and images = #{images,jdbcType=LONGVARCHAR}
       </if>
     </where>
   </select>
@@ -166,6 +195,12 @@
     <if test="param1.userId != null" >
       and user_id = #{param1.userId,jdbcType=BIGINT}
     </if>
+    <if test="param1.content != null" >
+      and content = #{param1.content,jdbcType=VARCHAR}
+    </if>
+    <if test="param1.images != null" >
+      and images = #{param1.images,jdbcType=VARCHAR}
+    </if>
     <if test="param1.time != null" >
       and time = #{param1.time,jdbcType=TIMESTAMP}
     </if>
@@ -175,14 +210,14 @@
     <if test="param1.latitude != null" >
       and latitude = #{param1.latitude,jdbcType=DOUBLE}
     </if>
+    <if test="param1.commentsCount != null" >
+      and comments_count = #{param1.commentsCount,jdbcType=BIGINT}
+    </if>
+    <if test="param1.statusesCount != null" >
+      and statuses_count = #{param1.statusesCount,jdbcType=BIGINT}
+    </if>
     <if test="param1.cityId != null" >
       and city_id = #{param1.cityId,jdbcType=INTEGER}
-    </if>
-    <if test="param1.content != null" >
-      and content = #{param1.content,jdbcType=LONGVARCHAR}
-    </if>
-    <if test="param1.images != null" >
-      and images = #{param1.images,jdbcType=LONGVARCHAR}
     </if>
     <if test="param2.sort != null" >
       order by 
@@ -194,4 +229,28 @@
       limit ${param2.offset}, ${param2.pageSize}
     </if>
   </select>
+
+  <update id="commentsInc" parameterType="java.lang.Long" >
+    update mtime
+    set comments_count = comments_count+1
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <update id="commentsDec" parameterType="java.lang.Long" >
+    update mtime
+    set comments_count = comments_count-1
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <update id="statusesInc" parameterType="java.lang.Long" >
+    update mtime
+    set statuses_count = statuses_count+1
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <update id="statusesDec" parameterType="java.lang.Long" >
+    update mtime
+    set statuses_count = statuses_count-1
+    where id = #{id,jdbcType=BIGINT}
+  </update>
 </mapper>

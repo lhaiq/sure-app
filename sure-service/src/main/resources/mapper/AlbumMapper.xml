@@ -3,7 +3,7 @@
 <mapper namespace="com.hengsu.sure.auth.repository.AlbumRepository" >
   <resultMap id="BaseResultMap" type="com.hengsu.sure.auth.entity.Album" >
     <id column="id" property="id" jdbcType="BIGINT" />
-    <result column="image_id" property="imageId" jdbcType="BIGINT" />
+    <result column="image_id" property="imageId" jdbcType="VARCHAR" />
     <result column="user_id" property="userId" jdbcType="BIGINT" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
   </resultMap>
@@ -20,13 +20,13 @@
     delete from album
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.hengsu.sure.auth.entity.Album" >
+  <insert id="insert" parameterType="com.hengsu.sure.auth.entity.Album" useGeneratedKeys="true" keyProperty="id">
     insert into album (id, image_id, user_id, 
       create_time)
-    values (#{id,jdbcType=BIGINT}, #{imageId,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, 
+    values (#{id,jdbcType=BIGINT}, #{imageId,jdbcType=VARCHAR}, #{userId,jdbcType=BIGINT},
       #{createTime,jdbcType=TIMESTAMP})
   </insert>
-  <insert id="insertSelective" parameterType="com.hengsu.sure.auth.entity.Album" >
+  <insert id="insertSelective" parameterType="com.hengsu.sure.auth.entity.Album" useGeneratedKeys="true" keyProperty="id">
     insert into album
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -47,7 +47,7 @@
         #{id,jdbcType=BIGINT},
       </if>
       <if test="imageId != null" >
-        #{imageId,jdbcType=BIGINT},
+        #{imageId,jdbcType=VARCHAR},
       </if>
       <if test="userId != null" >
         #{userId,jdbcType=BIGINT},
@@ -61,7 +61,7 @@
     update album
     <set >
       <if test="imageId != null" >
-        image_id = #{imageId,jdbcType=BIGINT},
+        image_id = #{imageId,jdbcType=VARCHAR},
       </if>
       <if test="userId != null" >
         user_id = #{userId,jdbcType=BIGINT},
@@ -74,7 +74,7 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="com.hengsu.sure.auth.entity.Album" >
     update album
-    set image_id = #{imageId,jdbcType=BIGINT},
+    set image_id = #{imageId,jdbcType=VARCHAR},
       user_id = #{userId,jdbcType=BIGINT},
       create_time = #{createTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
@@ -86,7 +86,7 @@
         and id = #{id,jdbcType=BIGINT}
       </if>
       <if test="imageId != null" >
-        and image_id = #{imageId,jdbcType=BIGINT}
+        and image_id = #{imageId,jdbcType=VARCHAR}
       </if>
       <if test="userId != null" >
         and user_id = #{userId,jdbcType=BIGINT}
@@ -104,7 +104,7 @@
       and id = #{param1.id,jdbcType=BIGINT}
     </if>
     <if test="param1.imageId != null" >
-      and image_id = #{param1.imageId,jdbcType=BIGINT}
+      and image_id = #{param1.imageId,jdbcType=VARCHAR}
     </if>
     <if test="param1.userId != null" >
       and user_id = #{param1.userId,jdbcType=BIGINT}

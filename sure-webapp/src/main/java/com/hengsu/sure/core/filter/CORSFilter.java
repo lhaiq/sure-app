@@ -1,5 +1,8 @@
 package com.hengsu.sure.core.filter;
 
+import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpMethod;
 
 import javax.servlet.*;
@@ -8,6 +11,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class CORSFilter implements Filter {
+
+    private final Logger logger = LoggerFactory.getLogger(CORSFilter.class);
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {

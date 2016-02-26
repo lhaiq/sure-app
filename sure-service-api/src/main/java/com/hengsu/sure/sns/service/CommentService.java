@@ -10,7 +10,7 @@ public interface CommentService {
 
     public int create(CommentModel commentModel);
 
-    public int createSelective(CommentModel commentModel);
+    public Long addComment(CommentModel commentModel);
 
     public CommentModel findByPrimaryKey(Long id);
 
@@ -23,6 +23,8 @@ public interface CommentService {
     public int selectCount(CommentModel commentModel);
 
     public void deleteCommentByMid(Long mid);
+
+    public void cancelStatue(Long mid,Long userId);
 
     public void deleteComment(Long id, Long userId);
 

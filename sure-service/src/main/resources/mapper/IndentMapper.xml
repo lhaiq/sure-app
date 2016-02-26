@@ -1,60 +1,69 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.hengsu.sure.invite.repository.IndentRepository" >
-  <resultMap id="BaseResultMap" type="com.hengsu.sure.invite.entity.Indent" >
-    <id column="id" property="id" jdbcType="BIGINT" />
-    <result column="indent_no" property="indentNo" jdbcType="VARCHAR" />
-    <result column="customer_id" property="customerId" jdbcType="BIGINT" />
-    <result column="seller_id" property="sellerId" jdbcType="BIGINT" />
-    <result column="trade_id" property="tradeId" jdbcType="BIGINT" />
-    <result column="money" property="money" jdbcType="DOUBLE" />
-    <result column="status" property="status" jdbcType="INTEGER" />
-    <result column="refer_id" property="referId" jdbcType="BIGINT" />
-    <result column="type" property="type" jdbcType="INTEGER" />
-    <result column="longitude" property="longitude" jdbcType="DOUBLE" />
-    <result column="latitude" property="latitude" jdbcType="DOUBLE" />
-    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
-    <result column="apply_time" property="applyTime" jdbcType="TIMESTAMP" />
-    <result column="canceled_time" property="canceledTime" jdbcType="TIMESTAMP" />
-    <result column="snapshot" property="snapshot" jdbcType="VARCHAR" />
-    <result column="cancel_reason" property="cancelReason" jdbcType="VARCHAR" />
-    <result column="handle_id" property="handleId" jdbcType="BIGINT" />
-    <result column="start_time" property="startTime" jdbcType="TIMESTAMP" />
-    <result column="end_time" property="endTime" jdbcType="TIMESTAMP" />
-    <result column="finish_time" property="finishTime" jdbcType="TIMESTAMP" />
-    <result column="price" property="price" jdbcType="DOUBLE" />
-    <result column="quantity" property="quantity" jdbcType="INTEGER" />
-    <result column="address" property="address" jdbcType="VARCHAR" />
-  </resultMap>
-  <sql id="Base_Column_List" >
+<mapper namespace="com.hengsu.sure.invite.repository.IndentRepository">
+    <resultMap id="BaseResultMap" type="com.hengsu.sure.invite.entity.Indent">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="indent_no" property="indentNo" jdbcType="VARCHAR"/>
+        <result column="customer_id" property="customerId" jdbcType="BIGINT"/>
+        <result column="seller_id" property="sellerId" jdbcType="BIGINT"/>
+        <result column="trade_id" property="tradeId" jdbcType="BIGINT"/>
+        <result column="money" property="money" jdbcType="DOUBLE"/>
+        <result column="status" property="status" jdbcType="INTEGER"/>
+        <result column="refer_id" property="referId" jdbcType="BIGINT"/>
+        <result column="type" property="type" jdbcType="INTEGER"/>
+        <result column="longitude" property="longitude" jdbcType="DOUBLE"/>
+        <result column="latitude" property="latitude" jdbcType="DOUBLE"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="apply_time" property="applyTime" jdbcType="TIMESTAMP"/>
+        <result column="canceled_time" property="canceledTime" jdbcType="TIMESTAMP"/>
+        <result column="snapshot" property="snapshot" jdbcType="VARCHAR"/>
+        <result column="cancel_reason" property="cancelReason" jdbcType="VARCHAR"/>
+        <result column="handle_id" property="handleId" jdbcType="BIGINT"/>
+        <result column="start_time" property="startTime" jdbcType="TIMESTAMP"/>
+        <result column="end_time" property="endTime" jdbcType="TIMESTAMP"/>
+        <result column="finish_time" property="finishTime" jdbcType="TIMESTAMP"/>
+        <result column="price" property="price" jdbcType="DOUBLE"/>
+        <result column="quantity" property="quantity" jdbcType="INTEGER"/>
+        <result column="address" property="address" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
     id, indent_no, customer_id, seller_id, trade_id, money, status, refer_id, type, longitude, 
     latitude, create_time, apply_time, canceled_time, snapshot, cancel_reason, handle_id, 
     start_time, end_time, finish_time, price, quantity, address
   </sql>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
-    select 
-    <include refid="Base_Column_List" />
-    from indent
-    where id = #{id,jdbcType=BIGINT}
-  </select>
-  <select id="selectByNO" resultMap="BaseResultMap" parameterType="java.lang.String" >
-    select
-    <include refid="Base_Column_List" />
-    from indent
-    where indent_no = #{indentNo,jdbcType=VARCHAR}
-  </select>
-  <select id="selectFinishing" resultMap="BaseResultMap" >
-    select
-    <include refid="Base_Column_List" />
-    from indent
-    where status=#{param1,jdbcType=INTEGER}
-    and end_time &lt;=#{param2,jdbcType=TIMESTAMP}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        from indent
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+    <select id="selectByNO" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from indent
+        where indent_no = #{indentNo,jdbcType=VARCHAR}
+    </select>
+    <select id="selectFinishing" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from indent
+        where status=#{param1,jdbcType=INTEGER}
+        and end_time &lt;=#{param2,jdbcType=TIMESTAMP}
+    </select>
+
+    <select id="selectStarting" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from indent
+        where status=#{param1,jdbcType=INTEGER}
+        and start_time &lt;=#{param2,jdbcType=TIMESTAMP}
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from indent
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.hengsu.sure.invite.entity.Indent" keyProperty="id" useGeneratedKeys="true">
+    <insert id="insert" parameterType="com.hengsu.sure.invite.entity.Indent" keyProperty="id" useGeneratedKeys="true">
     insert into indent (id, indent_no, customer_id, 
       seller_id, trade_id, money, 
       status, refer_id, type, 
@@ -72,224 +81,225 @@
       #{endTime,jdbcType=TIMESTAMP}, #{finishTime,jdbcType=TIMESTAMP}, #{price,jdbcType=DOUBLE}, 
       #{quantity,jdbcType=INTEGER}, #{address,jdbcType=VARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.hengsu.sure.invite.entity.Indent" keyProperty="id" useGeneratedKeys="true">
-    insert into indent
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        id,
-      </if>
-      <if test="indentNo != null" >
-        indent_no,
-      </if>
-      <if test="customerId != null" >
-        customer_id,
-      </if>
-      <if test="sellerId != null" >
-        seller_id,
-      </if>
-      <if test="tradeId != null" >
-        trade_id,
-      </if>
-      <if test="money != null" >
-        money,
-      </if>
-      <if test="status != null" >
-        status,
-      </if>
-      <if test="referId != null" >
-        refer_id,
-      </if>
-      <if test="type != null" >
-        type,
-      </if>
-      <if test="longitude != null" >
-        longitude,
-      </if>
-      <if test="latitude != null" >
-        latitude,
-      </if>
-      <if test="createTime != null" >
-        create_time,
-      </if>
-      <if test="applyTime != null" >
-        apply_time,
-      </if>
-      <if test="canceledTime != null" >
-        canceled_time,
-      </if>
-      <if test="snapshot != null" >
-        snapshot,
-      </if>
-      <if test="cancelReason != null" >
-        cancel_reason,
-      </if>
-      <if test="handleId != null" >
-        handle_id,
-      </if>
-      <if test="startTime != null" >
-        start_time,
-      </if>
-      <if test="endTime != null" >
-        end_time,
-      </if>
-      <if test="finishTime != null" >
-        finish_time,
-      </if>
-      <if test="price != null" >
-        price,
-      </if>
-      <if test="quantity != null" >
-        quantity,
-      </if>
-      <if test="address != null" >
-        address,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        #{id,jdbcType=BIGINT},
-      </if>
-      <if test="indentNo != null" >
-        #{indentNo,jdbcType=VARCHAR},
-      </if>
-      <if test="customerId != null" >
-        #{customerId,jdbcType=BIGINT},
-      </if>
-      <if test="sellerId != null" >
-        #{sellerId,jdbcType=BIGINT},
-      </if>
-      <if test="tradeId != null" >
-        #{tradeId,jdbcType=BIGINT},
-      </if>
-      <if test="money != null" >
-        #{money,jdbcType=DOUBLE},
-      </if>
-      <if test="status != null" >
-        #{status,jdbcType=INTEGER},
-      </if>
-      <if test="referId != null" >
-        #{referId,jdbcType=BIGINT},
-      </if>
-      <if test="type != null" >
-        #{type,jdbcType=INTEGER},
-      </if>
-      <if test="longitude != null" >
-        #{longitude,jdbcType=DOUBLE},
-      </if>
-      <if test="latitude != null" >
-        #{latitude,jdbcType=DOUBLE},
-      </if>
-      <if test="createTime != null" >
-        #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="applyTime != null" >
-        #{applyTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="canceledTime != null" >
-        #{canceledTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="snapshot != null" >
-        #{snapshot,jdbcType=VARCHAR},
-      </if>
-      <if test="cancelReason != null" >
-        #{cancelReason,jdbcType=VARCHAR},
-      </if>
-      <if test="handleId != null" >
-        #{handleId,jdbcType=BIGINT},
-      </if>
-      <if test="startTime != null" >
-        #{startTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="endTime != null" >
-        #{endTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="finishTime != null" >
-        #{finishTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="price != null" >
-        #{price,jdbcType=DOUBLE},
-      </if>
-      <if test="quantity != null" >
-        #{quantity,jdbcType=INTEGER},
-      </if>
-      <if test="address != null" >
-        #{address,jdbcType=VARCHAR},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.hengsu.sure.invite.entity.Indent" >
-    update indent
-    <set >
-      <if test="indentNo != null" >
-        indent_no = #{indentNo,jdbcType=VARCHAR},
-      </if>
-      <if test="customerId != null" >
-        customer_id = #{customerId,jdbcType=BIGINT},
-      </if>
-      <if test="sellerId != null" >
-        seller_id = #{sellerId,jdbcType=BIGINT},
-      </if>
-      <if test="tradeId != null" >
-        trade_id = #{tradeId,jdbcType=BIGINT},
-      </if>
-      <if test="money != null" >
-        money = #{money,jdbcType=DOUBLE},
-      </if>
-      <if test="status != null" >
-        status = #{status,jdbcType=INTEGER},
-      </if>
-      <if test="referId != null" >
-        refer_id = #{referId,jdbcType=BIGINT},
-      </if>
-      <if test="type != null" >
-        type = #{type,jdbcType=INTEGER},
-      </if>
-      <if test="longitude != null" >
-        longitude = #{longitude,jdbcType=DOUBLE},
-      </if>
-      <if test="latitude != null" >
-        latitude = #{latitude,jdbcType=DOUBLE},
-      </if>
-      <if test="createTime != null" >
-        create_time = #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="applyTime != null" >
-        apply_time = #{applyTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="canceledTime != null" >
-        canceled_time = #{canceledTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="snapshot != null" >
-        snapshot = #{snapshot,jdbcType=VARCHAR},
-      </if>
-      <if test="cancelReason != null" >
-        cancel_reason = #{cancelReason,jdbcType=VARCHAR},
-      </if>
-      <if test="handleId != null" >
-        handle_id = #{handleId,jdbcType=BIGINT},
-      </if>
-      <if test="startTime != null" >
-        start_time = #{startTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="endTime != null" >
-        end_time = #{endTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="finishTime != null" >
-        finish_time = #{finishTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="price != null" >
-        price = #{price,jdbcType=DOUBLE},
-      </if>
-      <if test="quantity != null" >
-        quantity = #{quantity,jdbcType=INTEGER},
-      </if>
-      <if test="address != null" >
-        address = #{address,jdbcType=VARCHAR},
-      </if>
-    </set>
-    where id = #{id,jdbcType=BIGINT}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.hengsu.sure.invite.entity.Indent" >
+    <insert id="insertSelective" parameterType="com.hengsu.sure.invite.entity.Indent" keyProperty="id"
+            useGeneratedKeys="true">
+        insert into indent
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="indentNo != null">
+                indent_no,
+            </if>
+            <if test="customerId != null">
+                customer_id,
+            </if>
+            <if test="sellerId != null">
+                seller_id,
+            </if>
+            <if test="tradeId != null">
+                trade_id,
+            </if>
+            <if test="money != null">
+                money,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="referId != null">
+                refer_id,
+            </if>
+            <if test="type != null">
+                type,
+            </if>
+            <if test="longitude != null">
+                longitude,
+            </if>
+            <if test="latitude != null">
+                latitude,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="applyTime != null">
+                apply_time,
+            </if>
+            <if test="canceledTime != null">
+                canceled_time,
+            </if>
+            <if test="snapshot != null">
+                snapshot,
+            </if>
+            <if test="cancelReason != null">
+                cancel_reason,
+            </if>
+            <if test="handleId != null">
+                handle_id,
+            </if>
+            <if test="startTime != null">
+                start_time,
+            </if>
+            <if test="endTime != null">
+                end_time,
+            </if>
+            <if test="finishTime != null">
+                finish_time,
+            </if>
+            <if test="price != null">
+                price,
+            </if>
+            <if test="quantity != null">
+                quantity,
+            </if>
+            <if test="address != null">
+                address,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="indentNo != null">
+                #{indentNo,jdbcType=VARCHAR},
+            </if>
+            <if test="customerId != null">
+                #{customerId,jdbcType=BIGINT},
+            </if>
+            <if test="sellerId != null">
+                #{sellerId,jdbcType=BIGINT},
+            </if>
+            <if test="tradeId != null">
+                #{tradeId,jdbcType=BIGINT},
+            </if>
+            <if test="money != null">
+                #{money,jdbcType=DOUBLE},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=INTEGER},
+            </if>
+            <if test="referId != null">
+                #{referId,jdbcType=BIGINT},
+            </if>
+            <if test="type != null">
+                #{type,jdbcType=INTEGER},
+            </if>
+            <if test="longitude != null">
+                #{longitude,jdbcType=DOUBLE},
+            </if>
+            <if test="latitude != null">
+                #{latitude,jdbcType=DOUBLE},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="applyTime != null">
+                #{applyTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="canceledTime != null">
+                #{canceledTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="snapshot != null">
+                #{snapshot,jdbcType=VARCHAR},
+            </if>
+            <if test="cancelReason != null">
+                #{cancelReason,jdbcType=VARCHAR},
+            </if>
+            <if test="handleId != null">
+                #{handleId,jdbcType=BIGINT},
+            </if>
+            <if test="startTime != null">
+                #{startTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="endTime != null">
+                #{endTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="finishTime != null">
+                #{finishTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="price != null">
+                #{price,jdbcType=DOUBLE},
+            </if>
+            <if test="quantity != null">
+                #{quantity,jdbcType=INTEGER},
+            </if>
+            <if test="address != null">
+                #{address,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.hengsu.sure.invite.entity.Indent">
+        update indent
+        <set>
+            <if test="indentNo != null">
+                indent_no = #{indentNo,jdbcType=VARCHAR},
+            </if>
+            <if test="customerId != null">
+                customer_id = #{customerId,jdbcType=BIGINT},
+            </if>
+            <if test="sellerId != null">
+                seller_id = #{sellerId,jdbcType=BIGINT},
+            </if>
+            <if test="tradeId != null">
+                trade_id = #{tradeId,jdbcType=BIGINT},
+            </if>
+            <if test="money != null">
+                money = #{money,jdbcType=DOUBLE},
+            </if>
+            <if test="status != null">
+                status = #{status,jdbcType=INTEGER},
+            </if>
+            <if test="referId != null">
+                refer_id = #{referId,jdbcType=BIGINT},
+            </if>
+            <if test="type != null">
+                type = #{type,jdbcType=INTEGER},
+            </if>
+            <if test="longitude != null">
+                longitude = #{longitude,jdbcType=DOUBLE},
+            </if>
+            <if test="latitude != null">
+                latitude = #{latitude,jdbcType=DOUBLE},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="applyTime != null">
+                apply_time = #{applyTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="canceledTime != null">
+                canceled_time = #{canceledTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="snapshot != null">
+                snapshot = #{snapshot,jdbcType=VARCHAR},
+            </if>
+            <if test="cancelReason != null">
+                cancel_reason = #{cancelReason,jdbcType=VARCHAR},
+            </if>
+            <if test="handleId != null">
+                handle_id = #{handleId,jdbcType=BIGINT},
+            </if>
+            <if test="startTime != null">
+                start_time = #{startTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="endTime != null">
+                end_time = #{endTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="finishTime != null">
+                finish_time = #{finishTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="price != null">
+                price = #{price,jdbcType=DOUBLE},
+            </if>
+            <if test="quantity != null">
+                quantity = #{quantity,jdbcType=INTEGER},
+            </if>
+            <if test="address != null">
+                address = #{address,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.hengsu.sure.invite.entity.Indent">
     update indent
     set indent_no = #{indentNo,jdbcType=VARCHAR},
       customer_id = #{customerId,jdbcType=BIGINT},
@@ -315,161 +325,316 @@
       address = #{address,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <select id="selectCount" resultType="java.lang.Integer" parameterType="com.hengsu.sure.invite.entity.Indent" >
-    select count(*) from indent
-    <where >
-      <if test="id != null" >
-        and id = #{id,jdbcType=BIGINT}
-      </if>
-      <if test="indentNo != null" >
-        and indent_no = #{indentNo,jdbcType=VARCHAR}
-      </if>
-      <if test="customerId != null" >
-        and customer_id = #{customerId,jdbcType=BIGINT}
-      </if>
-      <if test="sellerId != null" >
-        and seller_id = #{sellerId,jdbcType=BIGINT}
-      </if>
-      <if test="tradeId != null" >
-        and trade_id = #{tradeId,jdbcType=BIGINT}
-      </if>
-      <if test="money != null" >
-        and money = #{money,jdbcType=DOUBLE}
-      </if>
-      <if test="status != null" >
-        and status = #{status,jdbcType=INTEGER}
-      </if>
-      <if test="referId != null" >
-        and refer_id = #{referId,jdbcType=BIGINT}
-      </if>
-      <if test="type != null" >
-        and type = #{type,jdbcType=INTEGER}
-      </if>
-      <if test="longitude != null" >
-        and longitude = #{longitude,jdbcType=DOUBLE}
-      </if>
-      <if test="latitude != null" >
-        and latitude = #{latitude,jdbcType=DOUBLE}
-      </if>
-      <if test="createTime != null" >
-        and create_time = #{createTime,jdbcType=TIMESTAMP}
-      </if>
-      <if test="applyTime != null" >
-        and apply_time = #{applyTime,jdbcType=TIMESTAMP}
-      </if>
-      <if test="canceledTime != null" >
-        and canceled_time = #{canceledTime,jdbcType=TIMESTAMP}
-      </if>
-      <if test="snapshot != null" >
-        and snapshot = #{snapshot,jdbcType=VARCHAR}
-      </if>
-      <if test="cancelReason != null" >
-        and cancel_reason = #{cancelReason,jdbcType=VARCHAR}
-      </if>
-      <if test="handleId != null" >
-        and handle_id = #{handleId,jdbcType=BIGINT}
-      </if>
-      <if test="startTime != null" >
-        and start_time = #{startTime,jdbcType=TIMESTAMP}
-      </if>
-      <if test="endTime != null" >
-        and end_time = #{endTime,jdbcType=TIMESTAMP}
-      </if>
-      <if test="finishTime != null" >
-        and finish_time = #{finishTime,jdbcType=TIMESTAMP}
-      </if>
-      <if test="price != null" >
-        and price = #{price,jdbcType=DOUBLE}
-      </if>
-      <if test="quantity != null" >
-        and quantity = #{quantity,jdbcType=INTEGER}
-      </if>
-      <if test="address != null" >
-        and address = #{address,jdbcType=VARCHAR}
-      </if>
-    </where>
-  </select>
-  <select id="selectPage" resultMap="BaseResultMap" >
-    select 
-    <include refid="Base_Column_List" />
-    from indent where 1 = 1 
-    <if test="param1.id != null" >
-      and id = #{param1.id,jdbcType=BIGINT}
-    </if>
-    <if test="param1.indentNo != null" >
-      and indent_no = #{param1.indentNo,jdbcType=VARCHAR}
-    </if>
-    <if test="param1.customerId != null" >
-      and customer_id = #{param1.customerId,jdbcType=BIGINT}
-    </if>
-    <if test="param1.sellerId != null" >
-      and seller_id = #{param1.sellerId,jdbcType=BIGINT}
-    </if>
-    <if test="param1.tradeId != null" >
-      and trade_id = #{param1.tradeId,jdbcType=BIGINT}
-    </if>
-    <if test="param1.money != null" >
-      and money = #{param1.money,jdbcType=DOUBLE}
-    </if>
-    <if test="param1.status != null" >
-      and status = #{param1.status,jdbcType=INTEGER}
-    </if>
-    <if test="param1.referId != null" >
-      and refer_id = #{param1.referId,jdbcType=BIGINT}
-    </if>
-    <if test="param1.type != null" >
-      and type = #{param1.type,jdbcType=INTEGER}
-    </if>
-    <if test="param1.longitude != null" >
-      and longitude = #{param1.longitude,jdbcType=DOUBLE}
-    </if>
-    <if test="param1.latitude != null" >
-      and latitude = #{param1.latitude,jdbcType=DOUBLE}
-    </if>
-    <if test="param1.createTime != null" >
-      and create_time = #{param1.createTime,jdbcType=TIMESTAMP}
-    </if>
-    <if test="param1.applyTime != null" >
-      and apply_time = #{param1.applyTime,jdbcType=TIMESTAMP}
-    </if>
-    <if test="param1.canceledTime != null" >
-      and canceled_time = #{param1.canceledTime,jdbcType=TIMESTAMP}
-    </if>
-    <if test="param1.snapshot != null" >
-      and snapshot = #{param1.snapshot,jdbcType=VARCHAR}
-    </if>
-    <if test="param1.cancelReason != null" >
-      and cancel_reason = #{param1.cancelReason,jdbcType=VARCHAR}
-    </if>
-    <if test="param1.handleId != null" >
-      and handle_id = #{param1.handleId,jdbcType=BIGINT}
-    </if>
-    <if test="param1.startTime != null" >
-      and start_time = #{param1.startTime,jdbcType=TIMESTAMP}
-    </if>
-    <if test="param1.endTime != null" >
-      and end_time = #{param1.endTime,jdbcType=TIMESTAMP}
-    </if>
-    <if test="param1.finishTime != null" >
-      and finish_time = #{param1.finishTime,jdbcType=TIMESTAMP}
-    </if>
-    <if test="param1.price != null" >
-      and price = #{param1.price,jdbcType=DOUBLE}
-    </if>
-    <if test="param1.quantity != null" >
-      and quantity = #{param1.quantity,jdbcType=INTEGER}
-    </if>
-    <if test="param1.address != null" >
-      and address = #{param1.address,jdbcType=VARCHAR}
-    </if>
-    <if test="param2.sort != null" >
-      order by 
-      <foreach collection="param2.sort" item="order" separator="," >
-        ${order.property} ${order.direction}
-      </foreach>
-    </if>
-    <if test="param2.offset >= 0 and param2.pageSize > 0" >
-      limit ${param2.offset}, ${param2.pageSize}
-    </if>
-  </select>
+    <select id="selectCount" resultType="java.lang.Integer" parameterType="com.hengsu.sure.invite.entity.Indent">
+        select count(*) from indent
+        <where>
+            <if test="id != null">
+                and id = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="indentNo != null">
+                and indent_no = #{indentNo,jdbcType=VARCHAR}
+            </if>
+            <if test="customerId != null">
+                and customer_id = #{customerId,jdbcType=BIGINT}
+            </if>
+            <if test="sellerId != null">
+                and seller_id = #{sellerId,jdbcType=BIGINT}
+            </if>
+            <if test="tradeId != null">
+                and trade_id = #{tradeId,jdbcType=BIGINT}
+            </if>
+            <if test="money != null">
+                and money = #{money,jdbcType=DOUBLE}
+            </if>
+            <if test="status != null">
+                and status = #{status,jdbcType=INTEGER}
+            </if>
+            <if test="referId != null">
+                and refer_id = #{referId,jdbcType=BIGINT}
+            </if>
+            <if test="type != null">
+                and type = #{type,jdbcType=INTEGER}
+            </if>
+            <if test="longitude != null">
+                and longitude = #{longitude,jdbcType=DOUBLE}
+            </if>
+            <if test="latitude != null">
+                and latitude = #{latitude,jdbcType=DOUBLE}
+            </if>
+            <if test="createTime != null">
+                and create_time = #{createTime,jdbcType=TIMESTAMP}
+            </if>
+            <if test="applyTime != null">
+                and apply_time = #{applyTime,jdbcType=TIMESTAMP}
+            </if>
+            <if test="canceledTime != null">
+                and canceled_time = #{canceledTime,jdbcType=TIMESTAMP}
+            </if>
+            <if test="snapshot != null">
+                and snapshot = #{snapshot,jdbcType=VARCHAR}
+            </if>
+            <if test="cancelReason != null">
+                and cancel_reason = #{cancelReason,jdbcType=VARCHAR}
+            </if>
+            <if test="handleId != null">
+                and handle_id = #{handleId,jdbcType=BIGINT}
+            </if>
+            <if test="startTime != null">
+                and start_time = #{startTime,jdbcType=TIMESTAMP}
+            </if>
+            <if test="endTime != null">
+                and end_time = #{endTime,jdbcType=TIMESTAMP}
+            </if>
+            <if test="finishTime != null">
+                and finish_time = #{finishTime,jdbcType=TIMESTAMP}
+            </if>
+            <if test="price != null">
+                and price = #{price,jdbcType=DOUBLE}
+            </if>
+            <if test="quantity != null">
+                and quantity = #{quantity,jdbcType=INTEGER}
+            </if>
+            <if test="address != null">
+                and address = #{address,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </select>
+    <select id="selectPage" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from indent where 1 = 1
+        <if test="param1.id != null">
+            and id = #{param1.id,jdbcType=BIGINT}
+        </if>
+        <if test="param1.indentNo != null">
+            and indent_no = #{param1.indentNo,jdbcType=VARCHAR}
+        </if>
+        <if test="param1.customerId != null">
+            and customer_id = #{param1.customerId,jdbcType=BIGINT}
+        </if>
+        <if test="param1.sellerId != null">
+            and seller_id = #{param1.sellerId,jdbcType=BIGINT}
+        </if>
+        <if test="param1.tradeId != null">
+            and trade_id = #{param1.tradeId,jdbcType=BIGINT}
+        </if>
+        <if test="param1.money != null">
+            and money = #{param1.money,jdbcType=DOUBLE}
+        </if>
+        <if test="param1.status != null">
+            and status = #{param1.status,jdbcType=INTEGER}
+        </if>
+        <if test="param1.referId != null">
+            and refer_id = #{param1.referId,jdbcType=BIGINT}
+        </if>
+        <if test="param1.type != null">
+            and type = #{param1.type,jdbcType=INTEGER}
+        </if>
+        <if test="param1.longitude != null">
+            and longitude = #{param1.longitude,jdbcType=DOUBLE}
+        </if>
+        <if test="param1.latitude != null">
+            and latitude = #{param1.latitude,jdbcType=DOUBLE}
+        </if>
+        <if test="param1.createTime != null">
+            and create_time = #{param1.createTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="param1.applyTime != null">
+            and apply_time = #{param1.applyTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="param1.canceledTime != null">
+            and canceled_time = #{param1.canceledTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="param1.snapshot != null">
+            and snapshot = #{param1.snapshot,jdbcType=VARCHAR}
+        </if>
+        <if test="param1.cancelReason != null">
+            and cancel_reason = #{param1.cancelReason,jdbcType=VARCHAR}
+        </if>
+        <if test="param1.handleId != null">
+            and handle_id = #{param1.handleId,jdbcType=BIGINT}
+        </if>
+        <if test="param1.startTime != null">
+            and start_time = #{param1.startTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="param1.endTime != null">
+            and end_time = #{param1.endTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="param1.finishTime != null">
+            and finish_time = #{param1.finishTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="param1.price != null">
+            and price = #{param1.price,jdbcType=DOUBLE}
+        </if>
+        <if test="param1.quantity != null">
+            and quantity = #{param1.quantity,jdbcType=INTEGER}
+        </if>
+        <if test="param1.address != null">
+            and address = #{param1.address,jdbcType=VARCHAR}
+        </if>
+        <if test="param2.sort != null">
+            order by
+            <foreach collection="param2.sort" item="order" separator=",">
+                ${order.property} ${order.direction}
+            </foreach>
+        </if>
+        <if test="param2.offset >= 0 and param2.pageSize > 0">
+            limit ${param2.offset}, ${param2.pageSize}
+        </if>
+    </select>
+
+    <select id="selectIndent" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from indent where 1 = 1
+        <if test="param1.id != null">
+            and id = #{param1.id,jdbcType=BIGINT}
+        </if>
+        <if test="param1.indentNo != null">
+            and indent_no = #{param1.indentNo,jdbcType=VARCHAR}
+        </if>
+        <if test="param1.customerId != null">
+            and customer_id = #{param1.customerId,jdbcType=BIGINT}
+        </if>
+        <if test="param1.sellerId != null">
+            and seller_id = #{param1.sellerId,jdbcType=BIGINT}
+        </if>
+        <if test="param1.tradeId != null">
+            and trade_id = #{param1.tradeId,jdbcType=BIGINT}
+        </if>
+        <if test="param1.money != null">
+            and money = #{param1.money,jdbcType=DOUBLE}
+        </if>
+
+        <if test="param1.referId != null">
+            and refer_id = #{param1.referId,jdbcType=BIGINT}
+        </if>
+        <if test="param1.type != null">
+            and type = #{param1.type,jdbcType=INTEGER}
+        </if>
+        <if test="param1.longitude != null">
+            and longitude = #{param1.longitude,jdbcType=DOUBLE}
+        </if>
+        <if test="param1.latitude != null">
+            and latitude = #{param1.latitude,jdbcType=DOUBLE}
+        </if>
+        <if test="param1.createTime != null">
+            and create_time = #{param1.createTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="param1.applyTime != null">
+            and apply_time = #{param1.applyTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="param1.canceledTime != null">
+            and canceled_time = #{param1.canceledTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="param1.snapshot != null">
+            and snapshot = #{param1.snapshot,jdbcType=VARCHAR}
+        </if>
+        <if test="param1.cancelReason != null">
+            and cancel_reason = #{param1.cancelReason,jdbcType=VARCHAR}
+        </if>
+        <if test="param1.handleId != null">
+            and handle_id = #{param1.handleId,jdbcType=BIGINT}
+        </if>
+        <if test="param1.startTime != null">
+            and start_time = #{param1.startTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="param1.endTime != null">
+            and end_time = #{param1.endTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="param1.finishTime != null">
+            and finish_time = #{param1.finishTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="param1.price != null">
+            and price = #{param1.price,jdbcType=DOUBLE}
+        </if>
+        <if test="param1.quantity != null">
+            and quantity = #{param1.quantity,jdbcType=INTEGER}
+        </if>
+        <if test="param1.address != null">
+            and address = #{param1.address,jdbcType=VARCHAR}
+        </if>
+        <if test="param2.sort != null">
+            order by
+            <foreach collection="param2.sort" item="order" separator=",">
+                ${order.property} ${order.direction}
+            </foreach>
+        </if>
+        <if test="param2.offset >= 0 and param2.pageSize > 0">
+            limit ${param2.offset}, ${param2.pageSize}
+        </if>
+    </select>
+
+    <select id="selectIndentCount" resultType="java.lang.Integer" parameterType="com.hengsu.sure.invite.entity.Indent">
+        select count(*) from indent
+        <where>
+            <if test="id != null">
+                and id = #{id,jdbcType=BIGINT}
+            </if>
+            <if test="indentNo != null">
+                and indent_no = #{indentNo,jdbcType=VARCHAR}
+            </if>
+            <if test="customerId != null">
+                and customer_id = #{customerId,jdbcType=BIGINT}
+            </if>
+            <if test="sellerId != null">
+                and seller_id = #{sellerId,jdbcType=BIGINT}
+            </if>
+            <if test="tradeId != null">
+                and trade_id = #{tradeId,jdbcType=BIGINT}
+            </if>
+            <if test="money != null">
+                and money = #{money,jdbcType=DOUBLE}
+            </if>
+
+            <if test="referId != null">
+                and refer_id = #{referId,jdbcType=BIGINT}
+            </if>
+            <if test="type != null">
+                and type = #{type,jdbcType=INTEGER}
+            </if>
+            <if test="longitude != null">
+                and longitude = #{longitude,jdbcType=DOUBLE}
+            </if>
+            <if test="latitude != null">
+                and latitude = #{latitude,jdbcType=DOUBLE}
+            </if>
+            <if test="createTime != null">
+                and create_time = #{createTime,jdbcType=TIMESTAMP}
+            </if>
+            <if test="applyTime != null">
+                and apply_time = #{applyTime,jdbcType=TIMESTAMP}
+            </if>
+            <if test="canceledTime != null">
+                and canceled_time = #{canceledTime,jdbcType=TIMESTAMP}
+            </if>
+            <if test="snapshot != null">
+                and snapshot = #{snapshot,jdbcType=VARCHAR}
+            </if>
+            <if test="cancelReason != null">
+                and cancel_reason = #{cancelReason,jdbcType=VARCHAR}
+            </if>
+            <if test="handleId != null">
+                and handle_id = #{handleId,jdbcType=BIGINT}
+            </if>
+            <if test="startTime != null">
+                and start_time = #{startTime,jdbcType=TIMESTAMP}
+            </if>
+            <if test="endTime != null">
+                and end_time = #{endTime,jdbcType=TIMESTAMP}
+            </if>
+            <if test="finishTime != null">
+                and finish_time = #{finishTime,jdbcType=TIMESTAMP}
+            </if>
+            <if test="price != null">
+                and price = #{price,jdbcType=DOUBLE}
+            </if>
+            <if test="quantity != null">
+                and quantity = #{quantity,jdbcType=INTEGER}
+            </if>
+            <if test="address != null">
+                and address = #{address,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </select>
 </mapper>

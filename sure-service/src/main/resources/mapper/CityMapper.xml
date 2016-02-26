@@ -4,41 +4,28 @@
   <resultMap id="BaseResultMap" type="com.hengsu.sure.invite.entity.City" >
     <id column="id" property="id" jdbcType="BIGINT" />
     <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="longitude" property="longitude" jdbcType="DOUBLE" />
+    <result column="latitude" property="latitude" jdbcType="DOUBLE" />
     <result column="parent_id" property="parentId" jdbcType="BIGINT" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, name, parent_id
+    id, name, longitude, latitude, parent_id
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
-    select 
+    select
     <include refid="Base_Column_List" />
     from city
     where id = #{id,jdbcType=BIGINT}
   </select>
-
-  <select id="selectByName" resultMap="BaseResultMap" parameterType="java.lang.String" >
-    select
-    <include refid="Base_Column_List" />
-    from city
-    where name = #{name,jdbcType=VARCHAR}
-  </select>
-
-  <select id="selectProvinces" resultMap="BaseResultMap" >
-    select
-    <include refid="Base_Column_List" />
-    from city
-    where parent_id is NULL
-  </select>
-
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
     delete from city
     where id = #{id,jdbcType=BIGINT}
   </delete>
   <insert id="insert" parameterType="com.hengsu.sure.invite.entity.City" >
-    insert into city (id, name, parent_id
-      )
-    values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{parentId,jdbcType=BIGINT}
-      )
+    insert into city (id, name, longitude,
+    latitude, parent_id)
+    values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{longitude,jdbcType=DOUBLE},
+    #{latitude,jdbcType=DOUBLE}, #{parentId,jdbcType=BIGINT})
   </insert>
   <insert id="insertSelective" parameterType="com.hengsu.sure.invite.entity.City" >
     insert into city
@@ -48,6 +35,12 @@
       </if>
       <if test="name != null" >
         name,
+      </if>
+      <if test="longitude != null" >
+        longitude,
+      </if>
+      <if test="latitude != null" >
+        latitude,
       </if>
       <if test="parentId != null" >
         parent_id,
@@ -60,6 +53,12 @@
       <if test="name != null" >
         #{name,jdbcType=VARCHAR},
       </if>
+      <if test="longitude != null" >
+        #{longitude,jdbcType=DOUBLE},
+      </if>
+      <if test="latitude != null" >
+        #{latitude,jdbcType=DOUBLE},
+      </if>
       <if test="parentId != null" >
         #{parentId,jdbcType=BIGINT},
       </if>
@@ -71,6 +70,12 @@
       <if test="name != null" >
         name = #{name,jdbcType=VARCHAR},
       </if>
+      <if test="longitude != null" >
+        longitude = #{longitude,jdbcType=DOUBLE},
+      </if>
+      <if test="latitude != null" >
+        latitude = #{latitude,jdbcType=DOUBLE},
+      </if>
       <if test="parentId != null" >
         parent_id = #{parentId,jdbcType=BIGINT},
       </if>
@@ -80,7 +85,9 @@
   <update id="updateByPrimaryKey" parameterType="com.hengsu.sure.invite.entity.City" >
     update city
     set name = #{name,jdbcType=VARCHAR},
-      parent_id = #{parentId,jdbcType=BIGINT}
+    longitude = #{longitude,jdbcType=DOUBLE},
+    latitude = #{latitude,jdbcType=DOUBLE},
+    parent_id = #{parentId,jdbcType=BIGINT}
     where id = #{id,jdbcType=BIGINT}
   </update>
   <select id="selectCount" resultType="java.lang.Integer" parameterType="com.hengsu.sure.invite.entity.City" >
@@ -92,26 +99,38 @@
       <if test="name != null" >
         and name = #{name,jdbcType=VARCHAR}
       </if>
+      <if test="longitude != null" >
+        and longitude = #{longitude,jdbcType=DOUBLE}
+      </if>
+      <if test="latitude != null" >
+        and latitude = #{latitude,jdbcType=DOUBLE}
+      </if>
       <if test="parentId != null" >
         and parent_id = #{parentId,jdbcType=BIGINT}
       </if>
     </where>
   </select>
   <select id="selectPage" resultMap="BaseResultMap" >
-    select 
+    select
     <include refid="Base_Column_List" />
-    from city where 1 = 1 
+    from city where 1 = 1
     <if test="param1.id != null" >
       and id = #{param1.id,jdbcType=BIGINT}
     </if>
     <if test="param1.name != null" >
       and name = #{param1.name,jdbcType=VARCHAR}
     </if>
+    <if test="param1.longitude != null" >
+      and longitude = #{param1.longitude,jdbcType=DOUBLE}
+    </if>
+    <if test="param1.latitude != null" >
+      and latitude = #{param1.latitude,jdbcType=DOUBLE}
+    </if>
     <if test="param1.parentId != null" >
       and parent_id = #{param1.parentId,jdbcType=BIGINT}
     </if>
     <if test="param2.sort != null" >
-      order by 
+      order by
       <foreach collection="param2.sort" item="order" separator="," >
         ${order.property} ${order.direction}
       </foreach>
@@ -119,5 +138,18 @@
     <if test="param2.offset >= 0 and param2.pageSize > 0" >
       limit ${param2.offset}, ${param2.pageSize}
     </if>
+  </select>
+  <select id="selectByName" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from city
+    where name = #{name,jdbcType=VARCHAR}
+  </select>
+
+  <select id="selectProvinces" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from city
+    where parent_id is NULL
   </select>
 </mapper>

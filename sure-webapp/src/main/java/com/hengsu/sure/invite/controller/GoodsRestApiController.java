@@ -1,5 +1,6 @@
 package com.hengsu.sure.invite.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.hengsu.sure.ReturnCode;
 import com.hengsu.sure.invite.model.GoodsConfirmModel;
 import com.hengsu.sure.invite.model.GoodsModel;
@@ -18,6 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestApiController
@@ -40,6 +42,7 @@ public class GoodsRestApiController {
     public ResponseEntity<ResponseEnvelope<GoodsVO>> getGoodsById(@PathVariable Long id) {
         GoodsModel goodsModel = goodsService.findByPrimaryKey(id);
         GoodsVO goodsVO = beanMapper.map(goodsModel, GoodsVO.class);
+        goodsVO.setImageIds(JSON.parseArray(goodsModel.getImages(),String.class));
         ResponseEnvelope<GoodsVO> responseEnv = new ResponseEnvelope<>(goodsVO, true);
         return new ResponseEntity<>(responseEnv, HttpStatus.OK);
     }
@@ -53,7 +56,7 @@ public class GoodsRestApiController {
     @RequestMapping(value = "/invite/goods/confirm/{id}", method = RequestMethod.POST)
     public ResponseEntity<ResponseEnvelope<String>> confirmGoodsIndent(
             @PathVariable Long id,
-            @RequestBody GoodsConfirmVO goodsConfirmVO,
+            @Valid@RequestBody GoodsConfirmVO goodsConfirmVO,
             @Value("#{request.getAttribute('userId')}") Long userId) {
         GoodsConfirmModel goodsConfirmModel = beanMapper.map(goodsConfirmVO, GoodsConfirmModel.class);
         goodsConfirmModel.setBuyerId(userId);
@@ -67,19 +70,19 @@ public class GoodsRestApiController {
     /**
      * 轻奢列表
      *
-     * @param cityId
      * @param pageable
      * @return
      */
     @RequestMapping(value = "/invite/{typeId}/goods", method = RequestMethod.GET)
     public ResponseEntity<ResponseEnvelope<Page<GoodsModel>>> listGoods(
             @PathVariable Long typeId,
-            @RequestParam Integer cityId,
             Pageable pageable) {
         GoodsModel param = new GoodsModel();
         param.setGoodsType(typeId);
-        param.setCityId(cityId);
         List<GoodsModel> goodsModes = goodsService.selectPage(param, pageable);
+        for(GoodsModel goodsModel:goodsModes){
+            goodsModel.setImageIds(JSON.parseArray(goodsModel.getImages(),String.class));
+        }
         Integer count = goodsService.selectCount(param);
         Page<GoodsModel> pageContent = new PageImpl(goodsModes, pageable, count);
         ResponseEnvelope<Page<GoodsModel>> responseEnv = new ResponseEnvelope<>(pageContent, true);

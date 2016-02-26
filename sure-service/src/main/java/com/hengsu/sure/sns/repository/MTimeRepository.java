@@ -23,4 +23,11 @@ public interface MTimeRepository {
     int selectCount(@Param("mtime") MTime mtime);
 
     List<MTime> selectPage(@Param("mtime") MTime mtime, @Param("pageable") Pageable pageable);
+
+    public void commentsInc(Long id);
+    public void commentsDec(Long id);
+
+    public void statusesInc(Long id);
+    public void statusesDec(Long id);
+
 }

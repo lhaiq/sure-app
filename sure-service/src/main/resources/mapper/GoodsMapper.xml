@@ -12,11 +12,11 @@
     <result column="quantity" property="quantity" jdbcType="INTEGER" />
     <result column="price" property="price" jdbcType="DOUBLE" />
     <result column="money" property="money" jdbcType="DOUBLE" />
-    <result column="goods_type_id" property="goodsType" jdbcType="BIGINT" />
+    <result column="goods_type" property="goodsType" jdbcType="BIGINT" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, name, images, start_time, end_time, description, city_id, quantity, price, money, 
-    goods_type_id
+    goods_type
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
@@ -32,7 +32,7 @@
     insert into goods (id, name, images, 
       start_time, end_time, description, 
       city_id, quantity, price, 
-      money, goods_type_id)
+      money, goods_type)
     values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{images,jdbcType=VARCHAR}, 
       #{startTime,jdbcType=TIMESTAMP}, #{endTime,jdbcType=TIMESTAMP}, #{description,jdbcType=VARCHAR}, 
       #{cityId,jdbcType=INTEGER}, #{quantity,jdbcType=INTEGER}, #{price,jdbcType=DOUBLE}, 
@@ -72,7 +72,7 @@
         money,
       </if>
       <if test="goodsType != null" >
-        goods_type_id,
+        goods_type,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -142,7 +142,7 @@
         money = #{money,jdbcType=DOUBLE},
       </if>
       <if test="goodsType != null" >
-        goods_type_id = #{goodsType,jdbcType=BIGINT},
+        goods_type = #{goodsType,jdbcType=BIGINT},
       </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
@@ -158,7 +158,7 @@
       quantity = #{quantity,jdbcType=INTEGER},
       price = #{price,jdbcType=DOUBLE},
       money = #{money,jdbcType=DOUBLE},
-      goods_type_id = #{goodsType,jdbcType=BIGINT}
+      goods_type = #{goodsType,jdbcType=BIGINT}
     where id = #{id,jdbcType=BIGINT}
   </update>
   <select id="selectCount" resultType="java.lang.Integer" parameterType="com.hengsu.sure.invite.entity.Goods" >
@@ -195,7 +195,7 @@
         and money = #{money,jdbcType=DOUBLE}
       </if>
       <if test="goodsType != null" >
-        and goods_type_id = #{goodsType,jdbcType=BIGINT}
+        and goods_type = #{goodsType,jdbcType=BIGINT}
       </if>
     </where>
   </select>
@@ -234,7 +234,7 @@
       and money = #{param1.money,jdbcType=DOUBLE}
     </if>
     <if test="param1.goodsType != null" >
-      and goods_type_id = #{param1.goodsType,jdbcType=BIGINT}
+      and goods_type = #{param1.goodsType,jdbcType=BIGINT}
     </if>
     <if test="param2.sort != null" >
       order by 

@@ -109,6 +109,11 @@ public class IndentServiceImpl implements IndentService {
         return indentRepo.selectCount(beanMapper.map(indentModel, Indent.class));
     }
 
+    @Override
+    public int selectIndentCount(IndentModel indentModel) {
+        return indentRepo.selectIndentCount(beanMapper.map(indentModel, Indent.class));
+    }
+
     @Transactional
     @Override
     public void receiveTrade(TradeModel tradeModel) {
@@ -117,7 +122,7 @@ public class IndentServiceImpl implements IndentService {
         tradeService.createSelective(tradeModel);
         Long tradeId = tradeModel.getId();
 
-        IndentModel indentModel = findByNo(tradeModel.getTradeNo());
+        IndentModel indentModel = findByNo(tradeModel.getOutTradeNo());
 
         //判断状态是否正确
         if (IndentStatus.CONFIRMED.getCode() != indentModel.getStatus()) {
@@ -127,7 +132,7 @@ public class IndentServiceImpl implements IndentService {
         }
 
         //检查卖家账号
-        if(!sellerAccount.equals(tradeModel.getSellerId())){
+        if (!sellerAccount.equals(tradeModel.getSellerEmail())) {
             ErrorCode.throwBusinessException(ErrorCode.SELLER_ERROR);
         }
 
@@ -145,9 +150,6 @@ public class IndentServiceImpl implements IndentService {
             message.put("pushId", RENT_PAYED);
         }
 
-        message.put("indent", indentModel);
-        pushService.pushMessage(message.toJSONString(),
-                userService.findByPrimaryKeyNoPass(indentModel.getSellerId()));
 
         //添加关系
         if (IndentType.GOODS.getCode() != indentModel.getType()) {
@@ -156,6 +158,9 @@ public class IndentServiceImpl implements IndentService {
             relationModel.setToUser(indentModel.getSellerId());
             relationModel.setType(RelationType.FRIEND.getCode());
             relationService.addRelationIfNotExisted(relationModel);
+            message.put("indent", indentModel);
+            pushService.pushMessage(message.toJSONString(),
+                    userService.findByPrimaryKeyNoPass(indentModel.getSellerId()));
         }
 
         //更新状态
@@ -209,7 +214,6 @@ public class IndentServiceImpl implements IndentService {
         cashService.createSelective(cashModel);
 
         return cashModel;
-
     }
 
     @Override
@@ -232,13 +236,18 @@ public class IndentServiceImpl implements IndentService {
             ErrorCode.throwBusinessException(ErrorCode.INDENT_HAS_START);
         }
 
-
         return getCancelIndentModel(indentModel);
     }
 
     @Override
     public List<IndentModel> selectPage(IndentModel indentModel, Pageable pageable) {
         List<Indent> indents = indentRepo.selectPage(beanMapper.map(indentModel, Indent.class), pageable);
+        return beanMapper.mapAsList(indents, IndentModel.class);
+    }
+
+    @Override
+    public List<IndentModel> selectIndent(IndentModel indentModel, Pageable pageable) {
+        List<Indent> indents = indentRepo.selectIndent(beanMapper.map(indentModel, Indent.class), pageable);
         return beanMapper.mapAsList(indents, IndentModel.class);
     }
 
@@ -283,12 +292,35 @@ public class IndentServiceImpl implements IndentService {
     }
 
     public void scheduleFinishIndent() {
-        List<Indent> indents = indentRepo.selectFinishing(IndentStatus.PAYED.getCode(), new Date());
+        List<Indent> indents = indentRepo.selectFinishing(IndentStatus.STARTING.getCode(), new Date());
         for (Indent indent : indents) {
             finishIndent(beanMapper.map(indent, IndentModel.class));
             logger.info("the indent finished, the indent no:{}", indent.getIndentNo());
         }
 
+    }
+
+    public void scheduleStartIndent() {
+        List<Indent> indents = indentRepo.selectStarting(IndentStatus.PAYED.getCode(), new Date());
+        for (Indent indent : indents) {
+            startIndent(beanMapper.map(indent, IndentModel.class));
+            logger.info("the indent started, the indent no:{}", indent.getIndentNo());
+        }
+
+    }
+
+    @Transactional
+    public void startIndent(IndentModel indentModel) {
+
+        try {
+            //更新状态
+            IndentModel param = new IndentModel();
+            param.setId(indentModel.getId());
+            param.setStatus(IndentStatus.STARTING.getCode());
+            updateByPrimaryKeySelective(param);
+        } catch (Exception e) {
+            logger.info("unexpected error", e);
+        }
     }
 
     @Transactional
@@ -300,7 +332,7 @@ public class IndentServiceImpl implements IndentService {
             if (IndentType.INVITATION.getCode() == indentModel.getType()) {
                 money = indentModel.getMoney() - confService.getDouble(Constants.INVITATION_POUNDAGE);
             } else if (IndentType.RENT.getCode() == indentModel.getType()) {
-                money = indentModel.getMoney() - confService.getDouble(Constants.RENT_POUNDAGE);
+                money = indentModel.getMoney() - indentModel.getMoney() * confService.getDouble(Constants.RENT_PERCENTAGE)/100;
             }
 
             //创建流水

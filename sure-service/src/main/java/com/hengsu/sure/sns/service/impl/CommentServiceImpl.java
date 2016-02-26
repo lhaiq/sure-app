@@ -1,7 +1,12 @@
 package com.hengsu.sure.sns.service.impl;
 
 import com.hengsu.sure.core.ErrorCode;
+import com.hengsu.sure.sns.CommentType;
+import com.hengsu.sure.sns.repository.MTimeRepository;
+import com.hengsu.sure.sns.service.MTimeService;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,6 +28,9 @@ public class CommentServiceImpl implements CommentService {
     @Autowired
     private CommentRepository commentRepo;
 
+    @Autowired
+    private MTimeRepository mTimeRepository;
+
     @Transactional
     @Override
     public int create(CommentModel commentModel) {
@@ -31,8 +39,17 @@ public class CommentServiceImpl implements CommentService {
 
     @Transactional
     @Override
-    public int createSelective(CommentModel commentModel) {
-        return commentRepo.insertSelective(beanMapper.map(commentModel, Comment.class));
+    public Long addComment(CommentModel commentModel) {
+
+        //添加计数
+        if(commentModel.getType()== CommentType.COMMENT.getCode()){
+            mTimeRepository.commentsInc(commentModel.getmId());
+        }else{
+            mTimeRepository.statusesInc(commentModel.getmId());
+        }
+
+        commentRepo.insertSelective(beanMapper.map(commentModel, Comment.class));
+        return commentModel.getId();
     }
 
     @Transactional
@@ -59,13 +76,42 @@ public class CommentServiceImpl implements CommentService {
         commentRepo.deleteCommentByMid(mid);
     }
 
+    @Transactional
+    @Override
+    public void cancelStatue(Long mid, Long userId) {
+        CommentModel param = new CommentModel();
+        param.setmId(mid);
+        param.setUserid(userId);
+        param.setType(CommentType.STATUSES.getCode());
+
+        List<CommentModel> commentModels = listComments(param,new PageRequest(0,Integer.MAX_VALUE));
+        if(CollectionUtils.isNotEmpty(commentModels)){
+            CommentModel commentModel = commentModels.get(0);
+            deleteComment(commentModel.getId(),userId);
+        }
+
+    }
+
+    @Transactional
     @Override
     public void deleteComment(Long id, Long userId) {
 
         //检查是否为自己的评论或点赞
         CommentModel commentModel = findByPrimaryKey(id);
+        if(null==commentModel){
+            ErrorCode.throwBusinessException(ErrorCode.COMMENT_DELETE_ERROR);
+        }
+
         if (commentModel.getUserid() != userId) {
             ErrorCode.throwBusinessException(ErrorCode.COMMENT_DELETE_ERROR);
+        }
+
+        //减少计数
+        //添加计数
+        if(commentModel.getType()== CommentType.COMMENT.getCode()){
+            mTimeRepository.commentsDec(commentModel.getmId());
+        }else{
+            mTimeRepository.statusesDec(commentModel.getmId());
         }
 
         deleteByPrimaryKey(id);

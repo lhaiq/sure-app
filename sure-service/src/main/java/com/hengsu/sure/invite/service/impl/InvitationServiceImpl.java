@@ -131,7 +131,6 @@ public class InvitationServiceImpl implements InvitationService {
             ErrorCode.throwBusinessException(ErrorCode.INVITATION_ROLE_ERROR);
         }
 
-
         //判断是否超出次数
         Integer invitedCount = getInvitedCount(invitationModel.getUserId());
         if (invitedCount >= retryCount) {
@@ -176,7 +175,6 @@ public class InvitationServiceImpl implements InvitationService {
         //将邀约信息保存
         invitationModel.setCreateTime(new Date());
         invitationModel.setStatus(InvitationStatus.PUBLISHED.getCode());
-        invitationModel.setMoney(invitationModel.getPrice());
         invitationModel.setQuantity(1);
         createSelective(invitationModel);
 
@@ -252,7 +250,7 @@ public class InvitationServiceImpl implements InvitationService {
 
         //判断即时邀约状态
         if (InvitationStatus.PUBLISHED.getCode() != invitationModel.getStatus()) {
-            ErrorCode.throwBusinessException(ErrorCode.INVITATION_STATUS_ERROR);
+            return;
         }
 
         //更新状态

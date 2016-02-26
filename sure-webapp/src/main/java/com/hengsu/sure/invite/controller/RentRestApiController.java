@@ -124,7 +124,7 @@ public class RentRestApiController {
     @RequestMapping(value = "/invite/rent/confirm/{id}", method = RequestMethod.POST)
     public ResponseEntity<ResponseEnvelope<String>> confirmRent(
             @PathVariable Long id,
-            @RequestBody RentConfirmVO rentConfirmVO,
+            @Valid@RequestBody RentConfirmVO rentConfirmVO,
             @Value("#{request.getAttribute('userId')}") Long userId) {
 
         RentConfirmModel rentConfirmModel = beanMapper.map(rentConfirmVO, RentConfirmModel.class);

@@ -3,5 +3,5 @@
 "AccessKeySecret" : "n06XuYVHidJyjKbOfRjrDtXZeYNuzs",
 "RoleArn" : "acs:ram::1685604006703611:role/aliyunosstokengeneratorrole",
 "TokenExpireTime" : "900",
-"PolicyFile": "policy/bucket_read_write_policy.txt"
+"PolicyFile": "policy/all_policy.txt"
 }

@@ -44,46 +44,46 @@ public class AlbumRestApiController {
     private MTimeService mTimeService;
 
 
-//    @RequestMapping(value = "/auth/album", method = RequestMethod.GET)
-//    public ResponseEntity<ResponseEnvelope<Page<AlbumModel>>> getAlbumById(
-//            @Value("#{request.getAttribute('userId')}") Long userId,
-//            Pageable pageable) {
-//
-//        //设置查询参数
-//        AlbumModel param = new AlbumModel();
-//        param.setUserId(userId);
-//
-//        //返回数据
-//        Integer count = albumService.selectCount(param);
-//        List<AlbumModel> albumModels = albumService.selectPage(param, pageable);
-//        Page<AlbumModel> pageContent = new PageImpl<AlbumModel>(albumModels, pageable, count);
-//        ResponseEnvelope<Page<AlbumModel>> responseEnv = new ResponseEnvelope<>(pageContent, true);
-//        return new ResponseEntity<>(responseEnv, HttpStatus.OK);
-//    }
-
     @RequestMapping(value = "/auth/album", method = RequestMethod.GET)
-    public ResponseEntity<ResponseEnvelope<List<String>>> getAlbumById(
-            @RequestParam Long userId) {
+    public ResponseEntity<ResponseEnvelope<Page<AlbumModel>>> getAlbumById(
+            @RequestParam("userId") Long userId,
+            Pageable pageable) {
 
         //设置查询参数
-        MTimeModel param = new MTimeModel();
+        AlbumModel param = new AlbumModel();
         param.setUserId(userId);
 
-        Pageable pageable = new PageRequest(0, Integer.MAX_VALUE, Sort.Direction.DESC, "time");
-
         //返回数据
-        List<MTimeModel> mTimeModels = mTimeService.listMTimeModels(param, pageable);
-        List<String> imageIds = new ArrayList<>();
-
-        for (MTimeModel mTimeModel : mTimeModels) {
-            if (StringUtils.isNotEmpty(mTimeModel.getImages())) {
-                imageIds.addAll(JSON.parseArray(mTimeModel.getImages(), String.class));
-            }
-        }
-
-        ResponseEnvelope<List<String>> responseEnv = new ResponseEnvelope<>(imageIds, true);
+        Integer count = albumService.selectCount(param);
+        List<AlbumModel> albumModels = albumService.selectPage(param, pageable);
+        Page<AlbumModel> pageContent = new PageImpl<AlbumModel>(albumModels, pageable, count);
+        ResponseEnvelope<Page<AlbumModel>> responseEnv = new ResponseEnvelope<>(pageContent, true);
         return new ResponseEntity<>(responseEnv, HttpStatus.OK);
     }
+
+//    @RequestMapping(value = "/auth/album", method = RequestMethod.GET)
+//    public ResponseEntity<ResponseEnvelope<List<String>>> getAlbumById(
+//            @RequestParam Long userId) {
+//
+//        //设置查询参数
+//        MTimeModel param = new MTimeModel();
+//        param.setUserId(userId);
+//
+//        Pageable pageable = new PageRequest(0, Integer.MAX_VALUE, Sort.Direction.DESC, "time");
+//
+//        //返回数据
+//        List<MTimeModel> mTimeModels = mTimeService.listMTimeModels(param, pageable);
+//        List<String> imageIds = new ArrayList<>();
+//
+//        for (MTimeModel mTimeModel : mTimeModels) {
+//            if (StringUtils.isNotEmpty(mTimeModel.getImages())) {
+//                imageIds.addAll(JSON.parseArray(mTimeModel.getImages(), String.class));
+//            }
+//        }
+//
+//        ResponseEnvelope<List<String>> responseEnv = new ResponseEnvelope<>(imageIds, true);
+//        return new ResponseEntity<>(responseEnv, HttpStatus.OK);
+//    }
 
     /**
      * 上传照片
@@ -92,23 +92,25 @@ public class AlbumRestApiController {
      * @param userId
      * @return
      */
-//    @RequestMapping(value = "/auth/album", method = RequestMethod.POST)
-//    public ResponseEntity<ResponseEnvelope<String>> createAlbum(
-//            @RequestBody AlbumVO albumVO,
-//            @Value("#{request.getAttribute('userId')}") Long userId) {
-//        List<Long> imageIds = albumVO.getImageIds();
-//
-//        for (Long imageId : imageIds) {
-//            AlbumModel albumModel = new AlbumModel();
-//            albumModel.setImageId(imageId);
-//            albumModel.setUserId(userId);
-//            albumModel.setCreateTime(new Date());
-//            albumService.createSelective(albumModel);
-//        }
-//
-//        ResponseEnvelope<String> responseEnv = new ResponseEnvelope<>(ReturnCode.OPERATION_SUCCESS, true);
-//        return new ResponseEntity<>(responseEnv, HttpStatus.OK);
-//    }
+    @RequestMapping(value = "/auth/album", method = RequestMethod.POST)
+    public ResponseEntity<ResponseEnvelope<List<Long>>> createAlbum(
+            @RequestBody AlbumVO albumVO,
+            @Value("#{request.getAttribute('userId')}") Long userId) {
+        List<String> imageIds = albumVO.getImageIds();
+        List<Long> ids = new ArrayList<>();
+
+        for (String imageId : imageIds) {
+            AlbumModel albumModel = new AlbumModel();
+            albumModel.setImageId(imageId);
+            albumModel.setUserId(userId);
+            albumModel.setCreateTime(new Date());
+            albumService.createSelective(albumModel);
+            ids.add(albumModel.getId());
+        }
+
+        ResponseEnvelope<List<Long>> responseEnv = new ResponseEnvelope<>(ids, true);
+        return new ResponseEntity<>(responseEnv, HttpStatus.OK);
+    }
 
 
     /**
@@ -118,14 +120,14 @@ public class AlbumRestApiController {
      * @param userId
      * @return
      */
-//    @RequestMapping(value = "/auth/album/{id}", method = RequestMethod.DELETE)
-//    public ResponseEntity<ResponseEnvelope<String>> deleteAlbum(
-//            @PathVariable Long id,
-//            @Value("#{request.getAttribute('userId')}") Long userId) {
-//        albumService.deleteAlbum(id, userId);
-//        ResponseEnvelope<String> responseEnv = new ResponseEnvelope<>(ReturnCode.OPERATION_SUCCESS, true);
-//        return new ResponseEntity<>(responseEnv, HttpStatus.OK);
-//    }
+    @RequestMapping(value = "/auth/album/{id}", method = RequestMethod.DELETE)
+    public ResponseEntity<ResponseEnvelope<String>> deleteAlbum(
+            @PathVariable Long id,
+            @Value("#{request.getAttribute('userId')}") Long userId) {
+        albumService.deleteAlbum(id, userId);
+        ResponseEnvelope<String> responseEnv = new ResponseEnvelope<>(ReturnCode.OPERATION_SUCCESS, true);
+        return new ResponseEntity<>(responseEnv, HttpStatus.OK);
+    }
 
 
 }

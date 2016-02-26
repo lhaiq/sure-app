@@ -14,5 +14,5 @@ public class Constants {
     public static final String INDENT_REFUND_PERCENTAGE_1TO3HOUR = "indent_refund_percentage_1to3hour";
     public static final String INDENT_REFUND_PERCENTAGE_GREATER3HOUR = "indent_refund_percentage_greater3hour";
     public static final String INVITATION_POUNDAGE = "invitation_poundage";
-    public static final String RENT_POUNDAGE = "rent_poundage";
+    public static final String RENT_PERCENTAGE = "rent_percentage";
 }

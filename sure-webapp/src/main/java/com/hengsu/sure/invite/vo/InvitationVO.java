@@ -13,7 +13,6 @@ public class InvitationVO {
 
     @NotNull
     private Integer city;
-    @NotNull
     private List<String> scenes;
     @NotNull
     private Integer gender;
@@ -23,7 +22,6 @@ public class InvitationVO {
     private String date;
     @NotNull
     private String time;
-    @NotNull
     private Integer car;
     @NotNull
     private Double money;

@@ -2,13 +2,14 @@ package com.hengsu.sure.invite.vo;
 
 import com.hkntv.pylon.core.beans.mapping.annotation.MapClass;
 import java.util.Date;
+import java.util.List;
 
 @MapClass("com.hengsu.sure.invite.model.GoodsModel")
 public class GoodsVO{
 	
 	private Long id;
 	private String name;
-	private String images;
+	private List<String> imageIds;
 	private Date startTime;
 	private Date endTime;
 	private String description;
@@ -33,15 +34,15 @@ public class GoodsVO{
 	public String getName(){
 		return this.name;
 	}
-		
-	public void setImages(String images){
-		this.images = images;
+
+	public void setImageIds(List<String> imageIds) {
+		this.imageIds = imageIds;
 	}
-	
-	public String getImages(){
-		return this.images;
+
+	public List<String> getImageIds() {
+		return imageIds;
 	}
-		
+
 	public void setStartTime(Date startTime){
 		this.startTime = startTime;
 	}

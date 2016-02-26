@@ -3,11 +3,13 @@ package com.hengsu.sure.invite.controller;
 import com.alibaba.fastjson.JSON;
 import com.alipay.util.AlipayNotify;
 import com.hengsu.sure.ReturnCode;
+import com.hengsu.sure.auth.annotation.IgnoreAuth;
 import com.hengsu.sure.auth.model.UserModel;
 import com.hengsu.sure.auth.service.UserService;
 import com.hengsu.sure.auth.vo.UserVO;
 import com.hengsu.sure.core.ErrorCode;
 import com.hengsu.sure.invite.BillNumberBuilder;
+import com.hengsu.sure.invite.IndentStatus;
 import com.hengsu.sure.invite.IndentType;
 import com.hengsu.sure.invite.model.*;
 import com.hengsu.sure.invite.service.IndentCommentService;
@@ -55,6 +57,15 @@ public class IndentRestApiController {
 
     @Autowired
     private IndentCommentService indentCommentService;
+    /**
+     * password : 123456
+     * clientId : bb63b660211059f85a7b26111aee0099
+     * phone : 15184447833
+     */
+
+    private String password;
+    private String clientId;
+    private String phone;
 
     /**
      * 申请订单号
@@ -117,10 +128,13 @@ public class IndentRestApiController {
         Integer count = indentService.selectCount(param);
         List<IndentModel> indentModels = indentService.selectPage(param, pageable);
         List<IndentVO> indentVOs = beanMapper.mapAsList(indentModels, IndentVO.class);
-        for (IndentVO indentVO : indentVOs) {
-            UserModel userModel = userService.findByPrimaryKeyNoPass(indentVO.getSellerId());
-            indentVO.setUser(beanMapper.map(userModel, UserVO.class));
+        if (IndentType.GOODS.getCode() != type) {
+            for (IndentVO indentVO : indentVOs) {
+                UserModel userModel = userService.findByPrimaryKeyNoPass(indentVO.getSellerId());
+                indentVO.setUser(beanMapper.map(userModel, UserVO.class));
+            }
         }
+
         Page<IndentVO> page = new PageImpl<>(indentVOs, pageable, count);
 
         ResponseEnvelope<Page<IndentVO>> responseEnv = new ResponseEnvelope<>(page, true);
@@ -181,6 +195,8 @@ public class IndentRestApiController {
      *
      * @return
      */
+
+    @IgnoreAuth
     @RequestMapping(value = "/invite/trade", method = RequestMethod.POST)
     public ResponseEntity<String> receiveTrade(HttpServletRequest request) throws Exception {
         Map<String, String> params = new HashMap<>();
@@ -209,11 +225,15 @@ public class IndentRestApiController {
         //seller_id
         String seller_id = new String(request.getParameter("seller_id").getBytes("ISO-8859-1"), "UTF-8");
 
+        //seller_email
+        String seller_email = new String(request.getParameter("seller_email").getBytes("ISO-8859-1"), "UTF-8");
+
         //total_fee
-        Double total_fee = Double.parseDouble(request.getParameter("seller_id"));
+        Double total_fee = Double.parseDouble(request.getParameter("total_fee"));
 
         //交易状态
         String trade_status = new String(request.getParameter("trade_status").getBytes("ISO-8859-1"), "UTF-8");
+
 
         if (AlipayNotify.verify(params)) {//验证成功
             if (trade_status.equals("TRADE_FINISHED") || trade_status.equals("TRADE_SUCCESS")) {
@@ -221,6 +241,7 @@ public class IndentRestApiController {
                 tradeModel.setSellerId(seller_id);
                 tradeModel.setTotalFee(total_fee);
                 tradeModel.setOutTradeNo(out_trade_no);
+                tradeModel.setSellerEmail(seller_email);
                 tradeModel.setTradeNo(trade_no);
                 indentService.receiveTrade(tradeModel);
                 return new ResponseEntity<>(TRADE_SUCCESS_STATUS, HttpStatus.OK);
@@ -307,4 +328,27 @@ public class IndentRestApiController {
         return new ResponseEntity<>(responseEnv, HttpStatus.OK);
     }
 
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setClientId(String clientId) {
+        this.clientId = clientId;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public String getClientId() {
+        return clientId;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
 }

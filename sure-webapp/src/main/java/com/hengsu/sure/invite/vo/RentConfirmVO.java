@@ -11,11 +11,8 @@ public class RentConfirmVO {
 
     @NotEmpty
     private String indentNo;
-    @NotNull
     private Double price;
-    @NotNull
     private Integer quantity;
-    @NotNull
     private Double money;
 
 

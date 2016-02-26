@@ -315,7 +315,7 @@
     </select>
 
     <select id="queryRent" resultMap="UserResultMap">
-        SELECT u.id as userId,u.nickname,u.gender,u.height,
+        SELECT u.id as userId,u.nickname,u.gender,u.height,u.skills,
         u.age,u.icon,u.face_score,u.credit,r.id as rent_id
         FROM sure.rent r ,sure.user u
         where r.user_id = u.id
@@ -343,6 +343,7 @@
         <if test="param1.endDate != null">
             and r.end_date &lt;=#{param1.endDate,jdbcType=VARCHAR}
         </if>
+        and r.status = 0
         <if test="param1.scenes != null">
             <foreach collection="param1.scenes" item="scene">
                 and r.scene like '%${scene}%'
@@ -384,7 +385,7 @@
         <if test="endDate != null">
             and r.end_date &lt;=#{endDate,jdbcType=VARCHAR}
         </if>
-
+        and r.status = 0
         <if test="scenes != null">
             <foreach collection="scenes" item="scene">
                 and r.scene like '%${scene}%'

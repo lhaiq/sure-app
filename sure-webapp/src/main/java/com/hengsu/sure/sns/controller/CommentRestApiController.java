@@ -1,8 +1,10 @@
 package com.hengsu.sure.sns.controller;
 
+import com.hengsu.sure.ReturnCode;
 import com.hengsu.sure.auth.model.UserModel;
 import com.hengsu.sure.auth.service.UserService;
 import com.hengsu.sure.sns.CommentType;
+import com.hengsu.sure.sns.repository.MTimeRepository;
 import com.hengsu.sure.sns.vo.ListCommentsVO;
 import com.hengsu.sure.sns.vo.SNSUserVO;
 import org.slf4j.Logger;
@@ -51,7 +53,7 @@ public class CommentRestApiController {
      * @return
      */
     @RequestMapping(value = "/sns/{mid}/comment", method = RequestMethod.POST)
-    public ResponseEntity<ResponseEnvelope<Integer>> createComment(
+    public ResponseEntity<ResponseEnvelope<Long>> createComment(
             @PathVariable Long mid,
             @RequestBody CommentVO commentVO,
             @Value("#{request.getAttribute('userId')}") Long userId) {
@@ -60,8 +62,8 @@ public class CommentRestApiController {
         commentModel.setUserid(userId);
         commentModel.setType(CommentType.COMMENT.getCode());
         commentModel.setTime(new Date());
-        Integer result = commentService.createSelective(commentModel);
-        ResponseEnvelope<Integer> responseEnv = new ResponseEnvelope<Integer>(result,true);
+        Long commentId = commentService.addComment(commentModel);
+        ResponseEnvelope<Long> responseEnv = new ResponseEnvelope<>(commentId,true);
         return new ResponseEntity<>(responseEnv, HttpStatus.OK);
     }
 
@@ -71,7 +73,7 @@ public class CommentRestApiController {
      * @return
      */
     @RequestMapping(value = "/sns/{mid}/statue", method = RequestMethod.POST)
-    public ResponseEntity<ResponseEnvelope<Integer>> createStatues(
+    public ResponseEntity<ResponseEnvelope<String>> createStatues(
             @PathVariable Long mid,
             @Value("#{request.getAttribute('userId')}") Long userId) {
         CommentModel commentModel = new CommentModel();
@@ -79,8 +81,8 @@ public class CommentRestApiController {
         commentModel.setUserid(userId);
         commentModel.setTime(new Date());
         commentModel.setType(CommentType.STATUSES.getCode());
-        Integer result = commentService.createSelective(commentModel);
-        ResponseEnvelope<Integer> responseEnv = new ResponseEnvelope<Integer>(result,true);
+        commentService.addComment(commentModel);
+        ResponseEnvelope<String> responseEnv = new ResponseEnvelope<>(ReturnCode.OPERATION_SUCCESS,true);
         return new ResponseEntity<>(responseEnv, HttpStatus.OK);
     }
 
@@ -102,15 +104,15 @@ public class CommentRestApiController {
     /**
      * 取消点赞
      *
-     * @param id
+     * @param mid
      * @return
      */
-    @RequestMapping(value = "/sns/statue/{id}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/sns/{mid}/statue", method = RequestMethod.DELETE)
     public ResponseEntity<ResponseEnvelope<Long>> cancelStatue(
-            @PathVariable Long id,
+            @PathVariable Long mid,
             @Value("#{request.getAttribute('userId')}") Long userId) {
-        commentService.deleteComment(id, userId);
-        ResponseEnvelope<Long> responseEnv = new ResponseEnvelope<>(id, true);
+        commentService.cancelStatue(mid, userId);
+        ResponseEnvelope<Long> responseEnv = new ResponseEnvelope<>(mid, true);
         return new ResponseEntity<>(responseEnv, HttpStatus.OK);
     }
 

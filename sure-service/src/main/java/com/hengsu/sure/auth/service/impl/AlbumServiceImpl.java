@@ -32,7 +32,10 @@ public class AlbumServiceImpl implements AlbumService {
     @Transactional
     @Override
     public int createSelective(AlbumModel albumModel) {
-        return albumRepo.insertSelective(beanMapper.map(albumModel, Album.class));
+        Album album = beanMapper.map(albumModel, Album.class);
+        int ret = albumRepo.insertSelective(album);
+        albumModel.setId(album.getId());
+        return ret;
     }
 
     @Transactional

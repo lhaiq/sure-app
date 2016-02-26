@@ -25,6 +25,8 @@ public interface IndentService {
 
     public int selectCount(IndentModel indentModel);
 
+    public int selectIndentCount(IndentModel indentModel);
+
     public void receiveTrade(TradeModel tradeModel);
 
     public CashModel cancelIndent(Long id, Long userId);
@@ -33,7 +35,11 @@ public interface IndentService {
 
     public void scheduleFinishIndent();
 
+    public void scheduleStartIndent();
+
     public List<IndentModel> selectPage(IndentModel indentModel, Pageable pageable);
+
+    public List<IndentModel> selectIndent(IndentModel indentModel, Pageable pageable);
 
     public void commentIndent(IndentCommentModel indentCommentModel);
 

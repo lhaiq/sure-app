@@ -351,7 +351,7 @@ public class UserRestApiController {
         //该用户是否已经登陆过，如果是，以前登陆的失效
         long id = userModel.getId();
         String auth = loginContext.get(id);
-        if(!StringUtils.isEmpty(auth)){
+        if(!StringUtils.isEmpty(auth)&&!StringUtils.isEmpty(userModel.getClientId())){
             JSONObject message = new JSONObject();
             message.put("pushId", OTHER_LOGIN);
             pushService.pushMessage(message.toJSONString(),userModel);

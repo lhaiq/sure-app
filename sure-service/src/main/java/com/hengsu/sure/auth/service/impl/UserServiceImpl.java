@@ -22,6 +22,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.DigestUtils;
+import org.springframework.util.StringUtils;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -229,9 +230,10 @@ public class UserServiceImpl implements UserService {
         //MD5加密
         String password = DigestUtils.md5DigestAsHex(userModel.getPassword().getBytes());
         userModel.setPassword(password);
+        userModel.setRole(UserRole.CUSTOMER.getCode());
         createSelective(userModel);
 
-        handleClientId(userModel.getId(),userModel.getClientId());
+        handleClientId(userModel.getId(), userModel.getClientId());
     }
 
     @Override
@@ -243,7 +245,7 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public UserModel accountLogin(String phone, String password,String clientId) {
+    public UserModel accountLogin(String phone, String password, String clientId) {
         UserModel userModel = findUserByPhone(phone);
 
         //判断用户是否存在
@@ -257,7 +259,7 @@ public class UserServiceImpl implements UserService {
             ErrorCode.throwBusinessException(ErrorCode.LOGIN_PASSWORD_ERROR);
         }
 
-        String oldClientId =handleClientId(userModel.getId(),clientId);
+        String oldClientId = handleClientId(userModel.getId(), clientId);
 
         //密码不返回
         userModel.setPassword(null);
@@ -348,17 +350,30 @@ public class UserServiceImpl implements UserService {
     @Override
     public String handleClientId(Long userId, String clientId) {
 
+        UserModel userModel = findByPrimaryKey(userId);
+
         //判断该clientId是否被占用
-        User user = userRepo.findUserByClientId(clientId);
-        String oldClientId="";
+        User param = new User();
+        param.setClientId(clientId);
+        List<User> users = userRepo.selectPage(param, new PageRequest(0, Integer.MAX_VALUE));
 
         //是否当前用户占用client
-        if (user != null && (user.getId() != userId)) {
-            oldClientId= user.getClientId();
-            userRepo.updateClientNull(user.getId());
+        for (User user : users) {
+            if (user.getId() != userId) {
+                userRepo.updateClientNull(user.getId());
+            }
         }
 
-        return oldClientId;
+        if(clientId.equals(userModel.getClientId())){
+            return "";
+        }
+
+        UserModel updateParam = new UserModel();
+        updateParam.setId(userId);
+        updateParam.setClientId(clientId);
+        updateByPrimaryKeySelective(updateParam);
+
+        return userModel.getClientId();
 
     }
 

@@ -10,6 +10,7 @@ public class QueryRentModel {
     private Integer height;
     private Integer age;
     private String  icon;
+    private String skills;
     private Double  faceScore;
     private Double  credit;
     private Long  rentId;
@@ -84,5 +85,13 @@ public class QueryRentModel {
 
     public void setUserId(Long userId) {
         this.userId = userId;
+    }
+
+    public void setSkills(String skills) {
+        this.skills = skills;
+    }
+
+    public String getSkills() {
+        return skills;
     }
 }

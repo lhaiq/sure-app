@@ -12,7 +12,7 @@ public class ModifyUserVO {
     private Integer age;
     private Integer car;
     private Integer city;
-    private Long icon;
+    private String icon;
     private String alipay;
     private String clientId;
     private String skills;
@@ -84,11 +84,11 @@ public class ModifyUserVO {
         this.height = height;
     }
 
-    public Long getIcon() {
+    public String getIcon() {
         return icon;
     }
 
-    public void setIcon(Long icon) {
+    public void setIcon(String icon) {
         this.icon = icon;
     }
 

@@ -16,9 +16,26 @@ public class MTime {
     private String content;
 
     private String images;
+    private Long commentsCount;
+    private Long statusesCount;
 
     private Integer cityId;
 
+    public Long getCommentsCount() {
+        return commentsCount;
+    }
+
+    public void setCommentsCount(Long commentsCount) {
+        this.commentsCount = commentsCount;
+    }
+
+    public Long getStatusesCount() {
+        return statusesCount;
+    }
+
+    public void setStatusesCount(Long statusesCount) {
+        this.statusesCount = statusesCount;
+    }
 
     public String getContent() {
         return content;
